@@ -1,0 +1,70 @@
+- name: Apply dotfiles core
+  hosts: all
+  gather_facts: true
+
+  roles:
+    - role: common
+    - role: aur
+      when:
+        - is_archlinux | bool
+        - aur_enabled | bool
+    - role: identity
+      when: identity_enabled | bool
+    - role: python_dev
+      when: python_dev_enabled | bool
+    - role: ecmascript
+      when: ecmascript_enabled | bool
+    - role: golang
+      when: golang_enabled | bool
+    - role: tower
+      when: tower_enabled | bool
+    - role: appearance
+      when: appearance_enabled | bool
+    - role: shell
+      when: shell_enabled | bool
+    - role: tty
+      when: tty_enabled | bool
+    - role: linux_desktop
+      when:
+        - linux_desktop_enabled | bool
+        - is_linux | bool
+    - role: hyprland
+      when:
+        - hyprland_enabled | bool
+        - is_linux | bool
+    - role: system_tty_login
+      when:
+        - system_tty_login_enabled | bool
+        - is_linux | bool
+    - role: browser_base
+      when: browser_base_enabled | bool
+    - role: browser_personal
+      when: browser_personal_enabled | bool
+    - role: media
+      when: media_enabled | bool
+    - role: nvim
+      when: nvim_enabled | bool
+    - role: pkm
+      when: pkm_enabled | bool
+    - role: pim
+      when: pim_enabled | bool
+    - role: email
+      when: email_enabled | bool
+    - role: r_lang
+      when: r_lang_enabled | bool
+    - role: java
+      when: java_enabled | bool
+    - role: share_sync
+      when: share_sync_enabled | bool
+    - role: llm
+      when: llm_enabled | bool
+    - role: vscode
+      when: vscode_enabled | bool
+    - role: peripherals
+      when: peripherals_enabled | bool
+    - role: cloud
+      when: cloud_enabled | bool
+    - role: oci
+      when: oci_enabled | bool
+    - role: android_dev
+      when: android_dev_enabled | bool

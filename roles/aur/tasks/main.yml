@@ -1,0 +1,32 @@
+- name: Ensure Arch AUR foundation packages are installed
+  become: true
+  community.general.pacman:
+    name: "{{ aur_base_packages }}"
+    state: present
+
+- name: Ensure AUR builder user exists when yay is used
+  become: true
+  ansible.builtin.user:
+    name: "{{ aur_builder_user }}"
+    create_home: true
+    groups: wheel
+    append: true
+  when: aur_install_method == 'yay'
+
+- name: Allow AUR builder to install packages without password prompts
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ aur_sudoers_path }}"
+    line: "{{ aur_builder_user }} ALL=(ALL) NOPASSWD: /usr/bin/pacman, /usr/bin/makepkg"
+    create: true
+    mode: "0440"
+    validate: visudo -cf %s
+  when: aur_install_method == 'yay'
+
+- name: Install yay helper
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    name: yay
+    state: present
+  when: aur_install_method == 'yay'

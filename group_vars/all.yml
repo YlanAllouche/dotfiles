@@ -1,0 +1,394 @@
+dotfiles_profile: base
+
+active_user: "{{ dotfiles_active_user | default(ansible_user_id) }}"
+active_home: >-
+  {{
+    dotfiles_active_home
+    | default(
+      lookup('env', 'HOME')
+      if inventory_hostname == 'localhost'
+      else (
+        '/Users/' ~ active_user
+        if ansible_system == 'Darwin'
+        else '/home/' ~ active_user
+      )
+    )
+  }}
+
+platform_family: "{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}"
+is_macos: "{{ ansible_system == 'Darwin' }}"
+is_linux: "{{ ansible_system == 'Linux' }}"
+is_wsl: "{{ ansible_kernel is search('WSL') or ansible_kernel is search('Microsoft') }}"
+is_archlinux: "{{ ansible_distribution == 'Archlinux' }}"
+
+xdg_config_home: "{{ active_home }}/.config"
+xdg_data_home: "{{ active_home }}/.local/share"
+xdg_state_home: "{{ active_home }}/.local/state"
+xdg_cache_home: "{{ active_home }}/.cache"
+local_bin_dir: "{{ active_home }}/.local/bin"
+dotfiles_repo_root: "{{ playbook_dir | dirname }}"
+
+aur_enabled: true
+aur_install_method: yay
+aur_builder_user: aur_builder
+
+identity_enabled: true
+appearance_enabled: true
+shell_enabled: true
+tty_enabled: true
+nvim_enabled: true
+python_dev_enabled: false
+ecmascript_enabled: false
+golang_enabled: false
+tower_enabled: false
+linux_desktop_enabled: false
+hyprland_enabled: false
+system_tty_login_enabled: false
+browser_base_enabled: true
+browser_personal_enabled: false
+media_enabled: false
+pkm_enabled: false
+pim_enabled: false
+email_enabled: false
+r_lang_enabled: false
+java_enabled: false
+share_sync_enabled: false
+llm_enabled: false
+vscode_enabled: false
+peripherals_enabled: false
+cloud_enabled: false
+oci_enabled: false
+android_dev_enabled: false
+
+browser_bitwarden_enabled: false
+tty_dv_enabled: false
+tty_gh_enabled: false
+tty_glab_enabled: false
+tty_newsboat_enabled: false
+tty_neofetch_enabled: false
+tty_pywal_enabled: true
+shell_bootstrap_enabled: false
+tty_tmux_bootstrap_enabled: false
+nvim_bootstrap_plugins_enabled: false
+python_dev_poetry_enabled: false
+llm_opencode_enabled: false
+llm_claudecode_enabled: false
+appearance_generate_wallpapers: false
+appearance_install_colorwhirl_target: true
+appearance_install_matugen: true
+vscode_arch_source: pacman
+cloud_aws_enabled: false
+cloud_fly_enabled: false
+cloud_terraform_enabled: false
+oci_podman_enabled: false
+media_playlist_tools_enabled: false
+
+dotfiles_platform_paths:
+  brew_prefix:
+    macos: /opt/homebrew
+  firefox_tridactylrc:
+    linux: "{{ active_home }}/.tridactylrc"
+    macos: "{{ active_home }}/.tridactylrc"
+  opencode_global_config:
+    linux: "{{ xdg_config_home }}/opencode/opencode.json"
+    macos: "{{ xdg_config_home }}/opencode/opencode.json"
+
+identity_git_name: ""
+identity_git_email: ""
+identity_git_credential_helper: cache
+identity_glab_host: ""
+
+tty_base_arch_packages:
+  - bat
+  - btop
+  - cloc
+  - curl
+  - eza
+  - fd
+  - fzf
+  - git
+  - jq
+  - lazygit
+  - less
+  - ranger
+  - ripgrep
+  - rsync
+  - tig
+  - tmux
+  - unzip
+  - wget
+  - yq
+  - zip
+
+tty_base_homebrew_packages:
+  - bat
+  - btop
+  - cloc
+  - eza
+  - fd
+  - fzf
+  - gh
+  - git
+  - jq
+  - lazygit
+  - ripgrep
+  - tig
+  - tmux
+  - yq
+
+tty_pywal_package: python-pywal16
+
+shell_arch_packages:
+  - oh-my-posh
+  - zsh
+  - zsh-antidote
+
+shell_homebrew_packages:
+  - antidote
+  - oh-my-posh
+  - zsh
+
+python_dev_arch_packages:
+  - python
+  - python-pip
+  - python-virtualenv
+
+python_dev_homebrew_packages:
+  - python
+
+python_dev_global_packages:
+  - numpy
+  - pandas
+
+python_dev_poetry_arch_packages:
+  - poetry
+
+python_dev_poetry_homebrew_packages:
+  - poetry
+
+ecmascript_arch_packages:
+  - nodejs
+  - npm
+  - pnpm
+
+ecmascript_homebrew_packages:
+  - node
+  - pnpm
+
+ecmascript_global_packages:
+  - playwright
+  - typescript
+  - vite
+
+golang_arch_packages:
+  - go
+
+golang_homebrew_packages:
+  - go
+
+linux_desktop_arch_packages:
+  - flameshot
+  - fuzzel
+  - grim
+  - imagemagick
+  - kitty
+  - libnotify
+  - mpv
+  - pacmixer
+  - pcmanfm
+  - python-requests
+  - slurp
+  - tesseract
+  - wf-recorder
+  - wl-clipboard
+  - wofi
+  - xclip
+  - xdg-utils
+  - zathura
+  - zathura-pdf-mupdf
+  - calibre
+
+linux_desktop_aur_packages:
+  - koreader-bin
+
+hyprland_arch_packages:
+  - blueman
+  - brightnessctl
+  - chromium
+  - ddcutil
+  - hypridle
+  - hyprland
+  - hyprlock
+  - playerctl
+  - swww
+  - swaync
+  - tailscale
+  - waybar
+
+browser_base_arch_packages:
+  - firefox
+
+browser_personal_aur_packages:
+  - firefox-tridactyl-native
+
+browser_personal_homebrew_packages:
+  - rbw
+
+browser_personal_homebrew_casks:
+  - bitwarden
+
+media_arch_packages:
+  - jellyfin-mpv-shim
+  - mpd
+  - ncmpcpp
+  - python-gobject
+  - python-pillow
+
+media_homebrew_packages:
+  - mpd
+  - ncmpcpp
+
+pkm_arch_packages:
+  - glow
+  - jq
+  - obsidian
+
+pkm_homebrew_casks:
+  - obsidian
+
+pkm_python_packages:
+  - git+https://github.com/YlanAllouche/capturemd.git
+  - git+https://github.com/YlanAllouche/dashboard-md.git
+
+pim_arch_packages:
+  - afew
+  - alot
+  - goimapnotify
+  - khal
+  - todoman
+  - vdirsyncer
+
+pim_aur_packages:
+  - gmailieer-git
+
+email_arch_packages:
+  - isync
+  - msmtp
+  - neomutt
+  - notmuch
+
+identity_arch_packages:
+  - pass
+  - pass-otp
+  - rbw
+  - rclone
+
+identity_homebrew_packages:
+  - rbw
+  - rclone
+
+r_lang_arch_packages:
+  - r
+
+java_arch_packages:
+  - jdk-openjdk
+  - maven
+
+share_sync_arch_packages:
+  - nextcloud-client
+  - syncthing
+
+llm_opencode_arch_packages:
+  - opencode
+
+llm_opencode_homebrew_packages:
+  - opencode
+
+llm_claudecode_npm_package: "@anthropic-ai/claude-code"
+
+appearance_matugen_aur_packages:
+  - matugen-bin
+
+appearance_colorwhirl_npm_package: colorwhirl
+appearance_colorwhirl_command: colorwhirl
+appearance_wallpaper_output_dir: "{{ xdg_data_home }}/wallpapers/generated"
+appearance_controller_cache_dir: "{{ lookup('env', 'HOME') }}/.cache/dotfiles-wallpapers/{{ dotfiles_profile }}"
+appearance_default_resolutions:
+  - 2560x1440
+  - 1920x1080
+  - 3840x2160
+appearance_additional_resolutions: []
+appearance_colorwhirl_recipe_path: "{{ dotfiles_repo_root }}/roles/appearance/files/colorwhirl/default-personal.json"
+appearance_theme_name: default
+appearance_theme_wallpaper: "{{ appearance_wallpaper_output_dir }}/wallpaper-{{ appearance_default_resolutions[0] }}.png"
+appearance_theme_alpha: "100"
+appearance_theme_special:
+  background: "#000000"
+  foreground: "#b5b3aa"
+  cursor: "#b5b3aa"
+appearance_theme_colors:
+  color0: "#000000"
+  color1: "#ff6c60"
+  color2: "#a8ff60"
+  color3: "#ffffb6"
+  color4: "#96cbfe"
+  color5: "#ff73fd"
+  color6: "#c6c5fe"
+  color7: "#b5b3aa"
+  color8: "#6c6c66"
+  color9: "#ff6c60"
+  color10: "#a8ff60"
+  color11: "#ffffb6"
+  color12: "#96cbfe"
+  color13: "#ff73fd"
+  color14: "#c6c5fe"
+  color15: "#fdfbee"
+appearance_theme_recipe_colors:
+  - "#ff6c60"
+  - "#a8ff60"
+  - "#ffffb6"
+  - "#96cbfe"
+  - "#ff73fd"
+  - "#c6c5fe"
+
+consumer_contract_dir: "{{ xdg_config_home }}/dotfiles"
+consumer_contract_env_dir: "{{ consumer_contract_dir }}/env"
+consumer_contract_docs_dir: "{{ consumer_contract_dir }}/contracts"
+
+tower_arch_packages:
+  - ansible
+  - ansible-lint
+
+tower_homebrew_packages:
+  - ansible
+  - ansible-lint
+
+cloud_arch_packages:
+  - terraform
+
+cloud_arch_aur_packages:
+  - aws-cli-v2-bin
+  - flyctl-bin
+
+cloud_homebrew_packages:
+  - awscli
+  - flyctl
+  - terraform
+
+oci_arch_packages:
+  - podman
+
+oci_homebrew_packages:
+  - podman
+
+android_dev_arch_packages:
+  - android-tools
+
+vscode_arch_pacman_package: code
+vscode_arch_aur_package: visual-studio-code-live-bin
+vscode_homebrew_casks:
+  - visual-studio-code
+
+r_lang_default_packages:
+  - dplyr
+  - purrr
