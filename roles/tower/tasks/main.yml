@@ -10,3 +10,26 @@
     name: "{{ tower_homebrew_packages }}"
     state: present
   when: is_macos | bool
+
+- name: Ensure tower config directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/ansible/collections"
+    state: directory
+    mode: "0755"
+  when: tower_install_collections_enabled | bool
+
+- name: Install Ansible collection requirements file
+  ansible.builtin.copy:
+    src: "{{ dotfiles_repo_root }}/collections/requirements.yml"
+    dest: "{{ tower_collection_requirements_target_path }}"
+    mode: "0644"
+  when: tower_install_collections_enabled | bool
+
+- name: Install required Ansible collections for tower usage
+  ansible.builtin.command:
+    cmd: >-
+      ansible-galaxy collection install -r {{ tower_collection_requirements_target_path }}
+  environment:
+    HOME: "{{ active_home }}"
+  changed_when: false
+  when: tower_install_collections_enabled | bool

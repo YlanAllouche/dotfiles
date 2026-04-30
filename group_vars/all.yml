@@ -82,6 +82,8 @@ cloud_fly_enabled: false
 cloud_terraform_enabled: false
 oci_podman_enabled: false
 media_playlist_tools_enabled: false
+tower_install_collections_enabled: true
+tower_collection_requirements_target_path: "{{ xdg_config_home }}/ansible/collections/requirements.yml"
 
 dotfiles_platform_paths:
   brew_prefix:
