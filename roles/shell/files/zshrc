@@ -208,7 +208,3 @@ fi
 # TODO: shortcut for this
 # kitty @ set-window-title "Workspaces"
 for file in ~/.local/config/shell/*(N.); do source "$file"; done 2>/dev/null
-
-
-# Load Angular CLI autocompletion.
-source <(ng completion script)

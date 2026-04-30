@@ -322,7 +322,7 @@ appearance_default_resolutions:
 appearance_additional_resolutions: []
 appearance_colorwhirl_recipe_path: "{{ dotfiles_repo_root }}/roles/appearance/files/colorwhirl/default-personal.json"
 appearance_theme_name: default
-appearance_theme_wallpaper: "{{ appearance_wallpaper_output_dir }}/wallpaper-{{ appearance_default_resolutions[0] }}.png"
+appearance_theme_wallpaper: ""
 appearance_theme_alpha: "100"
 appearance_theme_special:
   background: "#000000"

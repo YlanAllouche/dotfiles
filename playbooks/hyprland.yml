@@ -13,25 +13,29 @@
     hyprland_enabled: true
     system_tty_login_enabled: true
     browser_base_enabled: true
-    browser_personal_enabled: true
-    browser_bitwarden_enabled: true
-    media_enabled: true
+    # Personal browser workflow comes later.
+    browser_personal_enabled: false
+    browser_bitwarden_enabled: false
+    # First fresh-Arch pass keeps the extra workflow roles off.
+    media_enabled: false
     nvim_enabled: true
-    pkm_enabled: true
-    pim_enabled: true
-    email_enabled: true
-    r_lang_enabled: true
+    pkm_enabled: false
+    pim_enabled: false
+    email_enabled: false
+    r_lang_enabled: false
     java_enabled: false
-    share_sync_enabled: true
+    share_sync_enabled: false
     llm_enabled: true
     llm_opencode_enabled: true
     llm_claudecode_enabled: false
+    vscode_enabled: true
     tty_dv_enabled: true
     tty_gh_enabled: true
     tty_glab_enabled: true
     tty_newsboat_enabled: true
     tty_neofetch_enabled: true
     tty_pywal_enabled: true
-    appearance_generate_wallpapers: true
-    appearance_install_colorwhirl_target: true
+    # Wallpaper generation can come back once the desktop path is validated.
+    appearance_generate_wallpapers: false
+    appearance_install_colorwhirl_target: false
     appearance_install_matugen: true
