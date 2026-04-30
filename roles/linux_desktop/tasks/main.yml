@@ -27,6 +27,7 @@
     mode: "0755"
   loop:
     - "{{ xdg_config_home }}/kitty"
+    - "{{ xdg_config_home }}/kitty/conf.d"
     - "{{ xdg_config_home }}/pacmixer"
     - "{{ xdg_config_home }}/wofi"
     - "{{ xdg_config_home }}/zathura"
