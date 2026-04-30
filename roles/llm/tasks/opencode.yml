@@ -1,9 +1,22 @@
-- name: Install OpenCode on Arch
+- name: Install OpenCode on Arch through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ llm_opencode_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
+
+- name: Install OpenCode on Arch through pacman
   become: true
   community.general.pacman:
-    name: "{{ llm_opencode_arch_packages }}"
+    name: "{{ llm_opencode_aur_packages }}"
     state: present
-  when: is_archlinux | bool
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
 
 - name: Install OpenCode on macOS
   community.general.homebrew:

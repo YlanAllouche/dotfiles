@@ -1,6 +1,8 @@
 shell_arch_packages:
-  - oh-my-posh
   - zsh
+
+shell_aur_packages:
+  - oh-my-posh
   - zsh-antidote
 
 shell_homebrew_packages:
