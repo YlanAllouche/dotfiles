@@ -5,6 +5,26 @@
     state: present
   when: is_archlinux | bool
 
+- name: Install shell AUR packages through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ shell_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
+
+- name: Install shell AUR packages through pacman
+  become: true
+  community.general.pacman:
+    name: "{{ shell_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
+
 - name: Install shell packages on macOS
   community.general.homebrew:
     name: "{{ shell_homebrew_packages }}"

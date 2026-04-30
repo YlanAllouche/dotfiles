@@ -136,11 +136,13 @@ tty_base_homebrew_packages:
   - tmux
   - yq
 
-tty_pywal_package: python-pywal16
+tty_pywal_package: python-pywal
 
 shell_arch_packages:
-  - oh-my-posh
   - zsh
+
+shell_aur_packages:
+  - oh-my-posh
   - zsh-antidote
 
 shell_homebrew_packages:
@@ -194,7 +196,6 @@ linux_desktop_arch_packages:
   - kitty
   - libnotify
   - mpv
-  - pacmixer
   - pcmanfm
   - python-requests
   - slurp
@@ -210,6 +211,7 @@ linux_desktop_arch_packages:
 
 linux_desktop_aur_packages:
   - koreader-bin
+  - pacmixer
 
 hyprland_arch_packages:
   - blueman
@@ -298,8 +300,8 @@ share_sync_arch_packages:
   - nextcloud-client
   - syncthing
 
-llm_opencode_arch_packages:
-  - opencode
+llm_opencode_aur_packages:
+  - opencode-bin
 
 llm_opencode_homebrew_packages:
   - opencode
