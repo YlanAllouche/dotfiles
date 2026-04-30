@@ -1,0 +1,19 @@
+# Completions and utilities
+zsh-users/zsh-completions
+rupa/z
+djui/alias-tips
+
+# FZF integration
+junegunn/fzf path:shell/completion.zsh
+junegunn/fzf path:shell/key-bindings.zsh
+Aloxaf/fzf-tab
+
+# History and autosuggestions
+zsh-users/zsh-history-substring-search
+zsh-users/zsh-autosuggestions
+
+# Must be last before vi-mode
+zsh-users/zsh-syntax-highlighting
+
+# Must be absolute last
+jeffreytse/zsh-vi-mode

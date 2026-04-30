@@ -1,0 +1,214 @@
+# Increase function nesting limit
+
+FUNCNEST=1000
+export CLICOLOR=1
+
+# Source antidote
+source /usr/share/zsh-antidote/antidote.zsh
+
+
+# Create plugins file if it doesn't exist
+if [ ! -f ${ZDOTDIR:-~}/.zsh_plugins.txt ]; then
+    touch ${ZDOTDIR:-~}/.zsh_plugins.txt
+fi
+
+
+# Basic zsh settings
+setopt AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
+setopt EXTENDED_GLOB
+setopt HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+
+# Editor
+export VISUAL=nvim
+export EDITOR=nvim
+
+# FZF settings
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --info=inline"
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# Autosuggestions settings - reduce complexity
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+# Vi mode settings
+ZVM_INIT_MODE=sourcing
+ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+
+# Load plugins
+antidote load
+
+# Initialize completion system
+autoload -Uz compinit && compinit
+
+# Completion styling
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# Custom FZF functions
+fh() {
+    print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -E 's/ _[0-9]_\*? *//' | sed -E 's/\\/\\\\/g')
+}
+
+fd() {
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+}
+
+ff() {
+    local files
+    IFS=$'\n' files=($(fzf --query="$1" --multi --select-1 --exit-0))
+    [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+}
+
+
+# Basic key bindings - these will be overridden by zsh-vi-mode if needed
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^R' fzf-history-widget
+bindkey '^T' fzf-file-widget
+bindkey '^[c' fzf-cd-widget
+bindkey '^ ' autosuggest-accept
+
+# Function to run after vi mode initializes
+function zvm_after_init() {
+    # Restore key bindings in vi insert mode
+    bindkey -M viins '^R' fzf-history-widget
+    bindkey -M viins '^P' fzf-file-widget
+    bindkey -M viins '^[c' fzf-cd-widget
+    bindkey -M viins '^ ' autosuggest-accept
+    
+    # Set up history navigation in command mode
+    bindkey -M vicmd 'k' history-substring-search-up
+    bindkey -M vicmd 'j' history-substring-search-down
+}
+
+# Initialize starship prompt
+
+# Aliases
+alias gs="git status"
+alias v="nvim"
+alias f="ranger"
+alias ll="eza -la --icons"
+alias l="eza -l --git --icons"
+alias tree="eza -l --git --icons --tree"
+alias s="eza --git --icons"
+alias icat="kitten icat"
+alias pas="~/.local/bin/zbw.zsh password output"
+alias tok="~/.local/bin/zbw.zsh fields output"
+# Space-based alias expansion (simpler version)
+expand-alias-and-accept() {
+  # Get the first word of the command line
+  local cmd=${${(Az)LBUFFER}[1]}
+  # Check if it's an alias
+  if [[ -n $cmd ]] && alias $cmd &>/dev/null; then
+    # Get the alias definition
+    local expanded_cmd=$(alias $cmd | sed "s/^$cmd=//;s/^'//;s/'$//")
+    # Replace the alias with its definition
+    LBUFFER="${LBUFFER/$cmd/$expanded_cmd}"
+  fi
+  # Insert a space
+  LBUFFER+=" "
+}
+
+# Create the widget and bind it to space
+zle -N expand-alias-and-accept
+bindkey " " expand-alias-and-accept
+autoload -Uz edit-command-line
+zle -N edit-command-line
+
+# If using built-in vi mode
+bindkey -M vicmd 'v' edit-command-line
+
+# If using zsh-vi-mode plugin
+function zvm_after_init() {
+  # Keep any existing bindings you have in this function
+  bindkey -M vicmd 'k' history-substring-search-up
+  bindkey -M vicmd 'j' history-substring-search-down
+  
+  # Add the edit-command-line binding
+  bindkey -M vicmd 'v' edit-command-line
+}
+
+bindkey -r '^T'
+bindkey -r '^P'
+
+bindkey -s '^T' 'kitty @ set-window-title "Workspaces" && ~/.local/bin/tmux-sessionizer\n'
+bindkey '^P' fzf-file-widget
+
+# eval "$(starship init zsh)"
+# eval "$(oh-my-posh init zsh --config  $HOME/.config/oh-my-posh/themes/pywal-test.json)"
+eval "$(oh-my-posh init zsh --config  $HOME/.cache/wal/omp.json)"
+eval "$(rbw gen-completions zsh); compdef _rbw rbw;"
+# export BROWSER=(firefox -P main)
+export BROWSER=browser
+export ZSH_PLUGINS_ALIAS_TIPS_DISABLED=true
+export PATH="$PATH:$HOME/.local/bin"
+export COLORTERM=truecolor
+export R_LIBS_USER=~/.local/share/R/library
+
+# Add this to your ~/.zshrc
+
+# Widget for password completion (Ctrl+A)
+rbw-password-completion() {
+    local result
+    result=$(~/.local/bin/zbw.zsh password completion 2>/dev/null)
+    if [[ $? -eq 0 && -n "$result" ]]; then
+        LBUFFER="${LBUFFER}${result}"
+    fi
+    zle redisplay
+}
+
+# Widget for fields completion (Ctrl+Shift+A) 
+rbw-fields-completion() {
+    local result
+    result=$(~/.local/bin/zbw.zsh fields completion 2>/dev/null)
+    if [[ $? -eq 0 && -n "$result" ]]; then
+        LBUFFER="${LBUFFER}${result}"
+    fi
+    zle redisplay
+}
+
+# Register the widgets
+zle -N rbw-password-completion
+zle -N rbw-fields-completion
+
+# Bind to key combinations
+bindkey '^A' rbw-password-completion        # Ctrl+A
+bindkey '^B' rbw-fields-completion     # Ctrl+Shift+A (may vary by terminal)
+
+bindkey -s '^[i' '~/.local/bin/tailscale-helper.zsh ip^M'
+bindkey -s '^[h' '~/.local/bin/tailscale-helper.zsh hostname^M'
+bindkey -s '^[s' '~/.local/bin/tailscale-helper.zsh ssh^M'
+bindkey -s '^[v' '~/.local/bin/tailscale-helper.zsh exit-node^M'
+
+
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# TODO: intirely llm-generated, look into it
+if [[ -z "$SSH_CLIENT" && -z "$SSH_TTY" ]] && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" ]] && [[ -z "$WT_SESSION" ]]; then
+kitty @ set-window-title "Terminal"
+else
+  # Otherwise
+fi
+
+# TODO: shortcut for this
+# kitty @ set-window-title "Workspaces"
+for file in ~/.local/config/shell/*(N.); do source "$file"; done 2>/dev/null
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)

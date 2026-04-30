@@ -1,0 +1,13 @@
+# Consumer Contracts
+
+This directory documents target-side values that should be injected by the consuming playbook or machine-local setup.
+
+Preferred patterns:
+
+- interactive shell values: drop `*.zsh` snippets into `~/.local/config/shell/`
+- script-specific non-interactive values: write role-specific env files in `{{ consumer_contract_env_dir }}`
+- app-native secrets/config: render the real config file directly from the consuming playbook
+- personal secrets: prefer `rbw` or `pass` when the tool can fetch at runtime
+- services: only use systemd user environment when the application truly needs it
+
+This public repo intentionally does not manage private values directly.

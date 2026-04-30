@@ -1,0 +1,14 @@
+git_protocol: ssh
+# TODO: automate glab authentication from the consuming playbook when ready.
+editor:
+browser:
+glamour_style: dark
+check_update: true
+display_hyperlinks: false
+{% if identity_glab_host %}host: {{ identity_glab_host }}
+hosts:
+  {{ identity_glab_host }}:
+    api_protocol: https
+    api_host: {{ identity_glab_host }}
+    token:
+{% endif %}

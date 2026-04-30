@@ -1,0 +1,41 @@
+- name: Install ECMAScript tooling on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ ecmascript_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install ECMAScript tooling on macOS
+  community.general.homebrew:
+    name: "{{ ecmascript_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Enable corepack when available
+  ansible.builtin.command:
+    cmd: corepack enable
+  failed_when: false
+  changed_when: false
+
+- name: Install global npm utilities
+  become: true
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+    state: present
+  loop: "{{ ecmascript_global_packages }}"
+  when: is_archlinux | bool
+
+- name: Install global npm utilities on macOS
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+    state: present
+  loop: "{{ ecmascript_global_packages }}"
+  when: is_macos | bool
+
+- name: Install Chromium development helper
+  ansible.builtin.copy:
+    src: bin/dev-chrome
+    dest: "{{ local_bin_dir }}/dev-chrome"
+    mode: "0755"

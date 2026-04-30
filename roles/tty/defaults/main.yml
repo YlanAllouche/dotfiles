@@ -1,0 +1,17 @@
+tty_arch_packages:
+  - bc
+  - gitmux
+  - "{{ tty_common_packages }}"
+
+tty_homebrew_packages:
+  - bash
+  - bat
+  - eza
+  - fd
+  - fzf
+  - git
+  - jq
+  - lazygit
+  - ranger
+  - ripgrep
+  - tmux

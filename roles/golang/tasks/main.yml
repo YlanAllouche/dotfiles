@@ -1,0 +1,38 @@
+- name: Install Go on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ golang_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install Go on macOS
+  community.general.homebrew:
+    name: "{{ golang_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Install Go shell snippet
+  ansible.builtin.copy:
+    dest: "{{ active_home }}/.local/config/shell/30-go.zsh"
+    mode: "0644"
+    content: |
+      export GOPATH="$HOME/go"
+      export GOBIN="$HOME/go/bin"
+      export PATH="$PATH:$GOBIN"
+
+- name: Ensure Go bin directory exists
+  ansible.builtin.file:
+    path: "{{ active_home }}/go/bin"
+    state: directory
+    mode: "0755"
+
+- name: Install Go editor tooling
+  ansible.builtin.command:
+    cmd: "go install {{ item }}"
+  environment:
+    GOPATH: "{{ active_home }}/go"
+    GOBIN: "{{ active_home }}/go/bin"
+    PATH: "/usr/local/bin:/usr/bin:/bin:{{ active_home }}/go/bin"
+  loop:
+    - golang.org/x/tools/gopls@latest
+    - golang.org/x/tools/cmd/goimports@latest

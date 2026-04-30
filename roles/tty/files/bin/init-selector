@@ -138,7 +138,7 @@ if file_path:
                 if workspace:
                     workspace_path = Path.home() / "workspaces" / workspace
                     subprocess.run(
-                        ["/home/ylan/.local/bin/tmux-sessionizer", str(workspace_path)]
+                        [str(Path.home() / ".local" / "bin" / "tmux-sessionizer"), str(workspace_path)]
                     )
 
     except FileNotFoundError:

@@ -1,0 +1,12 @@
+- name: Install tower packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ tower_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install tower packages on macOS
+  community.general.homebrew:
+    name: "{{ tower_homebrew_packages }}"
+    state: present
+  when: is_macos | bool

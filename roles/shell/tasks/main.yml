@@ -1,0 +1,61 @@
+- name: Install shell packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ shell_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install shell packages on macOS
+  community.general.homebrew:
+    name: "{{ shell_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Ensure shell config directory exists
+  ansible.builtin.file:
+    path: "{{ active_home }}/.local/config/shell"
+    state: directory
+    mode: "0755"
+
+- name: Install zsh configuration files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode | default('0644') }}"
+  loop:
+    - src: zshrc
+      dest: "{{ active_home }}/.zshrc"
+    - src: zsh_plugins.txt
+      dest: "{{ active_home }}/.zsh_plugins.txt"
+    - src: tailscale-helper.zsh
+      dest: "{{ local_bin_dir }}/tailscale-helper.zsh"
+      mode: "0755"
+
+- name: Install shell snippets
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ active_home }}/.local/config/shell/{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: path.zsh.j2
+      dest: 10-path.zsh
+    - src: brew.zsh.j2
+      dest: 20-brew.zsh
+
+- name: Bootstrap antidote plugin cache
+  ansible.builtin.shell: |
+    set -eu
+    source /usr/share/zsh-antidote/antidote.zsh
+    antidote load < "{{ active_home }}/.zsh_plugins.txt" >/dev/null
+  args:
+    executable: /usr/bin/zsh
+  when:
+    - shell_bootstrap_enabled | bool
+    - is_archlinux | bool
+
+- name: Ensure active user's shell is zsh on non-macOS systems
+  become: true
+  ansible.builtin.user:
+    name: "{{ active_user }}"
+    shell: "{{ shell_zsh_path }}"
+  when: not is_macos | bool

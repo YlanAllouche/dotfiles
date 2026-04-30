@@ -1,0 +1,61 @@
+- name: Install identity packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ identity_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install identity packages on macOS
+  community.general.homebrew:
+    name: "{{ identity_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Ensure identity directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - "{{ active_home }}/.ssh"
+    - "{{ xdg_config_home }}/rclone"
+    - "{{ consumer_contract_env_dir }}"
+    - "{{ consumer_contract_docs_dir }}"
+
+- name: Install consumer contract documentation
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: contracts-readme.md.j2
+      dest: "{{ consumer_contract_docs_dir }}/README.md"
+    - src: identity.todo.j2
+      dest: "{{ consumer_contract_docs_dir }}/identity.todo"
+    - src: email.todo.j2
+      dest: "{{ consumer_contract_docs_dir }}/email.todo"
+    - src: llm.todo.j2
+      dest: "{{ consumer_contract_docs_dir }}/llm.todo"
+    - src: media.todo.j2
+      dest: "{{ consumer_contract_docs_dir }}/media.todo"
+    - src: llm.env.example.j2
+      dest: "{{ consumer_contract_env_dir }}/llm.env.example"
+    - src: media.env.example.j2
+      dest: "{{ consumer_contract_env_dir }}/media.env.example"
+    - src: pim.todo.j2
+      dest: "{{ consumer_contract_docs_dir }}/pim.todo"
+
+- name: Install Bitwarden helper script
+  ansible.builtin.copy:
+    src: zbw.zsh
+    dest: "{{ local_bin_dir }}/zbw.zsh"
+    mode: "0755"
+
+- name: Manage git identity config when values are provided
+  ansible.builtin.template:
+    src: gitconfig.j2
+    dest: "{{ active_home }}/.gitconfig"
+    mode: "0644"
+  when:
+    - identity_git_name | length > 0
+    - identity_git_email | length > 0
