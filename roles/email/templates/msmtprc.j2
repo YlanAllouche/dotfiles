@@ -1,0 +1,7 @@
+# Public baseline for msmtp.
+# Put real account settings in the consuming playbook or local machine config.
+
+defaults
+auth on
+tls on
+logfile {{ xdg_state_home }}/msmtp.log

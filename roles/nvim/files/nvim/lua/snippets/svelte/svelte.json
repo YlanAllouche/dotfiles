@@ -1,0 +1,42 @@
+{
+  "Svelte Component (JSON)": {
+    "prefix": "jscomp",
+    "body": [
+      "<script>",
+      "\texport let ${1:props};",
+      "</script>",
+      "",
+      "<div>",
+      "\t${2:<!-- component content -->}",
+      "</div>",
+      "",
+      "<style scoped>",
+      "\t${3:/* component styles */}",
+      "</style>"
+    ],
+    "description": "Svelte component with script, markup, and styles"
+  },
+  "Svelte If Block (JSON)": {
+    "prefix": "jsif",
+    "body": ["{#if ${1:condition}}", "\t${2:<!-- content -->}", "{/if}"],
+    "description": "Svelte #if block"
+  },
+  "Svelte Each Block (JSON)": {
+    "prefix": "jseach",
+    "body": ["{#each ${1:items} as ${2:item}}", "\t${3:{$2}}", "{/each}"],
+    "description": "Svelte #each loop"
+  },
+  "Basic Svelte Component (JSON)": {
+    "prefix": "abscomp",
+    "body": [
+      "<script>",
+      "\t${1:// component logic}",
+      "</script>",
+      "",
+      "<${2:div} class=\"${3:component}\">",
+      "\t${4:<!-- content -->}",
+      "</${2:div}>"
+    ],
+    "description": "Basic Svelte component template"
+  }
+}

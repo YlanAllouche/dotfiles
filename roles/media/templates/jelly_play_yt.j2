@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MEDIA_ENV_FILE="${DOTFILES_MEDIA_ENV_FILE:-$HOME/.config/dotfiles/env/media.env}"
+
+if [ -f "$MEDIA_ENV_FILE" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$MEDIA_ENV_FILE"
+  set +a
+fi
+
+SERVER_URL="${JELLYFIN_SERVER_URL:-}"
+USERNAME="${JELLYFIN_USERNAME:-}"
+PASSWORD="${JELLYFIN_PASSWORD:-}"
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <youtube_id>" >&2
+  exit 1
+fi
+
+if [ -z "$SERVER_URL" ] || [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
+  cat >&2 <<'EOF'
+Missing Jellyfin credentials.
+
+Set these in your consuming setup before using jelly_play_yt:
+  JELLYFIN_SERVER_URL
+  JELLYFIN_USERNAME
+  JELLYFIN_PASSWORD
+
+Optional target-side file:
+  $HOME/.config/dotfiles/env/media.env
+EOF
+  exit 1
+fi
+
+get_access_token() {
+  local auth_response
+  auth_response=$(curl -s -X POST "$SERVER_URL/Users/AuthenticateByName" \
+    -H "Content-Type: application/json" \
+    -H "X-Emby-Authorization: MediaBrowser Client=\"BashCast\", Device=\"Bash\", DeviceId=\"BashCastDevice\", Version=\"1.0.0\"" \
+    -d "{\"Username\":\"$USERNAME\",\"Pw\":\"$PASSWORD\"}")
+
+  printf '%s' "$auth_response" | jq -r '.AccessToken // empty'
+}
+
+get_session_id() {
+  local access_token=$1
+  local device_id=$2
+  local sessions_response
+
+  sessions_response=$(curl -s -X GET "$SERVER_URL/Sessions" -H "X-Emby-Token: $access_token")
+  printf '%s' "$sessions_response" | jq -r --arg device_id "$device_id" '.[] | select(.DeviceId == $device_id) | .Id' | head -n1
+}
+
+find_video_by_youtube_id() {
+  local access_token=$1
+  local youtube_id=$2
+  local items_response media_id
+
+  items_response=$(curl -s -X GET "$SERVER_URL/Items?Recursive=true&Fields=ProviderIds,Path&MediaTypes=Video&Limit=1000000" -H "X-Emby-Token: $access_token")
+  media_id=$(printf '%s' "$items_response" | jq -r --arg ytid "$youtube_id" '.Items[] | select(.ProviderIds.youtube == $ytid) | .Id' | head -n1)
+
+  if [ -z "$media_id" ]; then
+    media_id=$(printf '%s' "$items_response" | jq -r --arg ytid "$youtube_id" '.Items[] | select(.Path | contains($ytid)) | .Id' | head -n1)
+  fi
+
+  printf '%s' "$media_id"
+}
+
+play_video() {
+  local access_token=$1
+  local session_id=$2
+  local media_id=$3
+
+  curl -s -X POST "$SERVER_URL/Sessions/$session_id/Playing?playCommand=PlayNow&itemIds=$media_id" \
+    -H "X-Emby-Token: $access_token" \
+    -H "accept: */*" \
+    -d '' >/dev/null
+}
+
+main() {
+  local youtube_id=$1
+  local access_token device_id session_id media_id
+
+  access_token=$(get_access_token)
+  if [ -z "$access_token" ]; then
+    echo "Authentication failed" >&2
+    exit 1
+  fi
+
+  device_id=$(jq -r '.client_uuid' "$HOME/.config/jellyfin-mpv-shim/conf.json")
+  session_id=$(get_session_id "$access_token" "$device_id")
+  session_id=${session_id:-$device_id}
+
+  media_id=$(find_video_by_youtube_id "$access_token" "$youtube_id")
+  if [ -z "$media_id" ]; then
+    notify-send "Jellyfin" "Could not find video: $youtube_id"
+    exit 1
+  fi
+
+  play_video "$access_token" "$session_id" "$media_id"
+}
+
+main "$@"

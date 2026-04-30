@@ -1,0 +1,36 @@
+{
+	"Vue Component (JSON)": {
+		"prefix": "jvcomp",
+		"body": [
+			"<template>",
+			"\t<div>",
+			"\t\t${1:<!-- template -->}",
+			"\t</div>",
+			"</template>",
+			"",
+			"<script setup>",
+			"\t${2:// script}",
+			"</script>",
+			"",
+			"<style scoped>",
+			"\t${3:/* styles */}",
+			"</style>"
+		],
+		"description": "Basic Vue SFC component structure"
+	},
+	"Vue v-if (JSON)": {
+		"prefix": "jvif",
+		"body": ["v-if=\"${1:condition}\""],
+		"description": "Vue v-if directive"
+	},
+	"Vue v-for (JSON)": {
+		"prefix": "jvfor",
+		"body": ["v-for=\"${1:item} in ${2:items}\""],
+		"description": "Vue v-for directive"
+	},
+	"Vue ref (JSON)": {
+		"prefix": "jvref",
+		"body": ["const ${1:variable} = ref(${2:null});"],
+		"description": "Vue ref() for reactive variable"
+	}
+}

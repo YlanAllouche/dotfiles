@@ -1,0 +1,12 @@
+- name: Install Java packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ java_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install Java packages on macOS
+  community.general.homebrew:
+    name: "{{ java_homebrew_packages }}"
+    state: present
+  when: is_macos | bool

@@ -11,6 +11,7 @@ local function setup_markdown_picker()
 	local actions = require("telescope.actions")
 	local previewers = require("telescope.previewers")
 
+	-- Directory to search for markdown files (easily changeable)
 	local markdown_dir = "~/share/"
 
 	local function get_markdown_files()
@@ -62,12 +63,16 @@ local function setup_markdown_picker()
 				previewer = previewers.new_buffer_previewer({
 					title = "File Preview",
 					define_preview = function(self, entry, status)
+						-- Read file content
 						local lines = {}
 						for line in io.lines(entry.path) do
 							table.insert(lines, line)
 						end
+						-- Set buffer content
 						vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+						-- Set filetype to markdown for syntax highlighting
 						vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "markdown")
+						-- Apply syntax highlighting
 						vim.api.nvim_buf_call(self.state.bufnr, function()
 							vim.cmd("syntax enable")
 						end)
@@ -89,9 +94,13 @@ local function setup_markdown_picker()
 			:find()
 	end
 
+	-- Register the command
 	vim.api.nvim_create_user_command("MarkdownPicker", markdown_picker, {})
 
+	-- Set the keybinding
 	vim.keymap.set("n", "<leader>O", ":MarkdownPicker<CR>", { noremap = true, silent = true })
+
+	-- vim.notify("Markdown picker feature is ready", vim.log.levels.INFO)
 end
 
 vim.defer_fn(setup_markdown_picker, 100)

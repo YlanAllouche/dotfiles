@@ -1,0 +1,1 @@
+r_lang_library_path: "{{ xdg_data_home }}/R/library"

@@ -1,0 +1,3 @@
+java_homebrew_packages:
+  - maven
+  - openjdk

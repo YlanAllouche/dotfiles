@@ -1,0 +1,11 @@
+- name: Ensure peripheral notes directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/peripherals"
+    state: directory
+    mode: "0755"
+
+- name: Install placeholder peripheral TODO file
+  ansible.builtin.template:
+    src: bluetooth-macs.todo.j2
+    dest: "{{ xdg_config_home }}/peripherals/bluetooth-macs.todo"
+    mode: "0644"

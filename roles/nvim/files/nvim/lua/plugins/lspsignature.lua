@@ -1,0 +1,81 @@
+return {
+	-- TODO: is this still necessary? most of the behavior seems to be implemented somewhere else now
+	--
+	--	"ray-x/lsp_signature.nvim",
+	--	event = "VeryLazy",
+	--	opts = {
+	--		bind = true,
+	--		handler_opts = {
+	--			border = "none",
+	--		},
+	--		hint_enable = true, -- Show virtual text hints
+	--		hint_prefix = "🔍 ", -- Prefix character for the hint
+	--		hint_scheme = "Comment", -- Highlight group for the virtual text hint
+	--		hi_parameter = "Search", -- How to highlight the current parameter
+	--		max_height = 7, -- Max height of signature floating window
+	--		max_width = 80, -- Max width of signature floating window
+	--		doc_lines = 10, -- How many lines to show in the docs
+	--		floating_window = true, -- Show signature in a floating window
+	--		floating_window_above_cur_line = true, -- Place the floating above the current line to avoid overlap
+	--		close_timeout = 4000, -- Close floating window after ms when laster parameter is entered
+	--		fix_pos = true, -- Fix floating window position when scrolling to prevent overlap
+	--		always_trigger = true, -- Trigger signature on new line or in middle of parameter
+	--		toggle_key = "<C-k>", -- Toggle signature on and off in insert mode
+	--		select_signature_key = "<M-n>", -- Cycle to next signature if multiple signatures exist
+	--		move_cursor_key = nil, -- Move cursor to signature parameter
+	--		zindex = 200, -- Z-index of the floating window (increased to show above other windows)
+	--		transparency = nil, -- 0-100 transparency
+	--		check_completion_visible = true,
+	--		shadow_blend = 36, -- Shadow blend value if using shadow
+	--		shadow_guibg = "Black", -- Shadow background color
+	--		timer_interval = 200, -- Default timer check interval
+	--		extra_trigger_chars = {}, -- Array of extra characters that trigger signature completion
+	--		padding = "", -- Character to pad on left and right of signature
+	--	},
+	--	config = function(_, opts)
+	--		-- Setup lsp_signature with the options
+	--		require("lsp_signature").setup(opts)
+	--
+	--		-- Track signature visibility state
+	--		local signature_visible = false
+	--
+	--		-- Monkey-patch the lsp_signature render function to track visibility
+	--		local lsp_sig = require("lsp_signature")
+	--		local original_close = lsp_sig.close_float
+	--
+	--		lsp_sig.close_float = function()
+	--			signature_visible = false
+	--			return original_close()
+	--		end
+	--
+	--		-- Store the original hover implementation
+	--		local original_hover = vim.lsp.buf.hover
+	--
+	--		-- Override vim.lsp.buf.hover to prevent showing when signature is visible
+	--		vim.lsp.buf.hover = function()
+	--			if signature_visible then
+	--				vim.notify("LSP signature help is currently active", vim.log.levels.INFO)
+	--				return
+	--			end
+	--			return original_hover()
+	--		end
+	--
+	--		-- Monitor signature help window
+	--		vim.api.nvim_create_autocmd("User", {
+	--			pattern = "lsp_signature_help_opened",
+	--			callback = function()
+	--				signature_visible = true
+	--			end,
+	--		})
+	--
+	--		vim.api.nvim_create_autocmd("User", {
+	--			pattern = "lsp_signature_help_closed",
+	--			callback = function()
+	--				signature_visible = false
+	--			end,
+	--		})
+	--	end,
+	--	dependencies = {
+	--		"neovim/nvim-lspconfig", -- Make sure lspconfig is loaded first
+	--	},
+}

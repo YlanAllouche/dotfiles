@@ -1,0 +1,33 @@
+{
+	"name": "nvim-snippets",
+	"version": "1.0.0",
+	"description": "Custom snippets for Neovim",
+	"contributes": {
+		"snippets": [
+			{
+				"language": "javascript",
+				"path": "./javascript/javascript.json"
+			},
+			{
+				"language": "javascriptreact",
+				"path": "./javascript/javascript.json"
+			},
+			{
+				"language": "typescript",
+				"path": "./typescript/typescript.json"
+			},
+			{
+				"language": "typescriptreact",
+				"path": "./typescript/typescript.json"
+			},
+			{
+				"language": "svelte",
+				"path": "./svelte/svelte.json"
+			},
+			{
+				"language": "vue",
+				"path": "./vue/vue.json"
+			}
+		]
+	}
+}

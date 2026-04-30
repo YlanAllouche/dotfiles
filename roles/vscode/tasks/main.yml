@@ -1,0 +1,42 @@
+- name: Install VS Code OSS on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ vscode_arch_pacman_package }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - vscode_arch_source == 'pacman'
+
+- name: Install VS Code through yay on Arch
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ vscode_arch_aur_package }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - vscode_arch_source == 'aur'
+    - aur_install_method == 'yay'
+
+- name: Install VS Code through pacman on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ vscode_arch_aur_package }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - vscode_arch_source == 'aur'
+    - aur_install_method == 'pacman'
+
+- name: Install VS Code on macOS
+  community.general.homebrew_cask:
+    name: "{{ vscode_homebrew_casks }}"
+    state: present
+  when: is_macos | bool
+
+- name: Ensure VS Code config skeleton directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/Code - OSS/User"
+    state: directory
+    mode: "0755"

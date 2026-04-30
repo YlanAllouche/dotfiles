@@ -1,0 +1,24 @@
+- name: Ensure Claude Code config directory exists
+  ansible.builtin.file:
+    path: "{{ active_home }}/.claude"
+    state: directory
+    mode: "0755"
+
+- name: Install Claude Code through npm
+  become: true
+  community.general.npm:
+    name: "{{ llm_claudecode_npm_package }}"
+    global: true
+    state: present
+  when:
+    - ecmascript_enabled | bool
+    - is_archlinux | bool
+
+- name: Install Claude Code through npm on macOS
+  community.general.npm:
+    name: "{{ llm_claudecode_npm_package }}"
+    global: true
+    state: present
+  when:
+    - ecmascript_enabled | bool
+    - is_macos | bool

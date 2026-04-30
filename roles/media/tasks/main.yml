@@ -1,0 +1,45 @@
+- name: Install media packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ media_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install media packages on macOS
+  community.general.homebrew:
+    name: "{{ media_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Ensure media config directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ xdg_config_home }}/mpd"
+    - "{{ xdg_config_home }}/ncmpcpp"
+
+- name: Install media helper scripts
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ local_bin_dir }}/{{ item.dest }}"
+    mode: "0755"
+  loop:
+    - src: bin/video-picker.py
+      dest: video-picker.py
+    - src: bin/kodiyt
+      dest: kodiyt
+
+- name: Install experimental playlist helper when enabled
+  ansible.builtin.copy:
+    src: bin/playlist-maker
+    dest: "{{ local_bin_dir }}/playlist-maker"
+    mode: "0755"
+  when: media_playlist_tools_enabled | bool
+
+- name: Install Jellyfin playback helper
+  ansible.builtin.template:
+    src: jelly_play_yt.j2
+    dest: "{{ local_bin_dir }}/jelly_play_yt"
+    mode: "0755"

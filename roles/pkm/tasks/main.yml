@@ -1,0 +1,88 @@
+- name: Install PKM packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ pkm_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install PKM packages on macOS
+  community.general.homebrew_cask:
+    name: "{{ pkm_homebrew_casks }}"
+    state: present
+  when: is_macos | bool
+
+- name: Install PKM helper scripts
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ local_bin_dir }}/{{ item.dest }}"
+    mode: "0755"
+  loop:
+    - src: bin/refreshQueries.sh
+      dest: refreshQueries.sh
+    - src: bin/capturemd
+      dest: capturemd
+    - src: bin/obsi-dash
+      dest: obsi-dash
+
+- name: Install PKM Python packages
+  ansible.builtin.pip:
+    name: "{{ pkm_python_packages }}"
+    extra_args: --user --break-system-packages
+    executable: pip3
+  when: is_archlinux | bool
+
+- name: Install PKM Python packages on macOS
+  ansible.builtin.pip:
+    name: "{{ pkm_python_packages }}"
+    extra_args: --user
+    executable: pip3
+  when: is_macos | bool
+
+- name: Ensure Obsidian config directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/obsidian"
+    state: directory
+    mode: "0755"
+
+- name: Install Obsidian app config
+  ansible.builtin.template:
+    src: obsidian.json.j2
+    dest: "{{ xdg_config_home }}/obsidian/obsidian.json"
+    mode: "0644"
+
+- name: Install PKM-specific Neovim overlays
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: nvim/dataview_picker.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/dataview_picker.lua"
+    - src: nvim/telescope.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/plugins/telescope.lua"
+    - src: nvim/markdown/attachment.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/attachment.lua"
+    - src: nvim/markdown/bookmark_picker.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/bookmark_picker.lua"
+    - src: nvim/markdown/bookmarks.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/bookmarks.lua"
+    - src: nvim/markdown/insertinline.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/insertinline.lua"
+    - src: nvim/markdown/insertlink.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/insertlink.lua"
+    - src: nvim/markdown/journal.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/journal.lua"
+    - src: nvim/markdown/links.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/links.lua"
+    - src: nvim/markdown/markdown.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/markdown.lua"
+    - src: nvim/markdown/markdown_picker.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/markdown_picker.lua"
+    - src: nvim/markdown/markdownToggle.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/markdownToggle.lua"
+    - src: nvim/markdown/mote.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/mote.lua"
+    - src: nvim/markdown/task_utils.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/task_utils.lua"
+    - src: nvim/markdown/title.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/title.lua"

@@ -1,0 +1,16 @@
+- name: Install Podman on Arch
+  become: true
+  community.general.pacman:
+    name: podman
+    state: present
+  when:
+    - is_archlinux | bool
+    - oci_podman_enabled | bool
+
+- name: Install Podman on macOS
+  community.general.homebrew:
+    name: podman
+    state: present
+  when:
+    - is_macos | bool
+    - oci_podman_enabled | bool

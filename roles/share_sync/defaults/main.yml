@@ -1,0 +1,1 @@
+share_sync_root: "{{ active_home }}/share"

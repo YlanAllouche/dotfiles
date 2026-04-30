@@ -1,0 +1,7 @@
+nvim_arch_packages:
+  - neovim
+  - python-pip
+
+nvim_homebrew_packages:
+  - neovim
+  - python

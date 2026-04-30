@@ -1,0 +1,72 @@
+{
+	"Console Log (JSON)": {
+		"prefix": "jclg",
+		"body": ["console.log(${1:variable});"],
+		"description": "Basic console.log snippet",
+		"scope": "javascript,typescript,javascriptreact,typescriptreact"
+	},
+	"Arrow Function (JSON)": {
+		"prefix": "jarfn",
+		"body": [
+			"/**",
+			" * ${1:functionName}",
+			" */",
+			"const ${1:functionName} = (${2:params}) => {",
+			"\t${3:// body}",
+			"};"
+		],
+		"description": "Arrow function with JSDoc documentation"
+	},
+	"useState Hook (JSON)": {
+		"prefix": "just",
+		"body": ["const [${1:count}, set${2:Count}] = useState(${3:0});"],
+		"description": "React useState hook (requires manual setter naming for JSON)"
+	},
+	"useEffect Hook (JSON)": {
+		"prefix": "juef",
+		"body": [
+			"useEffect(() => {",
+			"\t${1:// effect}",
+			"}, [${2:dependency}]);"
+		],
+		"description": "React useEffect hook with dependency array"
+	},
+	"useRef Hook (JSON)": {
+		"prefix": "jurf",
+		"body": ["const ${1:ref} = useRef(${2:null});"],
+		"description": "React useRef hook"
+	},
+	"Try-Catch Block (JSON)": {
+		"prefix": "jtryc",
+		"body": [
+			"try {",
+			"\t${1:// code}",
+			"} catch (error) {",
+			"\t${2:console.error(error);}",
+			"}"
+		],
+		"description": "Basic try-catch error handling"
+	},
+	"Async Arrow Function (JSON)": {
+		"prefix": "jarfnasync",
+		"body": [
+			"const ${1:functionName} = async (${2:params}) => {",
+			"\t${3:// body}",
+			"};"
+		],
+		"description": "Async arrow function"
+	},
+	"Promise Chain (JSON)": {
+		"prefix": "jprom",
+		"body": [
+			"${1:promise}",
+			".then((result) => {",
+			"\t${2:console.log(result);}",
+			"})",
+			".catch((error) => {",
+			"\t${3:console.error(error);}",
+			"})"
+		],
+		"description": "Promise with .then() and .catch()"
+	}
+}

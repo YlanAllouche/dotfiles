@@ -1,0 +1,61 @@
+- name: Install Terraform on Arch
+  become: true
+  community.general.pacman:
+    name: terraform
+    state: present
+  when:
+    - is_archlinux | bool
+    - cloud_terraform_enabled | bool
+
+- name: Install Terraform on macOS
+  community.general.homebrew:
+    name: terraform
+    state: present
+  when:
+    - is_macos | bool
+    - cloud_terraform_enabled | bool
+
+- name: Install cloud AUR tools through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: >-
+      {{
+        ([]
+          + (['aws-cli-v2-bin'] if cloud_aws_enabled else [])
+          + (['flyctl-bin'] if cloud_fly_enabled else []))
+      }}
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
+    - cloud_aws_enabled | bool or cloud_fly_enabled | bool
+
+- name: Install cloud AUR tools through pacman
+  become: true
+  community.general.pacman:
+    name: >-
+      {{
+        ([]
+          + (['aws-cli-v2-bin'] if cloud_aws_enabled else [])
+          + (['flyctl-bin'] if cloud_fly_enabled else []))
+      }}
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
+    - cloud_aws_enabled | bool or cloud_fly_enabled | bool
+
+- name: Install cloud tools on macOS
+  community.general.homebrew:
+    name: >-
+      {{
+        ([]
+          + (['awscli'] if cloud_aws_enabled else [])
+          + (['flyctl'] if cloud_fly_enabled else []))
+      }}
+    state: present
+  when:
+    - is_macos | bool
+    - cloud_aws_enabled | bool or cloud_fly_enabled | bool

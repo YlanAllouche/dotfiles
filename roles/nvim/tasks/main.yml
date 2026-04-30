@@ -1,0 +1,41 @@
+- name: Install Neovim packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ nvim_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install Neovim packages on macOS
+  community.general.homebrew:
+    name: "{{ nvim_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Ensure pynvim is installed for the active user
+  ansible.builtin.pip:
+    name: pynvim
+    extra_args: --user
+    executable: pip3
+
+- name: Ensure Neovim config directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/nvim"
+    state: directory
+    mode: "0755"
+
+- name: Install Neovim configuration tree
+  ansible.builtin.copy:
+    src: nvim/
+    dest: "{{ xdg_config_home }}/nvim/"
+    mode: preserve
+
+- name: Bootstrap Neovim plugins
+  ansible.builtin.command:
+    cmd: nvim --headless "+Lazy! sync" +qa
+  environment:
+    HOME: "{{ active_home }}"
+    XDG_CONFIG_HOME: "{{ xdg_config_home }}"
+    XDG_DATA_HOME: "{{ xdg_data_home }}"
+    XDG_STATE_HOME: "{{ xdg_state_home }}"
+    XDG_CACHE_HOME: "{{ xdg_cache_home }}"
+  when: nvim_bootstrap_plugins_enabled | bool

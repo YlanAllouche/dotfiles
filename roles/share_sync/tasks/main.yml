@@ -1,0 +1,12 @@
+- name: Install share sync packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ share_sync_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Ensure share root directory exists
+  ansible.builtin.file:
+    path: "{{ share_sync_root }}"
+    state: directory
+    mode: "0755"

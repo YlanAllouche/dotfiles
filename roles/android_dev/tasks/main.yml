@@ -1,0 +1,6 @@
+- name: Install Android platform tools on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ android_dev_arch_packages }}"
+    state: present
+  when: is_archlinux | bool

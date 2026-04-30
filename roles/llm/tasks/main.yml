@@ -1,0 +1,7 @@
+- name: Install OpenCode stack
+  ansible.builtin.include_tasks: opencode.yml
+  when: llm_opencode_enabled | bool
+
+- name: Install Claude Code stack
+  ansible.builtin.include_tasks: claudecode.yml
+  when: llm_claudecode_enabled | bool

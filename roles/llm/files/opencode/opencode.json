@@ -1,0 +1,58 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "@mohak34/opencode-notifier@0.1.14"
+  ],
+  "autoshare": false,
+  "autoupdate": true,
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 15000
+  },
+  "agent": {
+    "Manual Review": {
+      "description": "Can perform all actions, but requires user confirmation before writing to files.",
+      "tools": {
+        "bash": true,
+        "read": true,
+        "glob": true,
+        "grep": true,
+        "webfetch": true,
+        "edit": true,
+        "write": true,
+        "codesearch": true,
+        "lsp-diagnostics": true,
+        "lsp-hover": true,
+        "multiedit": true,
+        "patch": true,
+        "task": true,
+        "todo": true,
+        "websearch": true
+      },
+      "permission": {
+        "edit": "ask",
+        "bash": "ask",
+        "webfetch": "ask",
+        "doom_loop": "ask",
+        "external_directory": "ask",
+        "write": "ask"
+      }
+    }
+  },
+  "mcp": {
+    "Chrome DevTools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "chrome-devtools-mcp@latest",
+        "--browser-url=http://127.0.0.1:9222"
+      ]
+    },
+
+    "Svelte MCP": {
+      "type": "local",
+      "command": ["npx", "-y", "@sveltejs/mcp"]
+    }
+  }
+}

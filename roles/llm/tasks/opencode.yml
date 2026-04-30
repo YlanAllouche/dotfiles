@@ -1,0 +1,38 @@
+- name: Install OpenCode on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ llm_opencode_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install OpenCode on macOS
+  community.general.homebrew:
+    name: "{{ llm_opencode_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
+- name: Ensure OpenCode config directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/opencode"
+    state: directory
+    mode: "0755"
+
+- name: Install OpenCode configuration files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: opencode/opencode.json
+      dest: "{{ xdg_config_home }}/opencode/opencode.json"
+    - src: opencode/tui.json
+      dest: "{{ xdg_config_home }}/opencode/tui.json"
+    - src: opencode/opencode-notifier.json
+      dest: "{{ xdg_config_home }}/opencode/opencode-notifier.json"
+
+- name: Install OpenCode Neovim overlay
+  ansible.builtin.copy:
+    src: nvim/plugins/opencode.lua
+    dest: "{{ xdg_config_home }}/nvim/lua/plugins/opencode.lua"
+    mode: "0644"
+  when: nvim_enabled | bool

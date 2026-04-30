@@ -1,0 +1,22 @@
+#!/bin/bash
+REGEX="^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*"
+
+ID=$1
+
+if [ "$ID" == "" ];
+then
+  echo "Syntax $0 <id|url>"
+  exit
+fi
+
+if [[ $ID =~ $REGEX ]]; then
+  ID=${BASH_REMATCH[7]}
+fi
+
+echo "Sending request to play youtube video: $ID"
+
+
+# curl -s --data-binary '{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}}' -H 'content-type: application/json;' http://tv.ym:8080/jsonrpc
+curl -s --data-binary '{"jsonrpc":"2.0","id":"1","method":"Player.Open","params":{"item":{"file":"plugin://plugin.video.youtube/?action=play_video&videoid='$ID'"}}}' -H 'content-type: application/json;' http://192.168.2.128:8080/jsonrpc
+#xbmc-send --action="SetVolume(70)"
+#xbmc-send --action="PlayMedia(plugin://plugin.video.youtube/?action=play_video&videoid=$ID)"

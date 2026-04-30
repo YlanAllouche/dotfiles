@@ -1,0 +1,34 @@
+- name: Install email packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ email_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Ensure email config directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - "{{ xdg_config_home }}/neomutt"
+    - "{{ email_maildir_path }}"
+
+- name: Install public email scaffolding
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - src: mbsyncrc.j2
+      dest: "{{ active_home }}/.mbsyncrc"
+      mode: "0600"
+    - src: msmtprc.j2
+      dest: "{{ active_home }}/.msmtprc"
+      mode: "0600"
+    - src: notmuch-config.j2
+      dest: "{{ active_home }}/.notmuch-config"
+      mode: "0600"
+    - src: neomuttrc.j2
+      dest: "{{ xdg_config_home }}/neomutt/neomuttrc"
+      mode: "0644"

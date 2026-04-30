@@ -1,0 +1,28 @@
+- name: Install R packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ r_lang_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Ensure user R library directory exists
+  ansible.builtin.file:
+    path: "{{ r_lang_library_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Configure default R library path
+  ansible.builtin.copy:
+    dest: "{{ active_home }}/.Rprofile"
+    mode: "0644"
+    content: |
+      local({
+        dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+      })
+
+- name: Install default R libraries
+  ansible.builtin.command:
+    cmd: >-
+      Rscript -e "install.packages(c({{ r_lang_default_packages | map('to_json') | join(', ') }}), repos='https://cloud.r-project.org')"
+  environment:
+    R_LIBS_USER: "{{ r_lang_library_path }}"
