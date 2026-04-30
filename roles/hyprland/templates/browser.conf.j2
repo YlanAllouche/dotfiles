@@ -1,0 +1,12 @@
+env = BROWSER,browser
+
+{% if browser_personal_enabled %}
+$browser = firefox -P main
+$privateBrowser = firefox --private-window -P main
+{% else %}
+$browser = $BROWSER
+$privateBrowser = firefox --private-window
+{% endif %}
+
+bind = $mainMod, b, exec, $browser
+bind = $mainMod&Shift, b, exec, $privateBrowser

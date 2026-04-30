@@ -27,6 +27,12 @@
     - src: swaync/
       dest: "{{ xdg_config_home }}/swaync/"
 
+- name: Install Hyprland browser include
+  ansible.builtin.template:
+    src: browser.conf.j2
+    dest: "{{ xdg_config_home }}/hypr/browser.conf"
+    mode: "0644"
+
 - name: Install Hyprland helper scripts
   ansible.builtin.copy:
     src: "{{ item.src }}"
