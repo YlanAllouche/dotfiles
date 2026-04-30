@@ -1,0 +1,10 @@
+[Unit]
+Description=Hyprland session
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/start-hyprland
+Restart=no
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,14 @@
+set recolor "true"
+set default-bg rgba(0,0,0,0.7)
+set recolor-lightcolor {{ appearance_theme_special.background | to_json }}
+set recolor-darkcolor {{ appearance_theme_special.foreground | to_json }}
+set adjust-open "width"
+set guioptions ""
+set first-page-column 1:2
+
+set completion-bg {{ appearance_theme_special.background | to_json }}
+set completion-bg-highlight {{ appearance_theme_colors.color0 | to_json }}
+set completion-bg-group {{ appearance_theme_special.background | to_json }}
+set completion-fg {{ appearance_theme_special.foreground | to_json }}
+set completion-fg-highlight {{ appearance_theme_colors.color4 | to_json }}
+set completion-fg-group {{ appearance_theme_special.foreground | to_json }}

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -eu
+
+if [ "${XDG_VTNR:-}" != "1" ]; then
+  exit 0
+fi
+
+export XDG_CURRENT_DESKTOP=Hyprland
+export XDG_SESSION_DESKTOP=Hyprland
+export XDG_SESSION_TYPE=wayland
+export MOZ_ENABLE_WAYLAND=1
+export QT_QPA_PLATFORM=wayland
+
+exec dbus-run-session Hyprland

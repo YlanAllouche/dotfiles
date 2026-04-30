@@ -1,0 +1,7 @@
+@define-color foreground {{ appearance_theme_special.foreground }};
+@define-color background {{ appearance_theme_special.background }};
+@define-color cursor {{ appearance_theme_special.cursor }};
+
+{% for key, value in appearance_theme_colors.items() -%}
+@define-color {{ key }} {{ value }};
+{% endfor %}

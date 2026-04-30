@@ -1,0 +1,41 @@
+set recolor "true"
+set default-bg rgba(0,0,0,0.7)
+set recolor-lightcolor rgba(0,0,0,0)
+set adjust-open "width"
+set guioptions ""
+set first-page-column 1:2
+
+# set recolor true
+# set adjust-open "width-mode"
+# set guioptions none
+# set recolor-lightcolor "#10192a"
+# set recolor-darkcolor "#DA8D7A"
+# set default-bg "#10192a"
+# 
+# map <C-e> exec "devour evince '$FILE'"
+# 
+# set completion-bg "#10192a"
+# set completion-bg-highlight "#10192a"
+# set completion-bg-group "#10192a"
+# 
+# set completion-fg "#DA8D7A"
+# set completion-fg-highlight "#DA8D7A"
+# set completion-fg-group "#DA8D7A"
+
+# set recolor true
+# set adjust-open "width-mode"
+# set guioptions none
+# set recolor-lightcolor "{color0}"
+# set recolor-darkcolor "{color1}"
+# set default-bg "{color0}"
+# 
+# map <C-e> exec "devour evince '$FILE'"
+# 
+# set completion-bg "{color0}"
+# set completion-bg-highlight "{color0}"
+# set completion-bg-group "{color0}"
+# 
+# set completion-fg "{color1}"
+# set completion-fg-highlight "{color1}"
+# set completion-fg-group "{color1}"
+

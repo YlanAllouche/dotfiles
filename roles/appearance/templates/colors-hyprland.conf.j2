@@ -1,0 +1,7 @@
+$foreground = rgb({{ appearance_theme_special.foreground | replace('#', '') }})
+$background = rgb({{ appearance_theme_special.background | replace('#', '') }})
+$wallpaper = rgb({{ appearance_theme_special.background | replace('#', '') }})
+
+{% for key, value in appearance_theme_colors.items() %}
+{{ '$' ~ key }} = rgb({{ value | replace('#', '') }})
+{% endfor %}

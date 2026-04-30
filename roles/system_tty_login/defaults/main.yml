@@ -1,0 +1,1 @@
+system_tty_login_getty_override_dir: /etc/systemd/system/getty@tty1.service.d

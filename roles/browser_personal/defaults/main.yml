@@ -1,0 +1,5 @@
+browser_personal_aur_packages:
+  - firefox-tridactyl-native
+
+browser_personal_homebrew_casks:
+  - bitwarden

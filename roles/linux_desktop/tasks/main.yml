@@ -1,0 +1,68 @@
+- name: Install Linux desktop packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ linux_desktop_arch_packages }}"
+    state: present
+
+- name: Install Linux desktop AUR packages through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ linux_desktop_aur_packages }}"
+    state: present
+  when: aur_install_method == 'yay'
+
+- name: Install Linux desktop AUR packages through pacman
+  become: true
+  community.general.pacman:
+    name: "{{ linux_desktop_aur_packages }}"
+    state: present
+  when: aur_install_method == 'pacman'
+
+- name: Ensure Linux desktop config directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ xdg_config_home }}/kitty"
+    - "{{ xdg_config_home }}/pacmixer"
+    - "{{ xdg_config_home }}/wofi"
+    - "{{ xdg_config_home }}/zathura"
+
+- name: Install Linux desktop configuration trees
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: preserve
+  loop:
+    - src: kitty/
+      dest: "{{ xdg_config_home }}/kitty/"
+    - src: pacmixer/
+      dest: "{{ xdg_config_home }}/pacmixer/"
+    - src: wofi/
+      dest: "{{ xdg_config_home }}/wofi/"
+
+- name: Install Zathura configuration
+  ansible.builtin.template:
+    src: zathurarc.j2
+    dest: "{{ xdg_config_home }}/zathura/zathurarc"
+    mode: "0644"
+
+- name: Install Linux desktop helper scripts
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ local_bin_dir }}/{{ item.dest }}"
+    mode: "0755"
+  loop:
+    - src: bin/generate_image
+      dest: generate_image
+    - src: bin/img-clip.sh
+      dest: img-clip.sh
+    - src: bin/ocr-ss.sh
+      dest: ocr-ss.sh
+    - src: bin/rec
+      dest: rec
+    - src: bin/record
+      dest: record

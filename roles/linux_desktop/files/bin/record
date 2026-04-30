@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+
+STATE_FILE="/tmp/wf-recorder.state"
+RECORDINGS_DIR="${HOME}/Media/Recordings"
+mkdir -p "$RECORDINGS_DIR"
+
+recording_active() {
+    if [[ -f "$STATE_FILE" ]]; then
+        local pid=$(head -n1 "$STATE_FILE")
+        kill -0 "$pid" 2>/dev/null
+    else
+        return 1
+    fi
+}
+
+get_recording_info() {
+    if [[ -f "$STATE_FILE" ]]; then
+        tail -n1 "$STATE_FILE"
+    fi
+}
+
+get_recording_pid() {
+    if [[ -f "$STATE_FILE" ]]; then
+        head -n1 "$STATE_FILE"
+    fi
+}
+
+start_recording() {
+    local target="$1"
+    
+    if recording_active; then
+        local current_file=$(get_recording_info)
+        notify-send "Recording already in progress" "$current_file"
+        exit 1
+    fi
+    
+    local output_file="${RECORDINGS_DIR}/$(date +%Y-%m-%d_%H-%M-%S).mp4"
+    
+    case "$target" in
+        "screen")
+            wf-recorder -a -f "$output_file" &>/dev/null &
+            local pid=$!
+            echo -e "$pid\n$output_file" > "$STATE_FILE"
+            notify-send "Recording started" "Screen recording: $output_file"
+            ;;
+        "area")
+            local geometry=$(slurp)
+            if [[ -z "$geometry" ]]; then
+                notify-send "Recording cancelled" "No area selected"
+                exit 1
+            fi
+            wf-recorder -a -g "$geometry" -f "$output_file" &>/dev/null &
+            local pid=$!
+            echo -e "$pid\n$output_file" > "$STATE_FILE"
+            notify-send "Recording started" "Area recording: $output_file"
+            ;;
+        *)
+            echo "Usage: $0 start <screen|area>"
+            exit 1
+            ;;
+    esac
+}
+
+stop_recording() {
+    local convert_to_gif=false
+    
+    # Check for --gif flag
+    if [[ "$1" == "--gif" ]]; then
+        convert_to_gif=true
+    fi
+    
+    if ! recording_active; then
+        notify-send "No recording in progress" "Nothing to stop"
+        exit 1
+    fi
+    
+    local pid=$(get_recording_pid)
+    local output_file=$(get_recording_info)
+    
+    # Kill the specific PID
+    kill -TERM "$pid" 2>/dev/null
+    
+    # Wait a moment for graceful shutdown
+    sleep 1
+    
+    # Force kill if still running
+    if kill -0 "$pid" 2>/dev/null; then
+        kill -KILL "$pid" 2>/dev/null
+    fi
+    
+    echo "$output_file" | wl-copy
+    
+    if [[ "$convert_to_gif" == true ]]; then
+        notify-send "Recording stopped" "Converting to GIF: $output_file"
+        convert_recording_to_gif "$output_file"
+    else
+        notify-send "Recording stopped" "$output_file"
+    fi
+    
+    rm -f "$STATE_FILE"
+}
+
+convert_recording_to_gif() {
+    local input_file="$1"
+    local output_file="${input_file%.mp4}_high_quality.gif"
+    
+    if [[ ! -f "$input_file" ]]; then
+        notify-send "GIF Conversion Error" "Input file not found: $input_file"
+        return 1
+    fi
+    
+    # High quality version (1280px, standard color optimization)
+    # Specs: 1280x696 resolution, 10fps, Floyd-Steinberg dithering
+    ffmpeg -i "$input_file" \
+        -filter_complex "fps=10,scale=1280:-1:flags=lanczos" \
+        -an "$output_file" -y &>/dev/null
+    
+    if [[ $? -eq 0 ]]; then
+        echo "$output_file" | wl-copy
+        notify-send "GIF Conversion Complete" "$output_file"
+        echo "$output_file"
+    else
+        notify-send "GIF Conversion Failed" "Error converting $input_file"
+        return 1
+    fi
+}
+
+# Uncomment below for dithered version (better text clarity, larger file ~809KB)
+# convert_recording_to_gif_dithered() {
+#     local input_file="$1"
+#     local output_file="${input_file%.mp4}_dithered.gif"
+#
+#     if [[ ! -f "$input_file" ]]; then
+#         notify-send "GIF Conversion Error" "Input file not found: $input_file"
+#         return 1
+#     fi
+#
+#     # Dithered version (1280px, Bayer dithering for best text clarity)
+#     # Specs: 1280x696 resolution, 10fps, Bayer dithering, ~809KB file size
+#     ffmpeg -i "$input_file" \
+#         -filter_complex "fps=10,scale=1280:-1:flags=lanczos,split[p][tmp];[p]palettegen=max_colors=256[palette];[tmp][palette]paletteuse=dither=bayer" \
+#         -an "$output_file" -y &>/dev/null
+#
+#     if [[ $? -eq 0 ]]; then
+#         echo "$output_file" | wl-copy
+#         notify-send "GIF Conversion Complete (Dithered)" "$output_file"
+#         echo "$output_file"
+#     else
+#         notify-send "GIF Conversion Failed" "Error converting $input_file"
+#         return 1
+#     fi
+# }
+
+status_recording() {
+    if recording_active; then
+        local output_file=$(get_recording_info)
+        local pid=$(get_recording_pid)
+        echo "Recording in progress (PID: $pid): $output_file"
+    else
+        echo "No recording in progress"
+    fi
+}
+
+case "$1" in
+    "start")
+        start_recording "$2"
+        ;;
+    "stop")
+        stop_recording "$2"
+        ;;
+    "status")
+        status_recording
+        ;;
+    *)
+        echo "Usage: $0 <start|stop|status> [options]"
+        echo ""
+        echo "Actions:"
+        echo "  start screen       - Record primary screen"
+        echo "  start area         - Record selected area"
+        echo "  stop               - Stop current recording"
+        echo "  stop --gif         - Stop and convert to GIF (high quality)"
+        echo "  status             - Check recording status"
+        echo ""
+        echo "GIF Conversion:"
+        echo "  High Quality:      1280×696, 10fps, ~383KB"
+        echo "  (Dithered version available in script comments, ~809KB)"
+        exit 1
+        ;;
+esac

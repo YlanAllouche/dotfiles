@@ -1,0 +1,29 @@
+set editorcmd kitty /sbin/nvim
+# unbind <C-b>
+# unbind <C-y>
+unbind f1
+unbind <f1>
+bind --mode=insert <A-e> editor
+# FIX: currently does not insert multiline it seems
+bind ,p hint -W mpvsafe
+bind gd tabdetach
+bind <Space><Space> tab #
+bind gr reader
+bind gR reader --tab
+bind t fillcmdline tabopen
+bind w fillcmdline winopen
+bind b fillcmdline buffer 
+bind T fillcmdline tabgrab 
+bind W fillcmdline winmerge 
+bind x tabclose
+bind <Space><Esc> tabonly
+# set newtab https://llm.llama-elver.ts.net/
+# set newtab https://google.com/
+set searchurls.yt https://www.youtube.com/results?search_query=
+# TODO: make thangs.com work with scope=all parameter
+set searchurls.th https://thangs.com/search/
+# TODO: Make the new tab more functional as well
+# TODO: need picker
+bind --mode=browser <C-.> sidebartoggle
+bind ,b composite get_current_url | js -p tri.excmds.shellescape(JS_ARG).then(url => tri.excmds.exclaim_quiet('notify-send Captured && ~/.local/bin/capturemd url ' + url))
+bind ,B hint -qW js -p tri.excmds.shellescape(JS_ARG).then(url => tri.excmds.exclaim('notify-send "Captured target link" && ~/.local/bin/capturemd url ' + url))

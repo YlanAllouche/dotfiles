@@ -1,0 +1,281 @@
+@import url("../../.cache/wal/colors-waybar.css");
+
+/* ----------------------------------------------------- */
+/* Basic Waybar Styling                                  */
+/* ----------------------------------------------------- */
+
+* {
+  font-size: 12px;
+  font-family: "CodeNewRoman Nerd Font Propo", monospace;
+  margin: 0;
+  padding: 0;
+  border-radius: 0px;
+  box-shadow: none;
+  text-shadow: none;
+  transition: all 0.2s ease-in-out;
+}
+
+window#waybar {
+  background-color: @background;
+  color: @foreground;
+  border-radius: 0px;
+  padding: 0px;
+  margin: 0px;
+  border-top: 0px solid @color7;
+  border-bottom: 0px solid @color7;
+  min-height: 18px; /* Adjust this to your preferred Waybar height */
+}
+
+/* ----------------------------------------------------- */
+/* Module Groups (Left, Center, Right)                   */
+/* ----------------------------------------------------- */
+
+.modules-left,
+.modules-center {
+  /* No changes here */
+  padding: 0px;
+  margin: 0px;
+  border-radius: 0px;
+  background-color: transparent;
+  min-height: inherit;
+}
+
+.modules-right {
+  /* ADDED LEFT PADDING HERE */
+  padding: 0px 0px 0px 10px; /* Top Right Bottom Left: 0 0 0 10px */
+  margin: 0px;
+  border-radius: 0px;
+  background-color: transparent;
+  min-height: inherit;
+}
+
+/* ----------------------------------------------------- */
+/* Tooltips                                              */
+/* ----------------------------------------------------- */
+
+tooltip {
+  background-color: @color0;
+  color: @color7;
+  border-radius: 0px;
+  border: 1px solid @color8;
+  padding: 8px 10px;
+  box-shadow: none;
+}
+
+/* ----------------------------------------------------- */
+/* Generic Module Item Styling                           */
+/* ----------------------------------------------------- */
+
+#clock,
+#custom-pacman,
+#custom-notification,
+#bluetooth,
+#network,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#custom-endpoint,
+#group-expand,
+#custom-expand,
+#custom-colorpicker,
+#tray > box > * {
+  padding: 7px 10px; /* Example: 7px top/bottom, 10px left/right */
+  color: @foreground;
+  background-color: transparent;
+  border-radius: 0px;
+}
+
+#pulseaudio-slider trough {
+  margin-top: 7px; /* Align with other modules' vertical padding */
+  margin-bottom: 7px;
+}
+
+/* ----------------------------------------------------- */
+/* Hover Effects for Modules                             */
+/* ----------------------------------------------------- */
+
+#clock:hover,
+#custom-pacman:hover,
+#custom-notification:hover,
+#bluetooth:hover,
+#network:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#custom-endpoint:hover,
+#custom-colorpicker:hover,
+#group-expand:hover,
+#custom-expand:hover,
+#tray > box > *:hover {
+  color: @color9;
+  background-color: @color0;
+}
+
+/* ----------------------------------------------------- */
+/* Workspaces Specific Styling - REFINED                 */
+/* ----------------------------------------------------- */
+
+#workspaces {
+  padding: 0px;
+  background-color: transparent;
+  min-height: inherit;
+}
+
+#workspaces button {
+  all: unset;
+  padding: 0px 3px;
+  margin: -5px 0px;
+  min-width: 20px;
+  font-size: 50px;
+  color: @color16;
+  background-color: transparent;
+  border-radius: 0px;
+}
+
+/* Workspace is EMPTY (no windows) */
+#workspaces button.empty {
+  color: @color8;
+  background-color: transparent;
+}
+
+/* Workspace is OCCUPIED (contains windows but not active) */
+#workspaces button.occupied {
+  color: @color2;
+  background-color: transparent;
+}
+
+/* Workspace is ACTIVE (currently focused) */
+#workspaces button.active {
+  color: @color4;
+  background-color: transparent;
+}
+
+/* Workspace is URGENT (e.g., app needs attention) */
+#workspaces button.urgent {
+  color: @color1;
+}
+
+/* Hover over ANY workspace button */
+#workspaces button:hover {
+  color: @color1;
+  background-color: @color0;
+}
+
+/* ----------------------------------------------------- */
+/* Battery Specific Styling                              */
+/* ----------------------------------------------------- */
+
+#battery.charging {
+  color: @color6;
+}
+
+#battery.warning:not(.charging) {
+  color: @color4;
+}
+
+#battery.critical:not(.charging) {
+  color: @color1;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink {
+  to {
+    color: @foreground;
+  }
+}
+
+/* ----------------------------------------------------- */
+/* Custom Modules (Expanders, Colorpicker)               */
+/* ----------------------------------------------------- */
+
+#custom-expand {
+  color: @color8;
+}
+
+/* ----------------------------------------------------- */
+/* System Tray Styling                                   */
+/* ----------------------------------------------------- */
+
+#tray {
+  padding: 0px;
+  background-color: transparent;
+  min-height: inherit;
+}
+
+#tray > box > * {
+  padding: 7px 8px;
+  color: @foreground;
+  background-color: transparent;
+}
+
+/* ----------------------------------------------------- */
+/* Pulseaudio Slider Styling                             */
+/* ----------------------------------------------------- */
+
+#pulseaudio-slider slider {
+  min-height: 0px;
+  min-width: 0px;
+  opacity: 0;
+  background-image: none;
+  border: none;
+}
+
+#pulseaudio-slider trough {
+  min-height: 10px;
+  min-width: 80px;
+  border-radius: 0px;
+  background-color: @color0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+#pulseaudio-slider highlight {
+  min-width: 10px;
+  border-radius: 0px;
+  background-color: @color6;
+}
+
+/* ----------------------------------------------------- */
+/* Custom CPU and Memory Gauge Styling                  */
+/* ----------------------------------------------------- */
+
+#custom-cpu,
+#custom-memory {
+  padding: 7px 10px;
+  color: @foreground;
+  background-color: transparent;
+  border-radius: 0px;
+  min-width: 60px;
+}
+
+#custom-cpu:hover,
+#custom-memory:hover {
+  color: @color9;
+  background-color: @color0;
+}
+
+/* ----------------------------------------------------- */
+/* Custom Notification Styling                          */
+/* ----------------------------------------------------- */
+
+#custom-notification {
+  padding: 7px 10px;
+  color: @foreground;
+  background-color: transparent;
+  border-radius: 0px;
+  font-size: 15px;
+  min-width: 20px;
+}
+
+#custom-notification:hover {
+  color: @color9;
+  background-color: @color0;
+}

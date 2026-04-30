@@ -1,0 +1,193 @@
+{
+  "type": "popsicle",
+  "seed": 3323534893,
+  "width": 1920,
+  "height": 1080,
+  "colors": [
+    "#e41c23"
+  ],
+  "palette": {
+    "overrides": []
+  },
+  "texture": "drywall",
+  "textureParams": {
+    "drywall": {
+      "grainAmount": 0.7181314459871209,
+      "grainScale": 2.9018485325975787
+    },
+    "glass": {
+      "style": "simple"
+    },
+    "cel": {
+      "bands": 5,
+      "halftone": false
+    }
+  },
+  "voronoi": {
+    "enabled": false,
+    "space": "world",
+    "kind": "edges",
+    "scale": 9.501967205851717,
+    "seedOffset": -31,
+    "amount": 0.82,
+    "edgeWidth": 0.0755125003799216,
+    "softness": 0.6612456388356744,
+    "colorStrength": 0.25,
+    "colorMode": "lighten",
+    "tintColor": "#ffffff",
+    "materialMode": "both",
+    "materialKind": "match",
+    "roughnessStrength": 0.42,
+    "normalStrength": 0.34,
+    "normalScale": 0.7196644684328719,
+    "crackleAmount": 0,
+    "crackleScale": 14,
+    "nucleus": {
+      "enabled": false,
+      "size": 0.09,
+      "softness": 0.28,
+      "strength": 0.7,
+      "color": "#ffffff"
+    }
+  },
+  "backgroundColor": "#00324d",
+  "facades": {
+    "side": {
+      "enabled": false,
+      "tintColor": "#ffffff",
+      "tintAmount": 0,
+      "materialAmount": 0,
+      "roughness": 0.23330071936994157,
+      "metalness": 0.45822016111760266,
+      "clearcoat": 0.09413257557627719,
+      "envIntensityMult": 0.8985287688637427
+    },
+    "grazing": {
+      "enabled": false,
+      "mode": "add",
+      "color": "#ffffff",
+      "strength": 0.6214459865373954,
+      "power": 4.558031000878851,
+      "width": 0.7184752237377052,
+      "noise": 0
+    },
+    "outline": {
+      "enabled": false,
+      "color": "#0b0b10",
+      "thickness": 0.03137393269287066,
+      "opacity": 0.586428463579248
+    }
+  },
+  "edge": {
+    "hollow": false,
+    "seam": {
+      "enabled": false,
+      "color": "#0b0b10",
+      "opacity": 0.65,
+      "width": 0.02,
+      "noise": 0,
+      "emissiveIntensity": 0
+    },
+    "band": {
+      "enabled": false,
+      "color": "#ffffff",
+      "opacity": 0.25,
+      "width": 0.06,
+      "noise": 0,
+      "emissiveIntensity": 0
+    }
+  },
+  "bubbles": {
+    "enabled": false,
+    "mode": "through",
+    "interior": {
+      "enabled": true
+    },
+    "frequency": 1.8,
+    "frequencyVariance": 0.22,
+    "count": 8,
+    "radiusMin": 0.12,
+    "radiusMax": 0.38,
+    "softness": 0.06,
+    "wallThickness": 0.08,
+    "seedOffset": 0
+  },
+  "emission": {
+    "enabled": false,
+    "paletteIndex": 0,
+    "intensity": 7.581812701355568
+  },
+  "bloom": {
+    "enabled": false,
+    "strength": 1.3276897487694235,
+    "radius": 0.7882152528552614,
+    "threshold": 0.8414568361186021
+  },
+  "collisions": {
+    "mode": "none",
+    "carve": {
+      "direction": "oneWay",
+      "marginPx": 0,
+      "edge": "hard",
+      "featherPx": 0,
+      "finish": "none",
+      "finishAutoDepthMult": 1
+    }
+  },
+  "stickCount": 142,
+  "stickOverhang": 121.4835772012472,
+  "rotationCenterOffsetX": 18.42729277007038,
+  "rotationCenterOffsetY": -12.274521879030203,
+  "stickGap": 0.84,
+  "stickSize": 1.3209500023677767,
+  "stickRatio": 5.532307146047337,
+  "stickThickness": 1.198500551989961,
+  "stickEndProfile": "rounded",
+  "stickRoundness": 0.2868863184606007,
+  "stickChipAmount": 0,
+  "stickChipJaggedness": 0,
+  "stickBevel": 0.26594675724638045,
+  "stickOpacity": 1,
+  "lighting": {
+    "enabled": true,
+    "intensity": 1.8163387391223744,
+    "position": {
+      "x": 9.40918199287423,
+      "y": -0.47233714512582736,
+      "z": 3.8961679645650347
+    },
+    "ambientIntensity": 0.9677527764834251
+  },
+  "camera": {
+    "mode": "manual",
+    "padding": 0.897673067799867,
+    "distance": 26.32455673169288,
+    "zoom": 0.8366948766562363,
+    "panX": 1.9147680507864249,
+    "panY": 1.372327477638847,
+    "azimuth": 222.66953166565904,
+    "elevation": 59.639343051619086,
+    "near": 0.6954971929473662,
+    "far": 4448.361129519563
+  },
+  "environment": {
+    "enabled": true,
+    "intensity": 1.0481506687788922,
+    "rotation": 254.96819460045833,
+    "style": "studio"
+  },
+  "shadows": {
+    "enabled": true,
+    "type": "pcfsoft",
+    "mapSize": 4096,
+    "bias": -0.0008177124207195156,
+    "normalBias": 0.031356174658831594
+  },
+  "rendering": {
+    "toneMapping": "aces",
+    "exposure": 1.014174278910481
+  },
+  "geometry": {
+    "quality": 1
+  }
+}

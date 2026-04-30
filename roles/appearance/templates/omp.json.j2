@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "red": {{ appearance_theme_colors.color1 | to_json }},
+    "pink": {{ appearance_theme_colors.color5 | to_json }},
+    "purple": {{ appearance_theme_colors.color5 | to_json }},
+    "deepPurple": {{ appearance_theme_colors.color4 | to_json }},
+    "indigo": {{ appearance_theme_colors.color4 | to_json }},
+    "blue": {{ appearance_theme_colors.color4 | to_json }},
+    "lightBlue": {{ appearance_theme_colors.color6 | to_json }},
+    "cyan": {{ appearance_theme_colors.color6 | to_json }},
+    "teal": {{ appearance_theme_colors.color6 | to_json }},
+    "green": {{ appearance_theme_colors.color2 | to_json }},
+    "lightGreen": {{ appearance_theme_colors.color2 | to_json }},
+    "lime": {{ appearance_theme_colors.color3 | to_json }},
+    "yellow": {{ appearance_theme_colors.color3 | to_json }},
+    "amber": {{ appearance_theme_colors.color3 | to_json }},
+    "orange": {{ appearance_theme_colors.color1 | to_json }},
+    "deepOrange": {{ appearance_theme_colors.color1 | to_json }},
+    "brown": {{ appearance_theme_colors.color1 | to_json }},
+    "grey": {{ appearance_theme_colors.color8 | to_json }},
+    "blueGrey": {{ appearance_theme_colors.color8 | to_json }},
+    "white": {{ appearance_theme_special.foreground | to_json }},
+    "black": {{ appearance_theme_special.background | to_json }}
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        { "template": "┌──", "foreground": "p:white", "type": "text", "style": "plain" },
+        { "template": "{{ '{{ .UserName }}' }}", "foreground": "p:green", "type": "session", "style": "plain" },
+        { "template": "@", "foreground": "p:red", "type": "text", "style": "plain" },
+        { "template": "{{ '{{ .HostName }}' }}", "foreground": "p:blue", "type": "session", "style": "plain" },
+        { "template": "$", "foreground": "p:red", "type": "text", "style": "plain" },
+        { "properties": { "style": "folder" }, "foreground": "p:amber", "type": "path", "style": "plain" },
+        { "template": " <b>{{ '{{ .HEAD }}' }}</b> ", "foreground": "p:black", "background": "p:white", "type": "git", "style": "plain" }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "right",
+      "segments": [
+        { "type": "text", "style": "powerline", "foreground": "p:background", "background": "p:yellow", "template": "{{ '{{ if .Env.RANGER_LEVEL }} \uF0C6 {{ .Env.RANGER_LEVEL }} {{ end }}' }}" }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        { "template": "└─╼ ", "foreground": "p:white", "type": "text", "style": "plain" }
+      ],
+      "newline": true
+    }
+  ],
+  "version": 3,
+  "final_space": true
+}

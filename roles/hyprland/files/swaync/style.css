@@ -1,0 +1,392 @@
+/* Import pywal colors */
+@import url('../../.cache/wal/colors-waybar.css');
+
+/* Reset all default styling - match waybar */
+* {
+    font-size: 15px;
+    font-family: "CodeNewRoman Nerd Font Propo", monospace;
+    margin: 0;
+    padding: 0;
+    border-radius: 0px;
+    box-shadow: none;
+    text-shadow: none;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+}
+
+/* Control Center - flat, sharp, no transparency */
+.control-center {
+    background-color: @background;
+    color: @foreground;
+    border-radius: 0px;
+    border: 1px solid @color8;
+    padding: 0px;
+    margin: 0px;
+    box-shadow: none;
+}
+
+.control-center .notification-row {
+    background-color: unset;
+    border-radius: 0px;
+}
+
+/* Notifications - flat background, no transparency */
+.notification {
+    background-color: @background;
+    border-radius: 0px;
+}
+
+.control-center .notification-row .notification-background .notification {
+    margin: 0px;
+    margin-bottom: 1px;
+    box-shadow: none;
+    background-color: @background;
+    border-radius: 0px;
+    border-bottom: 1px solid @color8;
+}
+
+.floating-notifications .notification {
+    background-color: @background;
+    border-radius: 0px;
+    border: 1px solid @color8;
+    box-shadow: none;
+    animation: none;
+}
+
+.control-center .notification-row .notification-background .notification box,
+.control-center .notification-row .notification-background .notification widget,
+.control-center .notification-row .notification-background .notification .notification-content,
+.floating-notifications .notification-row .notification-background .notification box,
+.floating-notifications .notification-row .notification-background .notification widget,
+.floating-notifications.background .notification-background .notification .notification-content {
+    border-radius: 0px;
+    background-color: transparent;
+}
+
+.notification widget:hover {
+    background-color: @color0;
+    color: @color9;
+}
+
+.floating-notifications.background .notification-background .notification .notification-content,
+.control-center .notification-background .notification .notification-content {
+    padding: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+    margin: 0px;
+}
+
+/* Notification Content */
+.control-center .notification-row .notification-background .notification.low .notification-content label,
+.control-center .notification-row .notification-background .notification.normal .notification-content label,
+.floating-notifications.background .notification-background .notification.low .notification-content label,
+.floating-notifications.background .notification-background .notification.normal .notification-content label {
+    padding: 0px;
+    color: @foreground;
+}
+
+.control-center .notification-row .notification-background .notification.low .notification-content image,
+.control-center .notification-row .notification-background .notification.normal .notification-content image,
+.floating-notifications.background .notification-background .notification.low .notification-content image,
+.floating-notifications.background .notification-background .notification.normal .notification-content image {
+    background-color: transparent;
+}
+
+.control-center .notification-row .notification-background .notification.low .notification-content .body,
+.control-center .notification-row .notification-background .notification.normal .notification-content .body,
+.floating-notifications.background .notification-background .notification.low .notification-content .body,
+.floating-notifications.background .notification-background .notification.normal .notification-content .body {
+    color: @foreground;
+}
+
+/* Critical Notifications - match waybar hover style */
+.control-center .notification-row .notification-background .notification.critical .notification-content,
+.floating-notifications.background .notification-background .notification.critical .notification-content {
+    background-color: @color1;
+    color: @background;
+}
+
+.control-center .notification-row .notification-background .notification.critical .notification-content image,
+.floating-notifications.background .notification-background .notification.critical .notification-content image {
+    background-color: transparent;
+    color: inherit;
+}
+
+.control-center .notification-row .notification-background .notification.critical .notification-content label,
+.floating-notifications.background .notification-background .notification.critical .notification-content label {
+    color: @background;
+}
+
+.notification-content {
+    padding: 0px;
+}
+
+/* Text Styling */
+.control-center .notification-row .notification-background .notification .notification-content .summary,
+.floating-notifications.background .notification-background .notification .notification-content .summary {
+    font-family: 'CodeNewRoman Nerd Font Propo';
+    font-size: 15px;
+    font-weight: 500;
+    color: @foreground;
+}
+
+.control-center .notification-row .notification-background .notification .notification-content .time,
+.floating-notifications.background .notification-background .notification .notification-content .time {
+    font-size: 13px;
+    font-weight: 400;
+    margin: 0px;
+    padding: 0px;
+    color: @color8;
+}
+
+.control-center .notification-row .notification-background .notification .notification-content .body,
+.floating-notifications.background .notification-background .notification .notification-content .body {
+    font-family: 'CodeNewRoman Nerd Font Propo';
+    font-size: 13px;
+    font-weight: 400;
+    margin: 5px 0px 0px 0px;
+    padding: 0px;
+    color: @foreground;
+}
+
+/* Close Button - flat */
+.control-center .notification-row .close-button,
+.floating-notifications.background .close-button {
+    all: unset;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 5px 10px;
+    color: @foreground;
+    min-height: unset;
+    min-width: unset;
+}
+
+.control-center .notification-row .close-button:hover,
+.floating-notifications.background .close-button:hover {
+    all: unset;
+    background-color: @color0;
+    color: @color9;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 0px;
+}
+
+/* Widget Title */
+.widget-title {
+    padding: 10px;
+    margin: 0px;
+    color: @foreground;
+    background-color: @color0;
+    border-bottom: 1px solid @color8;
+}
+
+.widget-title > button {
+    padding: 5px 10px;
+    margin: 0px;
+    font-size: 15px;
+    color: @foreground;
+    text-shadow: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.widget-title > button:hover {
+    background-color: @color0;
+    color: @color9;
+    border: none;
+    box-shadow: none;
+}
+
+/* Widget Label */
+.widget-label {
+    padding: 10px;
+    margin: 0px;
+    border-bottom: 1px solid @color8;
+}
+
+.widget-label > label {
+    font-size: 15px;
+    color: @foreground;
+}
+
+/* MPRIS Player */
+.widget-mpris .widget-mpris-player {
+    padding: 10px;
+    margin: 0px;
+    background-color: @color0;
+    border-radius: 0px;
+    border-bottom: 1px solid @color8;
+    box-shadow: none;
+}
+
+.widget-mpris .widget-mpris-player button {
+    color: @foreground;
+    text-shadow: none;
+    border-radius: 0px;
+    border: none;
+    background-color: transparent;
+    padding: 5px 10px;
+    margin: 0px;
+    transition: all 0.2s ease-in-out;
+}
+
+.widget-mpris .widget-mpris-player button:hover {
+    all: unset;
+    background-color: @color0;
+    color: @color9;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 0px;
+}
+
+.widget-mpris .widget-mpris-player button:not(.selected) {
+    background-color: transparent;
+    border: none;
+}
+
+.widget-mpris .widget-mpris-player .widget-mpris-album-art {
+    border-radius: 0px;
+    box-shadow: none;
+    background-color: @color0;
+}
+
+.widget-mpris .widget-mpris-player .widget-mpris-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: @foreground;
+}
+
+.widget-mpris .widget-mpris-player .widget-mpris-subtitle {
+    font-size: 13px;
+    color: @color8;
+}
+
+.widget-mpris .widget-mpris-player > box > button:hover {
+    background-color: @color0;
+}
+
+/* Buttons Grid */
+.widget-buttons-grid {
+    font-family: "CodeNewRoman Nerd Font Propo";
+    padding: 0px;
+    margin: 0px;
+    border-radius: 0px;
+    background-color: @color0;
+    border-bottom: 1px solid @color8;
+}
+
+.widget-buttons-grid > flowbox {
+    background-color: transparent;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild {
+    border-right: 1px solid @color8;
+    border-bottom: 1px solid @color8;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button label {
+    font-size: 20px;
+    color: @color7;
+    transition: all 0.2s ease-in-out;
+    padding: 10px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover label {
+    font-size: 20px;
+    color: @color9;
+    transition: all 0.2s ease-in-out;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background-color: @color0;
+    border: none;
+    border-radius: 0px;
+    text-shadow: none;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+    padding: 10px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+    background-color: @background;
+    color: @color9;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked {
+    background-color: @color9;
+    color: @background;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button.toggle:checked label {
+    color: @background;
+}
+
+/* Menu Bar */
+.widget-menubar > box > .menu-button-bar > button {
+    border: none;
+    background-color: transparent;
+    border-radius: 0px;
+}
+
+.topbar-buttons > button {
+    border: none;
+    background-color: transparent;
+    border-radius: 0px;
+}
+
+/* Volume/Backlight Sliders */
+trough {
+    border-radius: 0px;
+    background-color: @color0;
+    border: 1px solid @color8;
+    margin: 5px 0px;
+}
+
+trough highlight {
+    padding: 0px;
+    background-color: @color9;
+    border-radius: 0px;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+    min-height: 2px;
+}
+
+trough highlight:hover {
+    padding: 0px;
+    background-color: @color9;
+    border-radius: 0px;
+    box-shadow: none;
+    transition: all 0.2s ease-in-out;
+}
+
+trough slider {
+    background-color: transparent;
+    border-radius: 0px;
+}
+
+trough slider:hover {
+    background-color: transparent;
+}
+
+.widget-volume {
+    background-color: @color0;
+    padding: 10px;
+    margin: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid @color8;
+}
+
+.widget-backlight {
+    background-color: @color0;
+    padding: 10px;
+    margin: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid @color8;
+}

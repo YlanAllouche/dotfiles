@@ -1,0 +1,108 @@
+{
+	"layer": "top",
+	"position": "top",
+	"reload_style_on_change": true,
+	"modules-left": ["custom/camera", "hyprland/window"],
+	"modules-center": ["hyprland/workspaces"],
+	"modules-right": ["custom/contrast", "memory", "cpu","battery","pulseaudio/slider","bluetooth","clock", "custom/notification"],
+
+"hyprland/window": {
+		"max-length": 50,
+    "format": " {}",
+    "rewrite": {
+        "(.*) — Mozilla Firefox": " 🌎 $1",
+        "(.*) - Chromium:": " 🌎 $1",
+        "(.*)Terminal": " > Terminal",
+        "(.*)mpv": " 📼 $1",
+        "(.*)Workspaces": " 󰃖 Workspaces"
+    },
+    "separate-outputs": true
+},
+	"hyprland/workspaces": {
+		"format": "{icon}",
+		"format-icons": {
+			"active": "",
+			"default": "",
+			"empty": ""
+		},
+		"persistent-workspaces": {
+			"*": [ 1,2,3,4,5]
+		}
+	},
+	"clock": {
+		"format": "{:%I:%M:%S %p} ",
+		"interval": 1,   
+		"tooltip-format": "<tt>{calendar}</tt>",
+		"calendar": {
+			"format": {
+				"today": "<span color='#fAfBfC'><b>{}</b></span>"
+			}
+		},
+		"actions": {
+			"on-click-right": "shift_down",
+			"on-click": "shift_up"
+		}
+	},
+"custom/contrast": {    
+    "exec": "brightnessctl get | awk '{printf \"%.0f\", $1/937*100}'",    
+    "exec-if": "which brightnessctl",    
+    "format": "{icon}{text}%",    
+    "format-icons": ["🔆"],    
+    "interval": "once",    
+    "on-scroll-up": "brightnessctl set +10%",    
+    "on-scroll-down": "brightnessctl set 10%-",    
+    "on-click": "brightnessctl set 100%"    
+},
+
+	"bluetooth": {
+		"format-on": "󰂯",
+		"format-off": "BT-off",
+		"format-disabled": "󰂲",
+		"format-connected-battery": "{device_battery_percentage}% 󰂯",
+		"format-alt": "{device_alias} 󰂯",
+		"tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+		"tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+		"tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
+		"tooltip-format-enumerate-connected-battery": "{device_alias}\n{device_address}\n{device_battery_percentage}%",
+		"on-click-right": "blueman-manager"
+	},
+"memory": {
+    "interval": 30,
+    "format": "{used:0.1f}G/{total:0.1f}G "
+},
+	"cpu": {
+	    "interval": 10,
+	    "format": "",
+	    "max-length": 1
+	},
+	"battery": {
+	    "interval": 60,
+	    "states": {
+	        "warning": 30,
+	        "critical": 15
+	    },
+	    "format": "{capacity}% {icon}",
+	    "format-icons": ["", "", "", "", ""],
+	    "format-charging": "{capacity}% ",
+	    "max-length": 25
+	},
+
+	"pulseaudio/slider": {
+		"min": 0,
+		"max": 100,
+		"orientation": "horizontal"
+	},
+	"custom/notification": {
+		"tooltip": false,
+		"format": "",
+		"on-click": "swaync-client -t -sw",
+		"escape": true
+	},
+	"custom/camera": {
+		"exec": "$HOME/.config/waybar/scripts/camera-check.sh",
+		"interval": 2,
+		"return-type": "json",
+		"format": "{}",
+		"tooltip": true
+	}
+}

@@ -1,0 +1,57 @@
+- name: Ensure tty1 getty override directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ system_tty_login_getty_override_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Configure tty1 autologin for the active user
+  become: true
+  ansible.builtin.template:
+    src: getty-override.conf.j2
+    dest: "{{ system_tty_login_getty_override_dir }}/override.conf"
+    mode: "0644"
+
+- name: Reload systemd after getty override changes
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Ensure tty1 getty is enabled
+  become: true
+  ansible.builtin.systemd:
+    name: getty@tty1.service
+    enabled: true
+
+- name: Install Hyprland start script and session files
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode | default('0644') }}"
+  loop:
+    - src: start-hyprland.sh.j2
+      dest: "{{ local_bin_dir }}/start-hyprland"
+      mode: "0755"
+
+- name: Ensure systemd user directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/systemd/user"
+    state: directory
+    mode: "0755"
+
+- name: Install Hyprland user unit and zprofile hook
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode | default('0644') }}"
+  loop:
+    - src: hyprland-session.service.j2
+      dest: "{{ xdg_config_home }}/systemd/user/hyprland-session.service"
+    - src: zprofile.j2
+      dest: "{{ active_home }}/.zprofile"
+
+- name: Reload user systemd units
+  ansible.builtin.systemd:
+    scope: user
+    daemon_reload: true
+  failed_when: false

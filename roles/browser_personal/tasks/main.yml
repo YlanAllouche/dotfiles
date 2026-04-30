@@ -1,0 +1,43 @@
+- name: Install browser personal packages on Arch
+  become: true
+  community.general.pacman:
+    name:
+      - bitwarden
+    state: present
+  when:
+    - is_archlinux | bool
+    - browser_bitwarden_enabled | bool
+
+- name: Install browser personal packages on macOS
+  community.general.homebrew_cask:
+    name: "{{ browser_personal_homebrew_casks }}"
+    state: present
+  when:
+    - is_macos | bool
+    - browser_bitwarden_enabled | bool
+
+- name: Install tridactyl native host through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ browser_personal_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
+
+- name: Install tridactyl native host through pacman
+  become: true
+  community.general.pacman:
+    name: "{{ browser_personal_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
+
+- name: Install personal Firefox configuration
+  ansible.builtin.copy:
+    src: tridactylrc
+    dest: "{{ dotfiles_platform_paths.firefox_tridactylrc[platform_family] }}"
+    mode: "0644"

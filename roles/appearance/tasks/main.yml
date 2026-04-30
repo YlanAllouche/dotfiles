@@ -1,0 +1,132 @@
+- name: Install matugen through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ appearance_matugen_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - appearance_install_matugen | bool
+    - aur_install_method == 'yay'
+
+- name: Install matugen through pacman
+  become: true
+  community.general.pacman:
+    name: "{{ appearance_matugen_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - appearance_install_matugen | bool
+    - aur_install_method == 'pacman'
+
+- name: Install color-whirl on target when requested
+  become: true
+  community.general.npm:
+    name: "{{ appearance_colorwhirl_npm_package }}"
+    global: true
+    state: present
+  when:
+    - appearance_install_colorwhirl_target | bool
+    - ecmascript_enabled | bool
+    - is_archlinux | bool
+
+- name: Install color-whirl on macOS target when requested
+  community.general.npm:
+    name: "{{ appearance_colorwhirl_npm_package }}"
+    global: true
+    state: present
+  when:
+    - appearance_install_colorwhirl_target | bool
+    - ecmascript_enabled | bool
+    - is_macos | bool
+
+- name: Ensure appearance output directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ xdg_cache_home }}/wal"
+    - "{{ appearance_wallpaper_output_dir }}"
+    - "{{ xdg_config_home }}/matugen"
+
+- name: Render wal-compatible theme outputs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: colors.json.j2
+      dest: "{{ xdg_cache_home }}/wal/colors.json"
+    - src: colors-hyprland.conf.j2
+      dest: "{{ xdg_cache_home }}/wal/colors-hyprland.conf"
+    - src: colors-waybar.css.j2
+      dest: "{{ xdg_cache_home }}/wal/colors-waybar.css"
+    - src: colors-kitty.conf.j2
+      dest: "{{ xdg_cache_home }}/wal/colors-kitty.conf"
+    - src: colors-rofi-dark.j2
+      dest: "{{ xdg_cache_home }}/wal/colors-rofi-dark"
+    - src: colors-rofi-light.j2
+      dest: "{{ xdg_cache_home }}/wal/colors-rofi-light"
+    - src: colors.sh.j2
+      dest: "{{ xdg_cache_home }}/wal/colors.sh"
+    - src: omp.json.j2
+      dest: "{{ xdg_cache_home }}/wal/omp.json"
+    - src: matugen-config.toml.j2
+      dest: "{{ xdg_config_home }}/matugen/config.toml"
+
+- name: Combine requested wallpaper resolutions
+  ansible.builtin.set_fact:
+    appearance_resolutions: "{{ (appearance_default_resolutions + appearance_additional_resolutions) | unique }}"
+
+- name: Ensure controller wallpaper cache exists
+  ansible.builtin.file:
+    path: "{{ appearance_controller_cache_dir }}"
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+  run_once: true
+  when: appearance_generate_wallpapers | bool
+
+- name: Generate base wallpapers on the controller
+  ansible.builtin.shell: |
+    set -euo pipefail
+    tmp="$(mktemp)"
+    jq --argjson width {{ item.split('x')[0] }} --argjson height {{ item.split('x')[1] }} '.width = $width | .height = $height' "{{ appearance_colorwhirl_recipe_path }}" > "$tmp"
+    {{ appearance_colorwhirl_command }} --config "@$tmp" --output "{{ appearance_controller_cache_dir }}/wallpaper-{{ item }}.png"
+    rm -f "$tmp"
+  args:
+    executable: /bin/bash
+  delegate_to: localhost
+  loop: "{{ appearance_resolutions }}"
+  when: appearance_generate_wallpapers | bool
+
+- name: Generate themed wallpapers on the controller
+  ansible.builtin.shell: |
+    set -euo pipefail
+    tmp="$(mktemp)"
+    jq --argjson width {{ item.split('x')[0] }} --argjson height {{ item.split('x')[1] }} --argjson colors '{{ appearance_theme_recipe_colors | to_json }}' '.width = $width | .height = $height | .colors = $colors' "{{ appearance_colorwhirl_recipe_path }}" > "$tmp"
+    {{ appearance_colorwhirl_command }} --config "@$tmp" --output "{{ appearance_controller_cache_dir }}/wallpaper-themed-{{ item }}.png"
+    rm -f "$tmp"
+  args:
+    executable: /bin/bash
+  delegate_to: localhost
+  loop: "{{ appearance_resolutions }}"
+  when: appearance_generate_wallpapers | bool
+
+- name: Copy generated base wallpapers to the target
+  ansible.builtin.copy:
+    src: "{{ appearance_controller_cache_dir }}/wallpaper-{{ item }}.png"
+    dest: "{{ appearance_wallpaper_output_dir }}/wallpaper-{{ item }}.png"
+    mode: "0644"
+  loop: "{{ appearance_resolutions }}"
+  when: appearance_generate_wallpapers | bool
+
+- name: Copy generated themed wallpapers to the target
+  ansible.builtin.copy:
+    src: "{{ appearance_controller_cache_dir }}/wallpaper-themed-{{ item }}.png"
+    dest: "{{ appearance_wallpaper_output_dir }}/wallpaper-themed-{{ item }}.png"
+    mode: "0644"
+  loop: "{{ appearance_resolutions }}"
+  when: appearance_generate_wallpapers | bool

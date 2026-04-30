@@ -1,0 +1,7 @@
+export wallpaper={{ appearance_theme_wallpaper | to_json }}
+export background={{ appearance_theme_special.background | to_json }}
+export foreground={{ appearance_theme_special.foreground | to_json }}
+export cursor={{ appearance_theme_special.cursor | to_json }}
+{% for key, value in appearance_theme_colors.items() -%}
+export {{ key }}={{ value | to_json }}
+{% endfor %}

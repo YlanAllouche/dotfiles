@@ -1,0 +1,18 @@
+- name: Install base browser packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ browser_base_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install base browser packages on macOS
+  community.general.homebrew_cask:
+    name: "{{ browser_base_homebrew_casks }}"
+    state: present
+  when: is_macos | bool
+
+- name: Install browser launcher script
+  ansible.builtin.copy:
+    src: bin/browser
+    dest: "{{ local_bin_dir }}/browser"
+    mode: "0755"

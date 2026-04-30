@@ -1,0 +1,19 @@
+@import "~/.cache/wal/colors-rofi-light"
+@import "~/.cache/wal/colors-rofi-dark"
+
+
+configuration {
+width: 30;
+columns: 1;
+font: "FiraCode Nerd Font 20";
+bw: 1;
+padding: 0;
+eh: 1;
+hide-scrollbar: true;
+fullscreen: false;
+fake-transparency: true;
+show-icons: false;
+fixed-num-lines: false;
+lines: 17;
+yoffset: -300;
+}

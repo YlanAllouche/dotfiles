@@ -1,0 +1,7 @@
+foreground   {{ appearance_theme_special.foreground }}
+background   {{ appearance_theme_special.background }}
+cursor       {{ appearance_theme_special.cursor }}
+
+{% for key, value in appearance_theme_colors.items() -%}
+{{ key }}       {{ value }}
+{% endfor %}
