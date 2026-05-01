@@ -71,7 +71,19 @@
     - is_macos | bool
     - tty_newsboat_enabled | bool
 
-- name: Install Neofetch on Arch
+- name: Install Neofetch on Arch through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: neofetch
+    state: present
+  when:
+    - is_archlinux | bool
+    - tty_neofetch_enabled | bool
+    - aur_install_method == 'yay'
+
+- name: Install Neofetch on Arch through pacman
   become: true
   community.general.pacman:
     name: neofetch
@@ -79,6 +91,7 @@
   when:
     - is_archlinux | bool
     - tty_neofetch_enabled | bool
+    - aur_install_method == 'pacman'
 
 - name: Install Neofetch on macOS
   community.general.homebrew:
@@ -93,6 +106,13 @@
     path: "{{ xdg_config_home }}/tmux-sessionizer"
     state: directory
     mode: "0755"
+
+- name: Ensure neofetch config directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/neofetch"
+    state: directory
+    mode: "0755"
+  when: tty_neofetch_enabled | bool
 
 - name: Ensure tmux drop-in config directory exists
   ansible.builtin.file:
@@ -172,6 +192,13 @@
     dest: "{{ xdg_config_home }}/glab-cli/config.yml"
     mode: "0644"
   when: tty_glab_enabled | bool
+
+- name: Install neofetch configuration
+  ansible.builtin.copy:
+    src: neofetch/config.conf
+    dest: "{{ xdg_config_home }}/neofetch/config.conf"
+    mode: "0644"
+  when: tty_neofetch_enabled | bool
 
 - name: Ensure TPM is installed
   ansible.builtin.git:
