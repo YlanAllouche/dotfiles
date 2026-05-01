@@ -11,6 +11,12 @@
     state: present
   when: is_macos | bool
 
+- name: Ensure shell snippet directory exists for Go exports
+  ansible.builtin.file:
+    path: "{{ active_home }}/.local/config/shell"
+    state: directory
+    mode: "0755"
+
 - name: Install Go shell snippet
   ansible.builtin.copy:
     dest: "{{ active_home }}/.local/config/shell/30-go.zsh"
