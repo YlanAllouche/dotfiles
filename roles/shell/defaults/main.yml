@@ -12,5 +12,3 @@ shell_homebrew_packages:
   - fzf
   - oh-my-posh
   - zsh
-
-shell_zsh_path: "{{ '/bin/zsh' if is_macos else '/usr/bin/zsh' }}"

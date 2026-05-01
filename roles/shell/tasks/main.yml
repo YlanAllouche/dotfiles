@@ -77,5 +77,5 @@
   become: true
   ansible.builtin.user:
     name: "{{ active_user }}"
-    shell: "{{ shell_zsh_path }}"
+    shell: "{{ '/bin/zsh' if is_macos else '/usr/bin/zsh' }}"
   when: not is_macos | bool
