@@ -39,6 +39,12 @@
         consumer_contract_env_dir: "{{ active_home }}/.config/dotfiles/env"
         consumer_contract_docs_dir: "{{ active_home }}/.config/dotfiles/contracts"
 
+    - name: Refresh pacman package databases on Arch
+      become: true
+      community.general.pacman:
+        update_cache: true
+      when: is_archlinux | bool
+
   roles:
     - role: common
     - role: aur
