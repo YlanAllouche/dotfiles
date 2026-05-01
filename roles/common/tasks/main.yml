@@ -3,4 +3,9 @@
     path: "{{ item }}"
     state: directory
     mode: "0755"
-  loop: "{{ common_home_directories }}"
+  loop:
+    - "{{ xdg_config_home }}"
+    - "{{ xdg_data_home }}"
+    - "{{ xdg_state_home }}"
+    - "{{ xdg_cache_home }}"
+    - "{{ local_bin_dir }}"
