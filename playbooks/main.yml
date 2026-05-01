@@ -2,6 +2,9 @@
   hosts: all
   gather_facts: true
 
+  vars_files:
+    - ../group_vars/all.yml
+
   pre_tasks:
     - name: Normalize runtime user and platform variables
       ansible.builtin.set_fact:
