@@ -16,6 +16,7 @@
     name: pynvim
     extra_args: --user
     executable: pip3
+  when: is_macos | bool
 
 - name: Ensure Neovim config directory exists
   ansible.builtin.file:
