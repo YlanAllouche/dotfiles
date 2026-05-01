@@ -10,5 +10,11 @@ export XDG_SESSION_DESKTOP=Hyprland
 export XDG_SESSION_TYPE=wayland
 export MOZ_ENABLE_WAYLAND=1
 export QT_QPA_PLATFORM=wayland
+{% if hyprland_allow_software_renderer | default(false) %}
+export WLR_RENDERER_ALLOW_SOFTWARE=1
+{% endif %}
+{% if hyprland_force_software_renderer | default(false) %}
+export LIBGL_ALWAYS_SOFTWARE=1
+{% endif %}
 
 exec /usr/bin/start-hyprland
