@@ -41,64 +41,64 @@
     - role: aur
       when:
         - is_archlinux | bool
-        - aur_enabled | bool
+        - aur_enabled | default(true) | bool
     - role: identity
-      when: identity_enabled | bool
+      when: identity_enabled | default(false) | bool
     - role: python_dev
-      when: python_dev_enabled | bool
+      when: python_dev_enabled | default(false) | bool
     - role: ecmascript
-      when: ecmascript_enabled | bool
+      when: ecmascript_enabled | default(false) | bool
     - role: golang
-      when: golang_enabled | bool
+      when: golang_enabled | default(false) | bool
     - role: tower
-      when: tower_enabled | bool
+      when: tower_enabled | default(false) | bool
     - role: appearance
-      when: appearance_enabled | bool
+      when: appearance_enabled | default(false) | bool
     - role: shell
-      when: shell_enabled | bool
+      when: shell_enabled | default(false) | bool
     - role: tty
-      when: tty_enabled | bool
+      when: tty_enabled | default(false) | bool
     - role: linux_desktop
       when:
-        - linux_desktop_enabled | bool
+        - linux_desktop_enabled | default(false) | bool
         - is_linux | bool
     - role: hyprland
       when:
-        - hyprland_enabled | bool
+        - hyprland_enabled | default(false) | bool
         - is_linux | bool
     - role: system_tty_login
       when:
-        - system_tty_login_enabled | bool
+        - system_tty_login_enabled | default(false) | bool
         - is_linux | bool
     - role: browser_base
-      when: browser_base_enabled | bool
+      when: browser_base_enabled | default(false) | bool
     - role: browser_personal
-      when: browser_personal_enabled | bool
+      when: browser_personal_enabled | default(false) | bool
     - role: media
-      when: media_enabled | bool
+      when: media_enabled | default(false) | bool
     - role: nvim
-      when: nvim_enabled | bool
+      when: nvim_enabled | default(false) | bool
     - role: pkm
-      when: pkm_enabled | bool
+      when: pkm_enabled | default(false) | bool
     - role: pim
-      when: pim_enabled | bool
+      when: pim_enabled | default(false) | bool
     - role: email
-      when: email_enabled | bool
+      when: email_enabled | default(false) | bool
     - role: r_lang
-      when: r_lang_enabled | bool
+      when: r_lang_enabled | default(false) | bool
     - role: java
-      when: java_enabled | bool
+      when: java_enabled | default(false) | bool
     - role: share_sync
-      when: share_sync_enabled | bool
+      when: share_sync_enabled | default(false) | bool
     - role: llm
-      when: llm_enabled | bool
+      when: llm_enabled | default(false) | bool
     - role: vscode
-      when: vscode_enabled | bool
+      when: vscode_enabled | default(false) | bool
     - role: peripherals
-      when: peripherals_enabled | bool
+      when: peripherals_enabled | default(false) | bool
     - role: cloud
-      when: cloud_enabled | bool
+      when: cloud_enabled | default(false) | bool
     - role: oci
-      when: oci_enabled | bool
+      when: oci_enabled | default(false) | bool
     - role: android_dev
-      when: android_dev_enabled | bool
+      when: android_dev_enabled | default(false) | bool
