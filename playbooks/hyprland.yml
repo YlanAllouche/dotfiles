@@ -44,6 +44,45 @@
     appearance_install_matugen: true
 
   pre_tasks:
+    - name: Apply hyprland profile toggles
+      ansible.builtin.set_fact:
+        dotfiles_profile: hyprland
+        identity_enabled: true
+        appearance_enabled: true
+        shell_enabled: true
+        tty_enabled: true
+        python_dev_enabled: true
+        ecmascript_enabled: true
+        golang_enabled: true
+        tower_enabled: true
+        linux_desktop_enabled: true
+        hyprland_enabled: true
+        system_tty_login_enabled: true
+        browser_base_enabled: true
+        browser_personal_enabled: false
+        browser_bitwarden_enabled: false
+        media_enabled: false
+        nvim_enabled: true
+        pkm_enabled: false
+        pim_enabled: false
+        email_enabled: false
+        r_lang_enabled: false
+        java_enabled: false
+        share_sync_enabled: false
+        llm_enabled: true
+        llm_opencode_enabled: true
+        llm_claudecode_enabled: false
+        vscode_enabled: true
+        tty_dv_enabled: true
+        tty_gh_enabled: true
+        tty_glab_enabled: true
+        tty_newsboat_enabled: true
+        tty_neofetch_enabled: true
+        tty_pywal_enabled: true
+        appearance_generate_wallpapers: false
+        appearance_install_colorwhirl_target: false
+        appearance_install_matugen: true
+
     - name: Normalize runtime user and platform variables
       ansible.builtin.set_fact:
         active_user: "{{ dotfiles_active_user | default(ansible_user_id) }}"
