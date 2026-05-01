@@ -2,6 +2,40 @@
   hosts: all
   gather_facts: true
 
+  pre_tasks:
+    - name: Normalize runtime user and platform variables
+      ansible.builtin.set_fact:
+        active_user: "{{ dotfiles_active_user | default(ansible_user_id) }}"
+        active_home: >-
+          {{
+            dotfiles_active_home
+            | default(
+              lookup('env', 'HOME')
+              if inventory_hostname == 'localhost'
+              else (
+                '/Users/' ~ (dotfiles_active_user | default(ansible_user_id))
+                if ansible_system == 'Darwin'
+                else '/home/' ~ (dotfiles_active_user | default(ansible_user_id))
+              )
+            )
+          }}
+        platform_family: "{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}"
+        is_macos: "{{ ansible_system == 'Darwin' }}"
+        is_linux: "{{ ansible_system == 'Linux' }}"
+        is_wsl: "{{ ansible_kernel is search('WSL') or ansible_kernel is search('Microsoft') }}"
+        is_archlinux: "{{ ansible_distribution == 'Archlinux' }}"
+
+    - name: Normalize runtime path variables
+      ansible.builtin.set_fact:
+        xdg_config_home: "{{ active_home }}/.config"
+        xdg_data_home: "{{ active_home }}/.local/share"
+        xdg_state_home: "{{ active_home }}/.local/state"
+        xdg_cache_home: "{{ active_home }}/.cache"
+        local_bin_dir: "{{ active_home }}/.local/bin"
+        consumer_contract_dir: "{{ active_home }}/.config/dotfiles"
+        consumer_contract_env_dir: "{{ active_home }}/.config/dotfiles/env"
+        consumer_contract_docs_dir: "{{ active_home }}/.config/dotfiles/contracts"
+
   roles:
     - role: common
     - role: aur
