@@ -68,8 +68,10 @@
     - role: tty
       when: tty_enabled | default(false) | bool
     - role: linux_desktop
+      when: linux_desktop_enabled | default(false) | bool
+    - role: sound
       when:
-        - linux_desktop_enabled | default(false) | bool
+        - sound_enabled | default(false) | bool
         - is_linux | bool
     - role: hyprland
       when:

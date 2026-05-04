@@ -16,3 +16,16 @@
     src: bin/browser
     dest: "{{ local_bin_dir }}/browser"
     mode: "0755"
+
+- name: Ensure shell snippet directory exists for browser export
+  ansible.builtin.file:
+    path: "{{ active_home }}/.local/config/shell"
+    state: directory
+    mode: "0755"
+
+- name: Export browser helper path in shell snippets
+  ansible.builtin.copy:
+    dest: "{{ active_home }}/.local/config/shell/40-browser.zsh"
+    mode: "0644"
+    content: |
+      export BROWSER="{{ local_bin_dir }}/browser"

@@ -64,6 +64,7 @@ ecmascript_enabled: false
 golang_enabled: false
 tower_enabled: false
 linux_desktop_enabled: false
+sound_enabled: false
 hyprland_enabled: false
 system_tty_login_enabled: false
 browser_base_enabled: true
@@ -136,6 +137,7 @@ tty_base_arch_packages:
   - jq
   - lazygit
   - less
+  - python-pynvim
   - ranger
   - ripgrep
   - rsync
@@ -155,6 +157,7 @@ tty_base_homebrew_packages:
   - fzf
   - gh
   - git
+  - gitmux
   - jq
   - lazygit
   - ripgrep
@@ -163,6 +166,11 @@ tty_base_homebrew_packages:
   - yq
 
 tty_pywal_package: python-pywal
+tty_gitmux_aur_package: gitmux
+tty_tmux_sessionizer_repo: https://github.com/theprimeagen/tmux-sessionizer
+tty_tpm_repo: https://github.com/tmux-plugins/tpm
+tty_python_packages:
+  - git+https://github.com/YlanAllouche/dv-tui.git
 
 shell_arch_packages:
   - zsh
@@ -234,6 +242,38 @@ linux_desktop_arch_packages:
   - zathura
   - zathura-pdf-mupdf
   - calibre
+  - noto-fonts-emoji
+
+linux_desktop_arch_font_packages:
+  - otf-monaspace-nerdfonts
+  - ttf-victor-mono-nerd
+  - ttf-firacode-nerd
+  - ttf-cascadia-code-nerd
+
+linux_desktop_homebrew_packages:
+  - kitty
+  - mpv
+
+linux_desktop_homebrew_font_casks:
+  - font-monaspace
+  - font-victor-mono-nerd-font
+  - font-fira-code-nerd-font
+  - font-caskaydia-cove-nerd-font
+  - font-noto-color-emoji
+
+# NOTES: Override these per target if macOS reports different family names than
+# Arch for the same installed fonts.
+kitty_font_family: FiraCode Nerd Font Mono
+kitty_italic_font_family: VictorMono Nerd Font
+kitty_bold_font_family: Monaspace Krypton NF
+kitty_bold_italic_font_family: Monaspace Krypton NF
+kitty_emoji_font_family: Noto Color Emoji
+kitty_font_family_macos: FiraCode Nerd Font Mono
+kitty_italic_font_family_macos: VictorMono Nerd Font
+kitty_bold_font_family_macos: Monaspace Krypton
+kitty_bold_italic_font_family_macos: Monaspace Krypton
+
+linux_desktop_generate_image_repo: https://github.com/YlanAllouche/generate_image
 
 linux_desktop_aur_packages:
   - koreader-bin
@@ -248,10 +288,22 @@ hyprland_arch_packages:
   - hyprland
   - hyprlock
   - playerctl
-  - swww
+  - awww
   - swaync
   - tailscale
   - waybar
+
+sound_arch_packages:
+  - pipewire
+  - pipewire-alsa
+  - pipewire-jack
+  - pipewire-pulse
+  - wireplumber
+  - gst-plugin-pipewire
+  - pavucontrol
+  - pulsemixer
+  - bluez
+  - bluez-utils
 
 browser_base_arch_packages:
   - firefox

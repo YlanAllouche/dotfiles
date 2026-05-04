@@ -1,12 +1,12 @@
 # Really need to consider getting a bold font for things like field name in yaml
 include ~/.cache/wal/colors-kitty.conf
-globinclude ~/.config/kitty/conf.d/*.conf
+globinclude conf.d/*.conf
 background_opacity 1
 dynamic_background_opacity yes
 font_size 12.0
 enable_audio_bell no
 bell_border_color     #83816e
-symbol_map U+1F600-U+1F6FF emoji OpenMoji Color
+symbol_map U+1F000-U+1F77F {{ kitty_emoji_font_family }}
 
 
 allow_remote_control yes
@@ -40,7 +40,7 @@ adjust_line_height 0
 adjust_column_width 0
 box_drawing_scale 0.001, 1, 1.5, 2
 # Enable proper emoji/icon rendering
-symbol_map U+1F000-U+1F77F Noto Color Emoji
+symbol_map U+1F300-U+1FAFF {{ kitty_emoji_font_family }}
 narrow_symbols U+E000-U+F8FF 1
 narrow_symbols U+1F300-U+1F5FF 2
 # Fix width for special characters
@@ -110,10 +110,10 @@ adjust_column_width 0
 
 
 # font_family      JetBrainsMono Nerd Font Mono 
-font_family      FiraCode Nerd Font Mono
-italic_font family="Monaspace Radon NF"
-italic_font family="VictorMono Nerd Font"
-bold_font family="Monaspace Krypton NF"
-# bold_italic_font JetBrainsMono Nerd Font Mono Bold Italic
-# italic_font  family="CaskaydiaCove Nerd Font"
-bold_font  family="CaskaydiaCove Nerd Font"
+font_family      {{ kitty_font_family_macos if is_macos else kitty_font_family }}
+# italic_font family="Monaspace Radon NF"
+italic_font family="{{ kitty_italic_font_family_macos if is_macos else kitty_italic_font_family }}"
+# bold_font family="Monaspace Krypton NF"
+# bold_font  family="CaskaydiaCove Nerd Font"
+bold_font family="{{ kitty_bold_font_family_macos if is_macos else kitty_bold_font_family }}"
+bold_italic_font family="{{ kitty_bold_italic_font_family_macos if is_macos else kitty_bold_italic_font_family }}"

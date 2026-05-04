@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+if [[ -n "$1" ]]; then
+    input="$1"
+else
+    echo "Enter group/project name:"
+    read input
+fi
+
+echo "n" | glab repo create "$input"
+git remote add origin "git@git.llama-elver.ts.net:${input}.git"
+git push -u origin master

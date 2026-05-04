@@ -1,0 +1,36 @@
+# TODO: Move Linux audio and Bluetooth stack provisioning into the infra layer
+# once that layer owns the base desktop image end-to-end.
+
+- name: Install sound and Bluetooth packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ sound_arch_packages }}"
+    state: present
+
+- name: Enable Bluetooth service globally
+  become: true
+  ansible.builtin.systemd_service:
+    name: bluetooth.service
+    enabled: true
+    state: started
+
+- name: Enable lingering for the active user so user services can start outside a GUI session
+  become: true
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ active_user }}"
+  changed_when: false
+
+- name: Resolve active user uid for user service setup
+  ansible.builtin.command:
+    cmd: "id -u {{ active_user }}"
+  register: sound_active_uid
+  changed_when: false
+
+- name: Enable PipeWire services for the active user
+  become: true
+  become_user: "{{ active_user }}"
+  ansible.builtin.command:
+    cmd: systemctl --user --now enable pipewire pipewire-pulse wireplumber
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ sound_active_uid.stdout }}"
+  changed_when: false

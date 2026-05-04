@@ -3,3 +3,4 @@ aur_base_packages:
   - git
 
 aur_sudoers_path: /etc/sudoers.d/11-aur-builder
+aur_manage_pacman_config: true

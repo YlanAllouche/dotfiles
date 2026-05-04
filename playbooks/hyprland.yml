@@ -16,6 +16,7 @@
     golang_enabled: true
     tower_enabled: true
     linux_desktop_enabled: true
+    sound_enabled: true
     hyprland_enabled: true
     system_tty_login_enabled: true
     browser_base_enabled: true
@@ -39,6 +40,7 @@
     tty_newsboat_enabled: true
     tty_neofetch_enabled: true
     tty_pywal_enabled: true
+    tty_tmux_bootstrap_enabled: true
     appearance_generate_wallpapers: false
     appearance_install_colorwhirl_target: false
     appearance_install_matugen: true
@@ -56,6 +58,7 @@
         golang_enabled: true
         tower_enabled: true
         linux_desktop_enabled: true
+        sound_enabled: true
         hyprland_enabled: true
         system_tty_login_enabled: true
         browser_base_enabled: true
@@ -79,6 +82,7 @@
         tty_newsboat_enabled: true
         tty_neofetch_enabled: true
         tty_pywal_enabled: true
+        tty_tmux_bootstrap_enabled: true
         appearance_generate_wallpapers: false
         appearance_install_colorwhirl_target: false
         appearance_install_matugen: true
