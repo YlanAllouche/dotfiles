@@ -9,3 +9,30 @@
     - "{{ xdg_state_home }}"
     - "{{ xdg_cache_home }}"
     - "{{ local_bin_dir }}"
+
+# NOTES: NVIDIA driver installation belongs to the infra layer, not to this
+# public dotfiles layer. This check exists to fail fast when the image/provision
+# layer did not install the expected stack.
+- name: Gather package facts for hardware contract checks
+  ansible.builtin.package_facts:
+    manager: auto
+  when:
+    - is_linux | bool
+    - is_archlinux | bool
+    - GPU_VENDOR | lower == 'nvidia'
+
+- name: Assert required NVIDIA package groups are present
+  ansible.builtin.assert:
+    that:
+      - item.any_of | select('in', ansible_facts.packages.keys() | list) | list | length > 0
+    fail_msg: >-
+      NOTES: {{ item.description }} is missing.
+      This dotfiles layer expects the infra layer to preinstall one of
+      {{ item.any_of | join(', ') }} before desktop roles run.
+      TODO: Override NVIDIA_REQUIRED_PACKAGE_GROUPS from the infra layer for
+      branch-specific driver stacks such as nvidia-580xx-dkms/nvidia-580xx-utils.
+  loop: "{{ NVIDIA_REQUIRED_PACKAGE_GROUPS }}"
+  when:
+    - is_linux | bool
+    - is_archlinux | bool
+    - GPU_VENDOR | lower == 'nvidia'

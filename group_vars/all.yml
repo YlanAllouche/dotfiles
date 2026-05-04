@@ -28,6 +28,28 @@ xdg_cache_home: "{{ active_home }}/.cache"
 local_bin_dir: "{{ active_home }}/.local/bin"
 dotfiles_repo_root: "{{ playbook_dir | dirname }}"
 
+# NOTES: This is the interface between the public dotfiles layer and the
+# private infra layer that builds images and provisions drivers.
+CPU_VENDOR: AMD
+GPU_VENDOR: NVIDIA
+
+# NOTES: Override this from the infra layer when a machine needs a branch-
+# specific NVIDIA stack such as nvidia-580xx-dkms/nvidia-580xx-utils.
+NVIDIA_REQUIRED_PACKAGE_GROUPS:
+  - description: NVIDIA kernel driver package
+    any_of:
+      - nvidia
+      - nvidia-dkms
+  - description: NVIDIA userspace package
+    any_of:
+      - nvidia-utils
+  - description: EGL Wayland bridge
+    any_of:
+      - egl-wayland
+  - description: DKMS framework
+    any_of:
+      - dkms
+
 aur_enabled: true
 aur_install_method: yay
 aur_builder_user: aur_builder
