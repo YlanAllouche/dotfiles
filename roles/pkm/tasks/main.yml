@@ -13,16 +13,9 @@
 
 - name: Install PKM helper scripts
   ansible.builtin.copy:
-    src: "{{ item.src }}"
-    dest: "{{ local_bin_dir }}/{{ item.dest }}"
+    src: bin/refreshQueries.sh
+    dest: "{{ local_bin_dir }}/refreshQueries.sh"
     mode: "0755"
-  loop:
-    - src: bin/refreshQueries.sh
-      dest: refreshQueries.sh
-    - src: bin/capturemd
-      dest: capturemd
-    - src: bin/obsi-dash
-      dest: obsi-dash
 
 - name: Install PKM Python packages
   ansible.builtin.pip:
@@ -44,6 +37,14 @@
     state: directory
     mode: "0755"
 
+- name: Install obsi-dash compatibility wrapper
+  ansible.builtin.copy:
+    dest: "{{ local_bin_dir }}/obsi-dash"
+    mode: "0755"
+    content: |
+      #!/usr/bin/env bash
+      exec playlist-maker "$@"
+
 - name: Install Obsidian app config
   ansible.builtin.template:
     src: obsidian.json.j2
@@ -51,6 +52,8 @@
     mode: "0644"
 
 - name: Install PKM-specific Neovim overlays
+  # TODO: Continue shrinking PKM ownership to only the dataview/JSON-bound
+  # Markdown features as the base Neovim config gets cleaned up further.
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -58,10 +61,8 @@
   loop:
     - src: nvim/dataview_picker.lua
       dest: "{{ xdg_config_home }}/nvim/lua/config/dataview_picker.lua"
-    - src: nvim/telescope.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/plugins/telescope.lua"
-    - src: nvim/markdown/attachment.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/attachment.lua"
+    - src: nvim/pkm_dataview_keymaps.lua
+      dest: "{{ xdg_config_home }}/nvim/lua/config/pkm_dataview_keymaps.lua"
     - src: nvim/markdown/bookmark_picker.lua
       dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/bookmark_picker.lua"
     - src: nvim/markdown/bookmarks.lua
@@ -70,19 +71,3 @@
       dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/insertinline.lua"
     - src: nvim/markdown/insertlink.lua
       dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/insertlink.lua"
-    - src: nvim/markdown/journal.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/journal.lua"
-    - src: nvim/markdown/links.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/links.lua"
-    - src: nvim/markdown/markdown.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/markdown.lua"
-    - src: nvim/markdown/markdown_picker.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/markdown_picker.lua"
-    - src: nvim/markdown/markdownToggle.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/markdownToggle.lua"
-    - src: nvim/markdown/mote.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/mote.lua"
-    - src: nvim/markdown/task_utils.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/task_utils.lua"
-    - src: nvim/markdown/title.lua
-      dest: "{{ xdg_config_home }}/nvim/lua/config/markdown/title.lua"

@@ -120,6 +120,8 @@ return {
 			})
 		end, { desc = "Find EVERYTHING (including .git)" })
 
+		-- TODO: Move these PKM dataview keymaps out of the broad Telescope plugin
+		-- config and into a smaller JSON-specific overlay.
 		-- Dataview picker - multiple JSON files
 		local dataview_picker = require("config.dataview_picker")
 		keymap.set("n", "<leader>o", function()

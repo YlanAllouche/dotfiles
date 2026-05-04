@@ -26,8 +26,6 @@
     dest: "{{ local_bin_dir }}/{{ item.dest }}"
     mode: "0755"
   loop:
-    - src: bin/video-picker.py
-      dest: video-picker.py
     - src: bin/kodiyt
       dest: kodiyt
 

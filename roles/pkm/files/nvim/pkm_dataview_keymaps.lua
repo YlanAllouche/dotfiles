@@ -1,0 +1,13 @@
+local dataview_picker = require("config.dataview_picker")
+
+vim.keymap.set("n", "<leader>o", function()
+	dataview_picker.open("-all.json", "All Items")
+end, { desc = "Open all.json in dataview picker" })
+
+vim.keymap.set("n", "<leader>Q", function()
+	dataview_picker.open("-main.json", "Main Items")
+end, { desc = "Open main.json in dataview picker" })
+
+vim.keymap.set("n", "<leader>W", function()
+	dataview_picker.open("-secondary.json", "Secondary Items")
+end, { desc = "Open secondary.json in dataview picker" })

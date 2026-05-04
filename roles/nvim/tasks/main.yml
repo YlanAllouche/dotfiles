@@ -30,7 +30,21 @@
     dest: "{{ xdg_config_home }}/nvim/"
     mode: preserve
 
+- name: Remove PKM-specific Neovim files from the base config tree
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ xdg_config_home }}/nvim/lua/config/dataview_picker.lua"
+    - "{{ xdg_config_home }}/nvim/lua/config/markdown/bookmark_picker.lua"
+    - "{{ xdg_config_home }}/nvim/lua/config/markdown/bookmarks.lua"
+    - "{{ xdg_config_home }}/nvim/lua/config/markdown/insertinline.lua"
+    - "{{ xdg_config_home }}/nvim/lua/config/markdown/insertlink.lua"
+    - "{{ xdg_config_home }}/nvim/lua/config/pkm_dataview_keymaps.lua"
+
 - name: Bootstrap Neovim plugins
+  # FIX: This headless bootstrap exists, but it still needs a validation pass
+  # for plugin health and first-run behavior on a clean machine.
   ansible.builtin.command:
     cmd: nvim --headless "+Lazy! sync" +qa
   environment:
