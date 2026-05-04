@@ -50,6 +50,12 @@
   - tridactyl config target
   - OpenCode global config target
 
+## Hardware Contract
+
+- `CPU_VENDOR` and `GPU_VENDOR` are the public interface between this repo and the infra layer.
+- This repo should not install GPU drivers directly.
+- The infra layer should provision the driver stack and, when needed, override the package contract variables such as `NVIDIA_REQUIRED_PACKAGE_GROUPS`.
+
 ## First-pass migration rule
 
 - Prefer the live system over `first-draft/` when both exist.
