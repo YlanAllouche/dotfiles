@@ -31,9 +31,17 @@
 
 - name: Install experimental playlist helper when enabled
   ansible.builtin.copy:
-    src: bin/playlist-maker
     dest: "{{ local_bin_dir }}/playlist-maker"
     mode: "0755"
+    content: |
+      #!/usr/bin/env python3
+      import sys
+      from playlist_maker.main import main
+
+      if __name__ == "__main__":
+          if sys.argv[0].endswith(".exe"):
+              sys.argv[0] = sys.argv[0][:-4]
+          sys.exit(main())
   when: media_playlist_tools_enabled | bool
 
 - name: Install Jellyfin playback helper
