@@ -19,8 +19,6 @@
   loop:
     - "{{ active_home }}/.ssh"
     - "{{ xdg_config_home }}/rclone"
-    - "{{ consumer_contract_env_dir }}"
-    - "{{ consumer_contract_docs_dir }}"
 
 - name: Install consumer contract documentation
   ansible.builtin.template:
@@ -44,6 +42,7 @@
       dest: "{{ consumer_contract_env_dir }}/media.env.example"
     - src: pim.todo.j2
       dest: "{{ consumer_contract_docs_dir }}/pim.todo"
+  when: false
 
 - name: Install Bitwarden helper script
   ansible.builtin.copy:

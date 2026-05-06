@@ -431,6 +431,7 @@ appearance_theme_recipe_colors:
   - "#ff73fd"
   - "#c6c5fe"
 
+# TODO: Consider how to best leverage the contract folder
 consumer_contract_dir: "{{ xdg_config_home }}/dotfiles"
 consumer_contract_env_dir: "{{ consumer_contract_dir }}/env"
 consumer_contract_docs_dir: "{{ consumer_contract_dir }}/contracts"
