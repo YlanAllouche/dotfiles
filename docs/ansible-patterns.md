@@ -2,9 +2,11 @@
 
 ## Entry points
 
-- `playbooks/main.yml` is the reusable core entrypoint.
-- `playbooks/hyprland.yml` is the default personal desktop profile.
-- `corpo.yml` is intentionally left local and git-ignored for now.
+- `main.yml` is the friendly default public entrypoint.
+- `playbooks/main.yml` is the reusable orchestration engine.
+- `playbooks/desktop-wayland.yml`, `playbooks/hyprland.yml`, and `playbooks/macos.yml` are public scenario wrappers.
+- `vars/profiles/` contains public profile-level presets.
+- `docs/playbook-interface.md` describes the intended public-vs-downstream interface.
 
 ## Target model
 

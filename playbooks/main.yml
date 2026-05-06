@@ -4,6 +4,7 @@
 
   vars_files:
     - ../group_vars/all.yml
+    - "../vars/profiles/{{ dotfiles_profile }}.yml"
 
   pre_tasks:
     - name: Normalize runtime user and platform variables

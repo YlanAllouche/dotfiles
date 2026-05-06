@@ -26,7 +26,12 @@ xdg_data_home: "{{ active_home }}/.local/share"
 xdg_state_home: "{{ active_home }}/.local/state"
 xdg_cache_home: "{{ active_home }}/.cache"
 local_bin_dir: "{{ active_home }}/.local/bin"
-dotfiles_repo_root: "{{ playbook_dir | dirname }}"
+dotfiles_repo_root: >-
+  {{
+    playbook_dir
+    if (playbook_dir | basename) != 'playbooks'
+    else (playbook_dir | dirname)
+  }}
 
 # NOTES: This is the interface between the public dotfiles layer and the
 # private infra layer that builds images and provisions drivers.
