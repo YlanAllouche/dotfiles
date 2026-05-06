@@ -17,6 +17,18 @@
     dest: "{{ local_bin_dir }}/refreshQueries.sh"
     mode: "0755"
 
+- name: Install PKM initiative selector
+  ansible.builtin.copy:
+    src: bin/init-selector
+    dest: "{{ local_bin_dir }}/init-selector"
+    mode: "0755"
+
+- name: Install PKM tmux keymap drop-in
+  ansible.builtin.copy:
+    src: tmux/pkm.conf
+    dest: "{{ xdg_config_home }}/tmux/conf.d/90-pkm.conf"
+    mode: "0644"
+
 - name: Install PKM Python packages
   ansible.builtin.pip:
     name: "{{ pkm_python_packages }}"

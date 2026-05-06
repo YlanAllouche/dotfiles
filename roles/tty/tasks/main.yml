@@ -215,12 +215,6 @@
       dest: "{{ active_home }}/.tmux.conf"
     - src: tmux-sessionizer/tmux-sessionizer.conf
       dest: "{{ xdg_config_home }}/tmux-sessionizer/tmux-sessionizer.conf"
-    - src: bin/init-selector
-      dest: "{{ local_bin_dir }}/init-selector"
-      mode: "0755"
-    - src: bin/project-selector.py
-      dest: "{{ local_bin_dir }}/project-selector.py"
-      mode: "0755"
     - src: inputrc
       dest: "{{ active_home }}/.inputrc"
 
