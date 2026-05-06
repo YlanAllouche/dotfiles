@@ -63,4 +63,10 @@ The intended contract is:
 - downstream repo overrides vars, enables/disables roles, and carries secrets or client-specific notes
 - `dotfiles_profile=custom` is the escape hatch when the full profile should live downstream
 
+See `custom_profile_templates/` for copyable downstream starting points for:
+
+- `hyprland`
+- `macos`
+- fully downstream-owned `custom`
+
 More detail lives in `docs/playbook-interface.md`.

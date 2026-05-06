@@ -1,0 +1,10 @@
+- import_playbook: "{{ ((lookup('env', 'DOTFILES_PUBLIC_REPO_DIR') | default('', true)) or (lookup('env', 'HOME') ~ '/workspaces/repos/github/YlanAllouche/dotfiles')) ~ '/playbooks/macos.yml' }}"
+  # Could also be: ../playbooks/macos.yml
+  vars:
+    dotfiles_profile: macos
+    tty_gh_enabled: true
+    vscode_enabled: true
+    # dotfiles_active_user: your-user
+    # dotfiles_active_home: /Users/your-user
+    # identity_git_name: Your Name
+    # identity_git_email: your.email@example.com

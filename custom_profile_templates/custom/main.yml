@@ -1,0 +1,42 @@
+- import_playbook: "{{ ((lookup('env', 'DOTFILES_PUBLIC_REPO_DIR') | default('', true)) or (lookup('env', 'HOME') ~ '/workspaces/repos/github/YlanAllouche/dotfiles')) ~ '/playbooks/main.yml' }}"
+  # Could also be: ../playbooks/main.yml
+  vars:
+    dotfiles_profile: custom
+    identity_enabled: true
+    appearance_enabled: true
+    shell_enabled: true
+    tty_enabled: true
+    nvim_enabled: true
+    python_dev_enabled: false
+    ecmascript_enabled: false
+    golang_enabled: false
+    tower_enabled: false
+    linux_desktop_enabled: false
+    sound_enabled: false
+    hyprland_enabled: false
+    system_tty_login_enabled: false
+    browser_base_enabled: true
+    browser_personal_enabled: false
+    media_enabled: false
+    pkm_enabled: false
+    pim_enabled: false
+    email_enabled: false
+    r_lang_enabled: false
+    java_enabled: false
+    share_sync_enabled: false
+    llm_enabled: false
+    llm_opencode_enabled: false
+    llm_claudecode_enabled: false
+    vscode_enabled: false
+    tty_dv_enabled: false
+    tty_gh_enabled: false
+    tty_glab_enabled: false
+    tty_newsboat_enabled: false
+    tty_neofetch_enabled: false
+    tty_pywal_enabled: true
+    tty_tmux_bootstrap_enabled: false
+    appearance_generate_wallpapers: false
+    appearance_install_colorwhirl_target: false
+    appearance_install_matugen: true
+    # dotfiles_active_user: your-user
+    # dotfiles_active_home: /home/your-user

@@ -53,6 +53,12 @@ A downstream repo is expected to:
 - set global vars such as `dotfiles_active_user`, `dotfiles_active_home`, or role-specific toggles
 - keep private secrets, machine notes, and client-specific artifacts out of this public repo
 
+The tracked `custom_profile_templates/` directory provides copyable examples for:
+
+- reusing the public `hyprland` archetype
+- reusing the public `macos` archetype
+- using `dotfiles_profile=custom` so the full profile lives downstream
+
 Use `dotfiles_profile=custom` when the downstream repo wants to define the full profile itself.
 
 ## Role Vars vs Profile Vars
