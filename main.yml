@@ -2,4 +2,4 @@
 # TODO: consider a generic profile extension field for package-manager-specific extras such as pip, npm, brew, and yay.
 - import_playbook: playbooks/main.yml
   vars:
-    dotfiles_profile: "{{ dotfiles_profile | default('hyprland') }}"
+    dotfiles_profile: hyprland
