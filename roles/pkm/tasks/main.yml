@@ -8,6 +8,7 @@
 - name: Install PKM packages on macOS
   community.general.homebrew_cask:
     name: "{{ pkm_homebrew_casks }}"
+    install_options: "{{ homebrew_cask_install_options }}"
     state: present
   when: is_macos | bool
 

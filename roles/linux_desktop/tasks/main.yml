@@ -3,12 +3,14 @@
   community.general.pacman:
     name: "{{ linux_desktop_arch_packages }}"
     state: present
+  when: is_archlinux | bool
 
 - name: Install Linux desktop font packages on Arch
   become: true
   community.general.pacman:
     name: "{{ linux_desktop_arch_font_packages }}"
     state: present
+  when: is_archlinux | bool
 
 - name: Install Linux desktop packages on macOS
   community.general.homebrew:
@@ -25,6 +27,7 @@
 - name: Install Linux desktop font casks on macOS
   community.general.homebrew_cask:
     name: "{{ linux_desktop_homebrew_font_casks }}"
+    install_options: "{{ homebrew_cask_install_options }}"
     state: present
   when: is_macos | bool
 
@@ -35,14 +38,18 @@
     use: yay
     name: "{{ linux_desktop_aur_packages }}"
     state: present
-  when: aur_install_method == 'yay'
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
 
 - name: Install Linux desktop AUR packages through pacman
   become: true
   community.general.pacman:
     name: "{{ linux_desktop_aur_packages }}"
     state: present
-  when: aur_install_method == 'pacman'
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
 
 - name: Ensure Linux desktop config directories exist
   ansible.builtin.file:

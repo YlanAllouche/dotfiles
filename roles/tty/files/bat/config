@@ -1,0 +1,13 @@
+--theme="1337"
+
+# Show line numbers, Git modifications and file header (but no grid)
+--style="numbers,changes,header"
+
+# Use italic text on the terminal when supported
+--italic-text=always
+
+# Use C++ syntax highlighting for .h files
+--map-syntax h:cpp
+
+# Use gitignore highlighting for .ignore files
+--map-syntax .ignore:.gitignore

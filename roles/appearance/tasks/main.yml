@@ -94,7 +94,7 @@
     set -euo pipefail
     tmp="$(mktemp)"
     jq --argjson width {{ item.split('x')[0] }} --argjson height {{ item.split('x')[1] }} '.width = $width | .height = $height' "{{ appearance_colorwhirl_recipe_path }}" > "$tmp"
-    {{ appearance_colorwhirl_command }} --config "@$tmp" --output "{{ appearance_controller_cache_dir }}/wallpaper-{{ item }}.png"
+    {{ appearance_colorwhirl_command }} --config "@$tmp" --output "{{ appearance_controller_cache_dir }}/wallpaper-{{ item }}.jpg"
     rm -f "$tmp"
   args:
     executable: /bin/bash
@@ -107,7 +107,7 @@
     set -euo pipefail
     tmp="$(mktemp)"
     jq --argjson width {{ item.split('x')[0] }} --argjson height {{ item.split('x')[1] }} --argjson colors '{{ appearance_theme_recipe_colors | to_json }}' '.width = $width | .height = $height | .colors = $colors' "{{ appearance_colorwhirl_recipe_path }}" > "$tmp"
-    {{ appearance_colorwhirl_command }} --config "@$tmp" --output "{{ appearance_controller_cache_dir }}/wallpaper-themed-{{ item }}.png"
+    {{ appearance_colorwhirl_command }} --config "@$tmp" --output "{{ appearance_controller_cache_dir }}/wallpaper-themed-{{ item }}.jpg"
     rm -f "$tmp"
   args:
     executable: /bin/bash
@@ -117,16 +117,23 @@
 
 - name: Copy generated base wallpapers to the target
   ansible.builtin.copy:
-    src: "{{ appearance_controller_cache_dir }}/wallpaper-{{ item }}.png"
-    dest: "{{ appearance_wallpaper_output_dir }}/wallpaper-{{ item }}.png"
+    src: "{{ appearance_controller_cache_dir }}/wallpaper-{{ item }}.jpg"
+    dest: "{{ appearance_wallpaper_output_dir }}/wallpaper-{{ item }}.jpg"
     mode: "0644"
   loop: "{{ appearance_resolutions }}"
   when: appearance_generate_wallpapers | bool
 
 - name: Copy generated themed wallpapers to the target
   ansible.builtin.copy:
-    src: "{{ appearance_controller_cache_dir }}/wallpaper-themed-{{ item }}.png"
-    dest: "{{ appearance_wallpaper_output_dir }}/wallpaper-themed-{{ item }}.png"
+    src: "{{ appearance_controller_cache_dir }}/wallpaper-themed-{{ item }}.jpg"
+    dest: "{{ appearance_wallpaper_output_dir }}/wallpaper-themed-{{ item }}.jpg"
     mode: "0644"
   loop: "{{ appearance_resolutions }}"
+  when: appearance_generate_wallpapers | bool
+
+- name: Install default wallpaper cache file
+  ansible.builtin.copy:
+    src: "{{ appearance_controller_cache_dir }}/wallpaper-{{ appearance_default_wallpaper_resolution }}.jpg"
+    dest: "{{ appearance_wallpaper_cache_path }}"
+    mode: "0644"
   when: appearance_generate_wallpapers | bool

@@ -11,6 +11,7 @@
 - name: Install browser personal packages on macOS
   community.general.homebrew_cask:
     name: "{{ browser_personal_homebrew_casks }}"
+    install_options: "{{ homebrew_cask_install_options }}"
     state: present
   when:
     - is_macos | bool

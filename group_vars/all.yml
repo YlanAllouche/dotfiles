@@ -58,6 +58,8 @@ NVIDIA_REQUIRED_PACKAGE_GROUPS:
 aur_enabled: true
 aur_install_method: yay
 aur_builder_user: aur_builder
+sudo_present: false
+homebrew_cask_install_options: "{{ [] if sudo_present | bool else ['appdir=' ~ active_home ~ '/Applications'] }}"
 
 identity_enabled: true
 appearance_enabled: true
@@ -139,6 +141,8 @@ tty_base_arch_packages:
   - fd
   - fzf
   - git
+  - htop
+  - inxi
   - jq
   - lazygit
   - less
@@ -146,6 +150,7 @@ tty_base_arch_packages:
   - ranger
   - ripgrep
   - rsync
+  - sshfs
   - tig
   - tmux
   - unzip
@@ -163,6 +168,7 @@ tty_base_homebrew_packages:
   - gh
   - git
   - gitmux
+  - htop
   - jq
   - lazygit
   - ripgrep
@@ -176,6 +182,9 @@ tty_tmux_sessionizer_repo: https://github.com/theprimeagen/tmux-sessionizer
 tty_tpm_repo: https://github.com/tmux-plugins/tpm
 tty_python_packages:
   - git+https://github.com/YlanAllouche/dv-tui.git
+
+tty_nvidia_python_packages:
+  - nvitop
 
 shell_arch_packages:
   - zsh
@@ -396,12 +405,14 @@ appearance_matugen_aur_packages:
 
 appearance_colorwhirl_npm_package: colorwhirl
 appearance_colorwhirl_command: colorwhirl
-appearance_wallpaper_output_dir: "{{ xdg_data_home }}/wallpapers/generated"
+appearance_wallpaper_output_dir: "{{ xdg_cache_home }}"
+appearance_wallpaper_cache_path: "{{ xdg_cache_home }}/wallpaper.jpg"
 appearance_controller_cache_dir: "{{ lookup('env', 'HOME') }}/.cache/dotfiles-wallpapers/{{ dotfiles_profile }}"
 appearance_default_resolutions:
   - 2560x1440
   - 1920x1080
   - 3840x2160
+appearance_default_wallpaper_resolution: 3840x2160
 appearance_additional_resolutions: []
 appearance_colorwhirl_recipe_path: "{{ dotfiles_repo_root }}/roles/appearance/files/colorwhirl/default-personal.json"
 appearance_theme_name: default

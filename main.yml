@@ -1,4 +1,5 @@
 # TODO: setup GH actions docker to at least have a tty profile working there while pulling a public share to make the PKM tools functional
+# TODO: consider a generic profile extension field for package-manager-specific extras such as pip, npm, brew, and yay.
 - import_playbook: playbooks/main.yml
   vars:
     dotfiles_profile: "{{ dotfiles_profile | default('hyprland') }}"

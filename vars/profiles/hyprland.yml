@@ -35,6 +35,10 @@ tty_newsboat_enabled: true
 tty_neofetch_enabled: true
 tty_pywal_enabled: true
 tty_tmux_bootstrap_enabled: true
-appearance_generate_wallpapers: false
+appearance_generate_wallpapers: true
+appearance_default_resolutions:
+  - 2560x1440
+appearance_default_wallpaper_resolution: 2560x1440
+appearance_colorwhirl_recipe_path: "{{ dotfiles_repo_root }}/roles/appearance/files/colorwhirl/default-hyprland.json"
 appearance_install_colorwhirl_target: false
 appearance_install_matugen: true

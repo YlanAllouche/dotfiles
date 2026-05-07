@@ -9,7 +9,7 @@ python_dev_enabled: true
 ecmascript_enabled: true
 golang_enabled: false
 tower_enabled: true
-linux_desktop_enabled: false
+linux_desktop_enabled: true
 sound_enabled: false
 hyprland_enabled: false
 system_tty_login_enabled: false
