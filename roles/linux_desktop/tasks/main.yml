@@ -18,6 +18,13 @@
     state: present
   when: is_macos | bool
 
+- name: Install Linux desktop app casks on macOS
+  community.general.homebrew_cask:
+    name: "{{ linux_desktop_homebrew_casks }}"
+    install_options: "{{ homebrew_cask_install_options }}"
+    state: present
+  when: is_macos | bool
+
 - name: Ensure Homebrew font tap exists on macOS
   community.general.homebrew_tap:
     name: homebrew/cask-fonts
