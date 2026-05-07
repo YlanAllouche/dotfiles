@@ -25,7 +25,8 @@ share_sync_enabled: false
 llm_enabled: true
 llm_opencode_enabled: false
 llm_claudecode_enabled: false
-vscode_enabled: true
+# TODO: Re-enable VS Code on macOS once its app/config path model is clarified.
+vscode_enabled: false
 
 browser_bitwarden_enabled: false
 tty_dv_enabled: false

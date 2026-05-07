@@ -111,6 +111,7 @@
     - "{{ active_home }}/Downloads"
   register: linux_desktop_user_dirs
   failed_when: false
+  when: is_linux | bool
 
 - name: Assert Desktop and Downloads are empty before symlinking
   ansible.builtin.assert:
@@ -120,6 +121,7 @@
       NOTES: {{ item.item }} must be empty before this role replaces it with a symlink.
   loop: "{{ linux_desktop_user_dirs.results }}"
   when:
+    - is_linux | bool
     - item.failed is not defined or not item.failed
 
 - name: Remove Desktop and Downloads directories before symlinking
@@ -129,6 +131,7 @@
   loop:
     - "{{ active_home }}/Desktop"
     - "{{ active_home }}/Downloads"
+  when: is_linux | bool
 
 - name: Symlink Desktop and Downloads to workspaces local desktop
   ansible.builtin.file:
@@ -138,6 +141,7 @@
   loop:
     - "{{ active_home }}/Desktop"
     - "{{ active_home }}/Downloads"
+  when: is_linux | bool
 
 - name: Install Linux desktop helper scripts
   ansible.builtin.copy:

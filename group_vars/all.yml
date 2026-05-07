@@ -134,6 +134,7 @@ identity_glab_host: ""
 
 tty_base_arch_packages:
   - bat
+  - bc
   - btop
   - cloc
   - curl
@@ -160,6 +161,7 @@ tty_base_arch_packages:
 
 tty_base_homebrew_packages:
   - bat
+  - bc
   - btop
   - cloc
   - eza
@@ -171,6 +173,7 @@ tty_base_homebrew_packages:
   - htop
   - jq
   - lazygit
+  - ranger
   - ripgrep
   - tig
   - tmux

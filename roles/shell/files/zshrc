@@ -4,7 +4,23 @@ FUNCNEST=1000
 export CLICOLOR=1
 
 # Source antidote
-source /usr/share/zsh-antidote/antidote.zsh
+if [[ -f /usr/share/zsh-antidote/antidote.zsh ]]; then
+    source /usr/share/zsh-antidote/antidote.zsh
+else
+    for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+        if [[ -x "$brew_bin" ]]; then
+            antidote_prefix="$($brew_bin --prefix antidote 2>/dev/null)"
+            if [[ -n "$antidote_prefix" && -f "$antidote_prefix/share/antidote/antidote.zsh" ]]; then
+                source "$antidote_prefix/share/antidote/antidote.zsh"
+                break
+            fi
+            if [[ -f "$($brew_bin --prefix)/share/antidote/antidote.zsh" ]]; then
+                source "$($brew_bin --prefix)/share/antidote/antidote.zsh"
+                break
+            fi
+        fi
+    done
+fi
 
 
 # Create plugins file if it doesn't exist
