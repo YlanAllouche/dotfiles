@@ -1,0 +1,5 @@
+- name: Keep x11 role dormant for now
+  ansible.builtin.debug:
+    msg: "X11 role is a placeholder for legacy desktop configuration."
+  changed_when: false
+  when: false

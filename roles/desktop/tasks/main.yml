@@ -1,0 +1,5 @@
+- name: Keep desktop placeholder role dormant for now
+  ansible.builtin.debug:
+    msg: "Desktop placeholder role is documentation-only for now."
+  changed_when: false
+  when: false

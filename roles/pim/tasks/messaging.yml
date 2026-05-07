@@ -1,0 +1,9 @@
+# TODO: Implement messaging-related workflow ownership here once the scope is clearer.
+# Candidate areas include terminal-first messaging clients and any PKM/PIM-adjacent
+# notification or inbox flows that belong with the broader personal information stack.
+
+- name: Keep messaging placeholder notes dormant for now
+  ansible.builtin.debug:
+    msg: "Messaging placeholder notes are not implemented yet."
+  changed_when: false
+  when: false

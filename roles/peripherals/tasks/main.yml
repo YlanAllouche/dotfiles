@@ -9,3 +9,9 @@
     src: bluetooth-macs.todo.j2
     dest: "{{ xdg_config_home }}/peripherals/bluetooth-macs.todo"
     mode: "0644"
+
+- name: Install touch and gesture placeholder TODO file
+  ansible.builtin.template:
+    src: touch-gestures.todo.j2
+    dest: "{{ xdg_config_home }}/peripherals/touch-gestures.todo"
+    mode: "0644"

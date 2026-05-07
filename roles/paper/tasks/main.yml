@@ -1,0 +1,5 @@
+- name: Keep paper role dormant for now
+  ansible.builtin.debug:
+    msg: "Paper role is a placeholder for future notes and setup skeletons."
+  changed_when: false
+  when: false

@@ -1,0 +1,19 @@
+# GTK and theme placeholder notes for future desktop role work.
+#
+# Intended config ownership targets:
+# - ~/.config/gtk-3.0
+# - ~/.gtkrc-2.0
+#
+# Candidate packages and themes to evaluate:
+# - capitaine-cursors
+# - qogir-icon-theme
+# - qogir-gtk-theme
+# - oomox
+# - gradience
+# - a GTK settings editor such as lxappearance or a modern equivalent
+
+- name: Keep GTK placeholder notes dormant for now
+  ansible.builtin.debug:
+    msg: "GTK placeholder notes are not wired into any active role yet."
+  changed_when: false
+  when: false

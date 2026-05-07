@@ -18,6 +18,7 @@
 
 - `linux_desktop`: desktop-adjacent Linux apps, launchers, capture scripts, mpv, pacmixer, zathura.
 - `hyprland`: Hyprland, hyprlock, hypridle, waybar, swaync, and Hyprland-specific helpers.
+- `desktop`: dormant placeholder scope for GTK/theme/cursor config that is not wired yet.
 - `browser_base`: browser install plus the `browser` launcher script.
 - `browser_personal`: tridactyl config, bitwarden toggle, tridactyl native host.
 - `media`: local music and media helpers such as mpd/ncmpcpp and Jellyfin/Kodi scripts.
@@ -36,7 +37,9 @@
 - `r_lang`: R install, user library path, default packages.
 - `java`: OpenJDK and Maven.
 - `share_sync`: share root and sync client baseline.
-- `peripherals`: currently dormant hardware-specific gestures and device notes.
+- `peripherals`: currently dormant hardware-specific notes including Bluetooth and touch/gesture placeholders.
+- `x11`: dormant placeholder home for X11-era config files.
+- `paper`: dormant placeholder for printer, scanner, messaging, and other operational skeleton notes.
 - `cloud`: optional AWS/Fly/Terraform tooling.
 - `oci`: optional podman/docker/k3-style container tooling.
 - `android_dev`: Android platform tools, off by default.
