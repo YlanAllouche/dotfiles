@@ -1,10 +1,27 @@
 # TODO: Move Linux audio and Bluetooth stack provisioning into the infra layer
 # once that layer owns the base desktop image end-to-end.
 
+- name: Gather package facts for sound stack reconciliation
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Build effective Arch sound package list for existing machines
+  # TODO: Decide whether public desktop applies should ever replace jack2 with
+  # pipewire-jack automatically, or whether that remains a manual migration.
+  ansible.builtin.set_fact:
+    sound_effective_arch_packages: >-
+      {{
+        sound_arch_packages
+        | reject('equalto', 'pipewire-jack')
+        | list
+        if ('jack2' in ansible_facts.packages and 'pipewire-jack' not in ansible_facts.packages)
+        else sound_arch_packages
+      }}
+
 - name: Install sound and Bluetooth packages on Arch
   become: true
   community.general.pacman:
-    name: "{{ sound_arch_packages }}"
+    name: "{{ sound_effective_arch_packages }}"
     state: present
 
 - name: Enable Bluetooth service globally
