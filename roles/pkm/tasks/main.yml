@@ -29,6 +29,24 @@
     dest: "{{ xdg_config_home }}/tmux/conf.d/90-pkm.conf"
     mode: "0644"
 
+- name: Ensure PKM Hyprland drop-in directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/hypr/conf.d"
+    state: directory
+    mode: "0755"
+  when:
+    - is_linux | bool
+    - hyprland_enabled | default(false) | bool
+
+- name: Install PKM Hyprland Obsidian drop-in
+  ansible.builtin.copy:
+    src: hypr/obsidian.conf
+    dest: "{{ xdg_config_home }}/hypr/conf.d/90-obsidian.conf"
+    mode: "0644"
+  when:
+    - is_linux | bool
+    - hyprland_enabled | default(false) | bool
+
 - name: Install PKM Python packages
   ansible.builtin.pip:
     name: "{{ pkm_python_packages }}"
