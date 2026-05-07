@@ -1,4 +1,4 @@
 # TODO: setup firefox partially here and in personal layer
-- import_playbook: desktop-wayland.yml
+- import_playbook: main.yml
   vars:
     dotfiles_profile: "{{ dotfiles_profile | default('hyprland') }}"

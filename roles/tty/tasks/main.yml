@@ -259,6 +259,20 @@
     - src: ranger/plugins/unicode_icons.py
       dest: "{{ xdg_config_home }}/ranger/plugins/unicode_icons.py"
 
+- name: Check existing tmux-sessionizer link target
+  ansible.builtin.stat:
+    path: "{{ local_bin_dir }}/tmux-sessionizer"
+    follow: false
+  register: tty_tmux_sessionizer_link
+
+- name: Remove legacy tmux-sessionizer file before linking upstream checkout
+  ansible.builtin.file:
+    path: "{{ local_bin_dir }}/tmux-sessionizer"
+    state: absent
+  when:
+    - tty_tmux_sessionizer_link.stat.exists | default(false)
+    - not tty_tmux_sessionizer_link.stat.islnk | default(false)
+
 - name: Link tmux-sessionizer binary from upstream checkout
   ansible.builtin.file:
     src: "{{ xdg_data_home }}/tmux-sessionizer/tmux-sessionizer"
