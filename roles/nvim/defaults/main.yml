@@ -1,6 +1,7 @@
 nvim_arch_packages:
   - neovim
   - python-pip
+  - python-debugpy
   - python-pynvim
   - tree-sitter-cli
 
@@ -11,6 +12,7 @@ nvim_homebrew_packages:
   - tree-sitter-cli
 
 nvim_macos_python_packages:
+  - debugpy
   - pynvim
 
 nvim_bootstrap_plugins_enabled: false

@@ -24,6 +24,22 @@ return {
 		end,
 	},
 	{
+		"mfussenegger/nvim-dap-python",
+		ft = { "python" },
+		dependencies = {
+			"mfussenegger/nvim-dap",
+		},
+		config = function()
+			local dap_python = require("dap-python")
+			local python3 = vim.fn.exepath("python3")
+
+			dap_python.setup(python3 ~= "" and python3 or "python3")
+
+			vim.keymap.set("n", "<A-d>t", dap_python.test_method, { desc = "Debug nearest Python test" })
+			vim.keymap.set("n", "<A-d>T", dap_python.test_class, { desc = "Debug Python test class" })
+		end,
+	},
+	{
 		"rcarriga/nvim-dap-ui",
 		dependencies = {
 			"mfussenegger/nvim-dap",
