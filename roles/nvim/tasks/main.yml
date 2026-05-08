@@ -30,7 +30,9 @@
     dest: "{{ xdg_config_home }}/nvim/"
     mode: preserve
 
-- name: Remove PKM-specific Neovim files from the base config tree
+- name: Remove legacy PKM-specific Neovim files from the base config tree
+  # NOTES: PKM owns these overlays now. Keep this cleanup pass so machines that
+  # received the older base tree converge without carrying stale PKM-only files.
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
