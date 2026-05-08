@@ -1,6 +1,7 @@
 nvim_arch_packages:
   - neovim
   - python-pip
+  - python-pynvim
   - tree-sitter-cli
 
 nvim_homebrew_packages:
@@ -8,3 +9,8 @@ nvim_homebrew_packages:
   - python
   - tree-sitter
   - tree-sitter-cli
+
+nvim_macos_python_packages:
+  - pynvim
+
+nvim_bootstrap_plugins_enabled: false

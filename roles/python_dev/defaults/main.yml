@@ -1,0 +1,19 @@
+python_dev_poetry_enabled: false
+
+python_dev_arch_packages:
+  - python
+  - python-pip
+  - python-virtualenv
+
+python_dev_homebrew_packages:
+  - python
+
+python_dev_global_packages:
+  - numpy
+  - pandas
+
+python_dev_poetry_arch_packages:
+  - python-poetry
+
+python_dev_poetry_macos_python_packages:
+  - poetry

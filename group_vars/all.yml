@@ -105,8 +105,6 @@ tty_neofetch_enabled: false
 tty_pywal_enabled: true
 shell_bootstrap_enabled: false
 tty_tmux_bootstrap_enabled: false
-nvim_bootstrap_plugins_enabled: false
-python_dev_poetry_enabled: false
 llm_opencode_enabled: false
 llm_claudecode_enabled: false
 appearance_generate_wallpapers: false
@@ -153,7 +151,6 @@ tty_base_arch_packages:
   - jq
   - lazygit
   - less
-  - python-pynvim
   - ranger
   - ripgrep
   - rsync
@@ -189,6 +186,9 @@ tty_pywal_package: python-pywal
 tty_gitmux_aur_package: gitmux
 tty_tmux_sessionizer_repo: https://github.com/theprimeagen/tmux-sessionizer
 tty_tpm_repo: https://github.com/tmux-plugins/tpm
+# TODO: Continue moving role-owned package/config defaults out of this shared
+# globals file and into role defaults. Keep cross-role/public interface vars
+# here, but localize the rest as the role boundaries stabilize.
 tty_python_packages:
   - git+https://github.com/YlanAllouche/dv-tui.git
 
@@ -206,24 +206,6 @@ shell_homebrew_packages:
   - antidote
   - oh-my-posh
   - zsh
-
-python_dev_arch_packages:
-  - python
-  - python-pip
-  - python-virtualenv
-
-python_dev_homebrew_packages:
-  - python
-
-python_dev_global_packages:
-  - numpy
-  - pandas
-
-python_dev_poetry_arch_packages:
-  - poetry
-
-python_dev_poetry_homebrew_packages:
-  - poetry
 
 ecmascript_arch_packages:
   - nodejs

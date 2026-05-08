@@ -11,10 +11,10 @@
     state: present
   when: is_macos | bool
 
-- name: Ensure pynvim is installed for the active user
+- name: Ensure Neovim Python packages are installed for the active user on macOS
   ansible.builtin.pip:
-    name: pynvim
-    extra_args: --user
+    name: "{{ nvim_macos_python_packages }}"
+    extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
   when: is_macos | bool
 

@@ -21,7 +21,7 @@
 - name: Install global Python development packages on macOS
   ansible.builtin.pip:
     name: "{{ python_dev_global_packages }}"
-    extra_args: --user
+    extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
   when: is_macos | bool
 
@@ -35,9 +35,10 @@
     - python_dev_poetry_enabled | bool
 
 - name: Install Poetry on macOS when requested
-  community.general.homebrew:
-    name: "{{ python_dev_poetry_homebrew_packages }}"
-    state: present
+  ansible.builtin.pip:
+    name: "{{ python_dev_poetry_macos_python_packages }}"
+    extra_args: --user --break-system-packages
+    executable: "{{ pip3_executable }}"
   when:
     - is_macos | bool
     - python_dev_poetry_enabled | bool
