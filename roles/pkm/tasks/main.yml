@@ -52,14 +52,14 @@
   ansible.builtin.pip:
     name: "{{ pkm_python_packages }}"
     extra_args: --user --break-system-packages
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when: is_archlinux | bool
 
 - name: Install PKM Python packages on macOS
   ansible.builtin.pip:
     name: "{{ pkm_python_packages }}"
     extra_args: --user
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when: is_macos | bool
 
 - name: Ensure Obsidian config directory exists

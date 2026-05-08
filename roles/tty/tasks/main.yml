@@ -15,21 +15,21 @@
   ansible.builtin.pip:
     name: "{{ tty_python_packages }}"
     extra_args: --user --break-system-packages
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when: is_archlinux | bool
 
 - name: Install tty Python helper packages on macOS
   ansible.builtin.pip:
     name: "{{ tty_python_packages }}"
     extra_args: --user
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when: is_macos | bool
 
 - name: Install NVIDIA tty Python helper packages on Linux
   ansible.builtin.pip:
     name: "{{ tty_nvidia_python_packages }}"
     extra_args: "{{ '--user --break-system-packages' if is_archlinux | bool else '--user' }}"
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when:
     - is_linux | bool
     - GPU_VENDOR | lower == 'nvidia'
@@ -293,6 +293,8 @@
   when: not tty_glab_enabled | bool
 
 - name: Install Newsboat URL list
+  # TODO: Install the sanitized public newsboat config once its private feed
+  # credentials and service-specific values are split into a downstream layer.
   ansible.builtin.copy:
     src: newsboat-urls
     dest: "{{ xdg_config_home }}/newsboat/urls"

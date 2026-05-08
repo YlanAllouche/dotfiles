@@ -43,6 +43,27 @@
         consumer_contract_env_dir: "{{ active_home }}/.config/dotfiles/env"
         consumer_contract_docs_dir: "{{ active_home }}/.config/dotfiles/contracts"
 
+    - name: Detect Homebrew prefix on macOS
+      ansible.builtin.shell: |
+        set -eu
+        for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+          if [ -x "$brew_bin" ]; then
+            "$brew_bin" --prefix
+            exit 0
+          fi
+        done
+        exit 1
+      args:
+        executable: /bin/sh
+      register: homebrew_prefix_cmd
+      changed_when: false
+      when: is_macos | bool
+
+    - name: Normalize package-manager helper paths
+      ansible.builtin.set_fact:
+        homebrew_prefix: "{{ homebrew_prefix_cmd.stdout if is_macos | bool else '' }}"
+        pip3_executable: "{{ (homebrew_prefix_cmd.stdout ~ '/bin/pip3') if is_macos | bool else 'pip3' }}"
+
     - name: Refresh pacman package databases on Arch
       become: true
       community.general.pacman:

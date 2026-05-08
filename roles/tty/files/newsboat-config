@@ -1,0 +1,50 @@
+external-url-viewer "urlview.sh"
+
+bind-key j down
+bind-key k up
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+bind-key G end
+bind-key g home
+bind-key d pagedown
+bind-key u pageup
+bind-key l open
+bind-key h quit
+bind-key a toggle-article-read
+bind-key n next-unread
+bind-key N prev-unread
+bind-key D pb-download
+bind-key U show-urls
+bind-key x pb-delete
+
+color listnormal cyan default
+color listfocus black yellow standout bold
+color listnormal_unread blue default
+color listfocus_unread yellow default bold
+color info red black bold
+color article cyan default
+
+browser "$BROWSER %u > /dev/null & "
+max-items 0
+macro , open-in-browser
+macro a set browser "tsp youtube-dl --add-metadata -xic"; open-in-browser; set browser linkhandler
+macro V set browser "setsid nohup mpv"; open-in-browser; set browser linkhandler
+macro w set browser "w3m"; open-in-browser; set browser linkhandler
+macro m set browser "mpv --ytdl --ontop --no-border --force-window --autofit=960x540 --geometry=-20-50 %u > /dev/null &"; open-in-browser; set browser "$BROWSER %u > /dev/null & "
+highlight article "flags:s" green default
+
+cache-file "~/.local/share/newsboat/cache.db"
+
+# Example FreshRSS configuration; keep real values in a private layer.
+# urls-source "freshrss"
+# freshrss-url "https://feeds.example.com/api/greader.php"
+# freshrss-login "your-user"
+# freshrss-password "your-password"
+# freshrss-flag-star "s"
+# freshrss-min-items 200
+
+macro ctrl-o set browser "mpv %u > /dev/null &"; open-in-browser; set browser "$BROWSER %u > /dev/null & "
+show-read-feeds yes
+show-read-articles yes

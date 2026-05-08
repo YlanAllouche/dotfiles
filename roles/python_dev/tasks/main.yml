@@ -15,14 +15,14 @@
   ansible.builtin.pip:
     name: "{{ python_dev_global_packages }}"
     extra_args: --user --break-system-packages
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when: is_archlinux | bool
 
 - name: Install global Python development packages on macOS
   ansible.builtin.pip:
     name: "{{ python_dev_global_packages }}"
     extra_args: --user
-    executable: pip3
+    executable: "{{ pip3_executable }}"
   when: is_macos | bool
 
 - name: Install Poetry on Arch when requested
