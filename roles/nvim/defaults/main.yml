@@ -1,7 +1,10 @@
 nvim_arch_packages:
   - neovim
   - python-pip
+  - tree-sitter-cli
 
 nvim_homebrew_packages:
   - neovim
   - python
+  - tree-sitter
+  - tree-sitter-cli

@@ -9,6 +9,21 @@ return {
 	config = function()
 		local telescope = require("telescope")
 		local actions = require("telescope.actions")
+		local preview_utils = require("telescope.previewers.utils")
+
+		preview_utils.ts_highlighter = function(bufnr, ft)
+			local lang = vim.treesitter.language.get_lang(ft)
+			if not lang then
+				return false
+			end
+
+			local get_query = vim.treesitter.query.get or vim.treesitter.get_query
+			if not pcall(get_query, lang, "highlights") then
+				return false
+			end
+
+			return pcall(vim.treesitter.start, bufnr, lang)
+		end
 
 		telescope.setup({
 			defaults = {
