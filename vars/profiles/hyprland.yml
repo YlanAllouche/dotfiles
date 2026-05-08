@@ -16,7 +16,7 @@ system_tty_login_enabled: true
 browser_base_enabled: true
 browser_personal_enabled: false
 media_enabled: false
-pkm_enabled: false
+pkm_enabled: true
 pim_enabled: false
 email_enabled: false
 r_lang_enabled: false

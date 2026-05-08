@@ -1,5 +1,10 @@
 # TODO: setup GH actions docker to at least have a tty profile working there while pulling a public share to make the PKM tools functional
 # TODO: consider a generic profile extension field for package-manager-specific extras such as pip, npm, brew, and yay.
+# TODO: Downstream imports currently rely on public profile vars loaded at play level,
+# which makes profile booleans easy to consume but awkward to override selectively.
+# If the private/client layering grows, add an explicit post-profile override map
+# such as dotfiles_profile_overrides and apply it after the selected public profile
+# is loaded, rather than relying on import precedence for booleans like pkm_enabled.
 - import_playbook: playbooks/main.yml
   vars:
     dotfiles_profile: hyprland

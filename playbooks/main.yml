@@ -7,18 +7,9 @@
 
   vars_files:
     - ../group_vars/all.yml
+    - "../vars/profiles/{{ dotfiles_profile }}.yml"
 
   pre_tasks:
-    - name: Load selected public profile vars into a temporary map
-      ansible.builtin.include_vars:
-        file: "../vars/profiles/{{ dotfiles_profile }}.yml"
-        name: dotfiles_selected_profile_vars
-
-    - name: Apply selected public profile vars
-      ansible.builtin.set_fact:
-        "{{ item.key }}": "{{ item.value }}"
-      loop: "{{ dotfiles_selected_profile_vars | dict2items }}"
-
     - name: Normalize runtime user and platform variables
       ansible.builtin.set_fact:
         active_user: "{{ dotfiles_active_user | default(ansible_user_id) }}"
