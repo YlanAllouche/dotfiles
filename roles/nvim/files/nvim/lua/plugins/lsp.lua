@@ -42,6 +42,7 @@ return {
 					-- "fsautocomplete",
 					-- "csharp_ls",
 					"pyright",
+					"ruff",
 					"gopls",
 					"rust_analyzer",
 					"jdtls",
@@ -54,9 +55,8 @@ return {
 				ensure_installed = {
 					"prettier", -- prettier formatter
 					"stylua", -- lua formatter
-					"isort", -- python formatter
-					"black", -- python formatter
-					"pylint", -- python linter
+					"ruff", -- python formatter/linter/LSP server
+					-- "black", -- fallback formatter for Black-only Python repos
 					"eslint_d", -- js linter
 				},
 			})
@@ -92,6 +92,11 @@ return {
 				group = vim.api.nvim_create_augroup("LspSemanticTokensToggle", { clear = true }),
 				callback = function(args)
 					apply_semantic_tokens(args.buf, vim.g.lsp_semantic_tokens_enabled)
+
+					local client = args.data and vim.lsp.get_client_by_id(args.data.client_id) or nil
+					if client and client.name == "ruff" then
+						client.server_capabilities.hoverProvider = false
+					end
 				end,
 			})
 
@@ -152,8 +157,8 @@ return {
 				severity_sort = true,
 			})
 
-			vim.keymap.set("n", "<A-d>", toggle_diagnostics, { desc = "Toggle diagnostics" })
-			vim.keymap.set("i", "<A-d>", function()
+			vim.keymap.set("n", "<A-d>d", toggle_diagnostics, { desc = "Toggle diagnostics" })
+			vim.keymap.set("i", "<A-d>d", function()
 				toggle_diagnostics()
 				-- Return to insert mode since the toggle function might exit it
 				vim.cmd("startinsert")
@@ -253,6 +258,11 @@ return {
 			}
 			vim.lsp.enable("pyright")
 
+			vim.lsp.config.ruff = {
+				capabilities = capabilities,
+			}
+			vim.lsp.enable("ruff")
+
 			vim.lsp.config.svelte = {
 				capabilities = capabilities,
 				on_attach = on_attach,
@@ -339,7 +349,6 @@ return {
 			vim.keymap.set("n", "<leader>p", "<cmd>Telescope lsp_workspace_symbols<cr>", {})
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
 			vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, {})
-			vim.keymap.set("n", "<M>f", vim.lsp.buf.format, {})
 			vim.keymap.set("n", "<leader>ut", "<cmd>LspSemanticTokensToggle<CR>", { desc = "Toggle LSP semantic tokens" })
 			-- vim.keymap.set("n", "<leader>r", vim.lsp.buf.references, {})
 		end,
