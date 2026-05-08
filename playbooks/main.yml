@@ -12,7 +12,7 @@
   pre_tasks:
     - name: Normalize runtime user and platform variables
       ansible.builtin.set_fact:
-        active_user: "{{ dotfiles_active_user | default(ansible_user_id) }}"
+        active_user: "{{ dotfiles_active_user | default(ansible_facts['user_id']) }}"
         active_home: >-
           {{
             dotfiles_active_home
@@ -20,17 +20,17 @@
               lookup('env', 'HOME')
               if inventory_hostname == 'localhost'
               else (
-                '/Users/' ~ (dotfiles_active_user | default(ansible_user_id))
-                if ansible_system == 'Darwin'
-                else '/home/' ~ (dotfiles_active_user | default(ansible_user_id))
+                '/Users/' ~ (dotfiles_active_user | default(ansible_facts['user_id']))
+                if ansible_facts['system'] == 'Darwin'
+                else '/home/' ~ (dotfiles_active_user | default(ansible_facts['user_id']))
               )
             )
           }}
-        platform_family: "{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}"
-        is_macos: "{{ ansible_system == 'Darwin' }}"
-        is_linux: "{{ ansible_system == 'Linux' }}"
-        is_wsl: "{{ ansible_kernel is search('WSL') or ansible_kernel is search('Microsoft') }}"
-        is_archlinux: "{{ ansible_distribution == 'Archlinux' }}"
+        platform_family: "{{ 'macos' if ansible_facts['system'] == 'Darwin' else 'linux' }}"
+        is_macos: "{{ ansible_facts['system'] == 'Darwin' }}"
+        is_linux: "{{ ansible_facts['system'] == 'Linux' }}"
+        is_wsl: "{{ ansible_facts['kernel'] is search('WSL') or ansible_facts['kernel'] is search('Microsoft') }}"
+        is_archlinux: "{{ ansible_facts['distribution'] == 'Archlinux' }}"
 
     - name: Normalize runtime path variables
       ansible.builtin.set_fact:

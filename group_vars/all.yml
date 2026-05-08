@@ -1,4 +1,4 @@
-active_user: "{{ dotfiles_active_user | default(ansible_user_id) }}"
+active_user: "{{ dotfiles_active_user | default(ansible_facts['user_id']) }}"
 active_home: >-
   {{
     dotfiles_active_home
@@ -7,17 +7,17 @@ active_home: >-
       if inventory_hostname == 'localhost'
       else (
         '/Users/' ~ active_user
-        if ansible_system == 'Darwin'
+        if ansible_facts['system'] == 'Darwin'
         else '/home/' ~ active_user
       )
     )
   }}
 
-platform_family: "{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}"
-is_macos: "{{ ansible_system == 'Darwin' }}"
-is_linux: "{{ ansible_system == 'Linux' }}"
-is_wsl: "{{ ansible_kernel is search('WSL') or ansible_kernel is search('Microsoft') }}"
-is_archlinux: "{{ ansible_distribution == 'Archlinux' }}"
+platform_family: "{{ 'macos' if ansible_facts['system'] == 'Darwin' else 'linux' }}"
+is_macos: "{{ ansible_facts['system'] == 'Darwin' }}"
+is_linux: "{{ ansible_facts['system'] == 'Linux' }}"
+is_wsl: "{{ ansible_facts['kernel'] is search('WSL') or ansible_facts['kernel'] is search('Microsoft') }}"
+is_archlinux: "{{ ansible_facts['distribution'] == 'Archlinux' }}"
 
 xdg_config_home: "{{ active_home }}/.config"
 xdg_data_home: "{{ active_home }}/.local/share"

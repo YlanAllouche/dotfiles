@@ -23,13 +23,13 @@ ansible-playbook -i inventory/remote-archtest.yml --limit archtest /dev/stdin <<
   pre_tasks:
     - name: Normalize runtime user and platform variables
       ansible.builtin.set_fact:
-        active_user: "{{ ansible_user_id }}"
-        active_home: "{{ '/home/' ~ ansible_user_id }}"
-        platform_family: "{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}"
-        is_macos: "{{ ansible_system == 'Darwin' }}"
-        is_linux: "{{ ansible_system == 'Linux' }}"
-        is_wsl: "{{ ansible_kernel is search('WSL') or ansible_kernel is search('Microsoft') }}"
-        is_archlinux: "{{ ansible_distribution == 'Archlinux' }}"
+        active_user: "{{ ansible_facts['user_id'] }}"
+        active_home: "{{ '/home/' ~ ansible_facts['user_id'] }}"
+        platform_family: "{{ 'macos' if ansible_facts['system'] == 'Darwin' else 'linux' }}"
+        is_macos: "{{ ansible_facts['system'] == 'Darwin' }}"
+        is_linux: "{{ ansible_facts['system'] == 'Linux' }}"
+        is_wsl: "{{ ansible_facts['kernel'] is search('WSL') or ansible_facts['kernel'] is search('Microsoft') }}"
+        is_archlinux: "{{ ansible_facts['distribution'] == 'Archlinux' }}"
 
     - name: Normalize runtime path variables
       ansible.builtin.set_fact:
