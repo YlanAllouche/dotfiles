@@ -53,6 +53,8 @@ Drive the engine directly with a custom profile:
 ansible-playbook playbooks/main.yml -e dotfiles_profile=custom
 ```
 
+For inline role-only iteration examples such as `nvim` or `python_dev` on a remote test machine, see `docs/ansible-patterns.md`.
+
 ## Downstream Use
 
 Private or client-specific repos are expected to import one of the public playbooks and override globals or role toggles there.

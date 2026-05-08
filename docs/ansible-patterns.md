@@ -8,6 +8,66 @@
 - `vars/profiles/` contains public profile-level presets.
 - `docs/playbook-interface.md` describes the intended public-vs-downstream interface.
 
+## Role-only iteration
+
+Use an inline playbook when you want a fast feedback loop on one or two roles without creating a tracked wrapper playbook.
+
+Current Arch test-machine pattern:
+
+```bash
+ansible-playbook -i inventory/remote-archtest.yml --limit archtest /dev/stdin <<'EOF'
+- name: Apply nvim role only
+  hosts: all
+  gather_facts: true
+
+  pre_tasks:
+    - name: Normalize runtime user and platform variables
+      ansible.builtin.set_fact:
+        active_user: "{{ ansible_user_id }}"
+        active_home: "{{ '/home/' ~ ansible_user_id }}"
+        platform_family: "{{ 'macos' if ansible_system == 'Darwin' else 'linux' }}"
+        is_macos: "{{ ansible_system == 'Darwin' }}"
+        is_linux: "{{ ansible_system == 'Linux' }}"
+        is_wsl: "{{ ansible_kernel is search('WSL') or ansible_kernel is search('Microsoft') }}"
+        is_archlinux: "{{ ansible_distribution == 'Archlinux' }}"
+
+    - name: Normalize runtime path variables
+      ansible.builtin.set_fact:
+        xdg_config_home: "{{ active_home }}/.config"
+        xdg_data_home: "{{ active_home }}/.local/share"
+        xdg_state_home: "{{ active_home }}/.local/state"
+        xdg_cache_home: "{{ active_home }}/.cache"
+        local_bin_dir: "{{ active_home }}/.local/bin"
+        pip3_executable: pip3
+
+    - name: Refresh pacman package databases on Arch
+      become: true
+      community.general.pacman:
+        update_cache: true
+      when: is_archlinux | bool
+
+  tasks:
+    - name: Apply nvim role
+      ansible.builtin.include_role:
+        name: nvim
+EOF
+```
+
+To iterate on both editor roles, add `python_dev` to the same inline playbook:
+
+```yaml
+  tasks:
+    - name: Apply nvim role
+      ansible.builtin.include_role:
+        name: nvim
+
+    - name: Apply python_dev role
+      ansible.builtin.include_role:
+        name: python_dev
+```
+
+For macOS, copy the `Detect Homebrew prefix on macOS` and `Normalize package-manager helper paths` pre_tasks from `playbooks/main.yml` so `pip3_executable` resolves to the Homebrew-managed interpreter.
+
 ## Target model
 
 - The default assumption is: run on the current machine for the current user.
