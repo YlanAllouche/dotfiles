@@ -31,6 +31,7 @@
     name: "{{ item }}"
     global: true
     state: present
+  environment: "{{ npm_global_environment }}"
   loop: "{{ ecmascript_global_packages }}"
   when: is_macos | bool
 

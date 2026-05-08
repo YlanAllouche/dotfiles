@@ -36,6 +36,7 @@
     name: "{{ appearance_colorwhirl_npm_package }}"
     global: true
     state: present
+  environment: "{{ npm_global_environment }}"
   when:
     - appearance_install_colorwhirl_target | bool
     - ecmascript_enabled | bool

@@ -59,6 +59,13 @@ aur_install_method: yay
 aur_builder_user: aur_builder
 sudo_present: false
 homebrew_cask_install_options: "{{ [] if sudo_present | bool else ['appdir=' ~ active_home ~ '/Applications'] }}"
+npm_global_prefix: "{{ active_home }}/.local"
+npm_global_environment: >-
+  {{
+    {'NPM_CONFIG_PREFIX': npm_global_prefix}
+    if (is_macos | bool and not sudo_present | bool)
+    else {}
+  }}
 
 identity_enabled: true
 appearance_enabled: true

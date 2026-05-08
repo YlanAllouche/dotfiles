@@ -1,6 +1,6 @@
 dotfiles_profile: macos
 
-identity_enabled: true
+identity_enabled: false
 appearance_enabled: true
 shell_enabled: true
 tty_enabled: true
@@ -8,7 +8,7 @@ nvim_enabled: true
 python_dev_enabled: true
 ecmascript_enabled: true
 golang_enabled: false
-tower_enabled: true
+tower_enabled: false
 linux_desktop_enabled: true
 sound_enabled: false
 hyprland_enabled: false
@@ -22,7 +22,7 @@ email_enabled: false
 r_lang_enabled: false
 java_enabled: false
 share_sync_enabled: false
-llm_enabled: true
+llm_enabled: false
 llm_opencode_enabled: false
 llm_claudecode_enabled: false
 # TODO: Re-enable VS Code on macOS once its app/config path model is clarified.

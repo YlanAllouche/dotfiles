@@ -19,6 +19,7 @@
     name: "{{ llm_claudecode_npm_package }}"
     global: true
     state: present
+  environment: "{{ npm_global_environment }}"
   when:
     - ecmascript_enabled | bool
     - is_macos | bool
