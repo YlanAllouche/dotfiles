@@ -36,16 +36,17 @@ dotfiles_repo_root: >-
 CPU_VENDOR: AMD
 GPU_VENDOR: NVIDIA
 
-# NOTES: Override this from the infra layer when a machine needs a branch-
-# specific NVIDIA stack such as nvidia-580xx-dkms/nvidia-580xx-utils.
+# NOTES: This public layer accepts both the generic NVIDIA package names and
+# branch-specific variants such as nvidia-580xx-dkms/nvidia-580xx-utils.
 NVIDIA_REQUIRED_PACKAGE_GROUPS:
   - description: NVIDIA kernel driver package
     any_of:
       - nvidia
-      - nvidia-dkms
+    any_match: '^nvidia(?:-.+)?-dkms$'
   - description: NVIDIA userspace package
     any_of:
       - nvidia-utils
+    any_match: '^nvidia(?:-.+)?-utils$'
   - description: EGL Wayland bridge
     any_of:
       - egl-wayland

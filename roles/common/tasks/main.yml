@@ -24,13 +24,29 @@
 - name: Assert required NVIDIA package groups are present
   ansible.builtin.assert:
     that:
-      - item.any_of | select('in', ansible_facts.packages.keys() | list) | list | length > 0
+      - >-
+        (
+          item.any_of | default([])
+          | select('in', ansible_facts.packages.keys() | list)
+          | list
+          | length
+        ) > 0
+        or
+        (
+          item.any_match is defined
+          and
+          (
+            ansible_facts.packages.keys() | list
+            | select('match', item.any_match)
+            | list
+            | length
+          ) > 0
+        )
     fail_msg: >-
       NOTES: {{ item.description }} is missing.
       This dotfiles layer expects the infra layer to preinstall one of
-      {{ item.any_of | join(', ') }} before desktop roles run.
-      TODO: Override NVIDIA_REQUIRED_PACKAGE_GROUPS from the infra layer for
-      branch-specific driver stacks such as nvidia-580xx-dkms/nvidia-580xx-utils.
+      {{ item.any_of | join(', ') }}{% if item.any_match is defined %} or a package matching {{ item.any_match }}{% endif %}
+      before desktop roles run.
   loop: "{{ NVIDIA_REQUIRED_PACKAGE_GROUPS }}"
   when:
     - is_linux | bool
