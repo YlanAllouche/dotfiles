@@ -11,24 +11,28 @@
     state: present
   when: is_macos | bool
 
-- name: Install tty Python helper packages on Arch
+- name: Install tty Python packages on Arch
   ansible.builtin.pip:
     name: "{{ tty_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
-  when: is_archlinux | bool
+  when:
+    - is_archlinux | bool
+    - tty_python_packages | length > 0
 
-- name: Install tty Python helper packages on macOS
+- name: Install tty Python packages on macOS
   ansible.builtin.pip:
     name: "{{ tty_python_packages }}"
-    extra_args: --user
+    extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
-  when: is_macos | bool
+  when:
+    - is_macos | bool
+    - tty_python_packages | length > 0
 
-- name: Install NVIDIA tty Python helper packages on Linux
+- name: Install NVIDIA tty Python packages on Linux
   ansible.builtin.pip:
     name: "{{ tty_nvidia_python_packages }}"
-    extra_args: "{{ '--user --break-system-packages' if is_archlinux | bool else '--user' }}"
+    extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
   when:
     - is_linux | bool
@@ -339,9 +343,3 @@
     msg: "TODO: Bootstrap tmux plugins non-interactively once the TPM command-line flow is validated. For now, use prefix + I inside tmux."
   changed_when: false
   when: tty_tmux_bootstrap_enabled | bool
-
-- name: Install dv helper for tty workflows
-  ansible.builtin.debug:
-    msg: "dv is expected to be provided by the dv-tui Python package in ~/.local/bin."
-  changed_when: false
-  when: tty_dv_enabled | bool

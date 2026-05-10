@@ -58,7 +58,7 @@
 - name: Install PKM Python packages on macOS
   ansible.builtin.pip:
     name: "{{ pkm_python_packages }}"
-    extra_args: --user
+    extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
   when: is_macos | bool
 

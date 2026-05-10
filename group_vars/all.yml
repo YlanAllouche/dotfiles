@@ -189,8 +189,7 @@ tty_tpm_repo: https://github.com/tmux-plugins/tpm
 # TODO: Continue moving role-owned package/config defaults out of this shared
 # globals file and into role defaults. Keep cross-role/public interface vars
 # here, but localize the rest as the role boundaries stabilize.
-tty_python_packages:
-  - git+https://github.com/YlanAllouche/dv-tui.git
+tty_python_packages: []
 
 tty_nvidia_python_packages:
   - nvitop
@@ -344,6 +343,9 @@ pkm_homebrew_casks:
   - obsidian
 
 pkm_python_packages:
+  # TODO: Move dv-tui back to the tty role once its ownership is clearly
+  # general-purpose enough to stop piggybacking on the PKM workflow for now.
+  - git+https://github.com/YlanAllouche/dv-tui.git
   - git+https://github.com/YlanAllouche/capturemd.git
   - git+https://github.com/YlanAllouche/dashboard-md.git
 
