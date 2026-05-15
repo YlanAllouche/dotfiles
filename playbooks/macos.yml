@@ -9,3 +9,7 @@
 # TODO: set dock: make it smaller and auto hide
 # TODO: Set shortcuts for changing to workspace 1/2/3
 # TODO: Clean the dock by removing all the useless things
+# TODO: screenshot flow settings
+#     - map from cmd+shift+5  to screeshot_key
+#     - make the overlay save to clipboard by default
+#     - make the overlay not remember the previous position
