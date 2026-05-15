@@ -1,0 +1,13 @@
+- name: Ensure Hammerspoon config directory exists
+  ansible.builtin.file:
+    path: "{{ hammerspoon_config_dir }}"
+    state: directory
+    mode: "0755"
+  when: is_macos | bool
+
+- name: Install Hammerspoon configuration tree
+  ansible.builtin.copy:
+    src: hammerspoon/
+    dest: "{{ hammerspoon_config_dir }}/"
+    mode: preserve
+  when: is_macos | bool
