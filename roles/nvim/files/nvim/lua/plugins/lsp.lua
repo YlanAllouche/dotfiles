@@ -334,6 +334,7 @@ return {
 			-- )
 			vim.keymap.set("n", "<leader>q", vim.lsp.buf.hover, {})
 			vim.keymap.set("n", "<A>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+			-- FIX: Workspace diagnostics currently behave differently on macOS than on Linux.
 			vim.keymap.set("n", "<leader>E", "<cmd>Telescope diagnostics<CR>", { desc = "List diagnostics" })
 			vim.keymap.set("n", "<leader>e", "<cmd>Telescope diagnostics bufnr=0<CR>", { desc = "Buffer diagnostics" })
 			-- as well as easily fix it with exception if needed
