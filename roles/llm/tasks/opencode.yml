@@ -44,8 +44,10 @@
       dest: "{{ xdg_config_home }}/opencode/opencode-notifier.json"
 
 - name: Install OpenCode Neovim overlay
+  # TODO: Move the opencode.nvim lock ownership out of the base nvim role once
+  # plugin lock management is separated cleanly from the shared Neovim baseline.
   ansible.builtin.copy:
-    src: nvim/plugins/opencode.lua
+    src: opencode/nvim/plugins/opencode.lua
     dest: "{{ xdg_config_home }}/nvim/lua/plugins/opencode.lua"
     mode: "0644"
   when: nvim_enabled | bool

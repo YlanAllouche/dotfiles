@@ -43,6 +43,7 @@
   "mcp": {
     "Chrome DevTools": {
       "type": "local",
+      "enabled": false,
       "command": [
         "npx",
         "chrome-devtools-mcp@latest",
@@ -52,6 +53,7 @@
 
     "Svelte MCP": {
       "type": "local",
+      "enabled": false,
       "command": ["npx", "-y", "@sveltejs/mcp"]
     }
   }
