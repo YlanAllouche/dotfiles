@@ -1,3 +1,11 @@
 - import_playbook: main.yml
   vars:
     dotfiles_profile: macos
+# Settings set manually to auto
+# TODO: toggle off natural scrolling
+# TODO: toggle off workspace auto re-ordering
+# TODO: toggle on reduced motion
+# TODO: increase keyboard repeat speed and delay
+# TODO: set dock: make it smaller and auto hide
+# TODO: Set shortcuts for changing to workspace 1/2/3
+# TODO: Clean the dock by removing all the useless things

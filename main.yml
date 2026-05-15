@@ -5,6 +5,7 @@
 # If the private/client layering grows, add an explicit post-profile override map
 # such as dotfiles_profile_overrides and apply it after the selected public profile
 # is loaded, rather than relying on import precedence for booleans like pkm_enabled.
+# TODO: be able to override  hostname and user for things like PS1
 - import_playbook: playbooks/main.yml
   vars:
     dotfiles_profile: hyprland
