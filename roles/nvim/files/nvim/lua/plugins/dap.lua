@@ -4,9 +4,14 @@ return {
 		config = function()
 			local dap = require("dap")
 
-			vim.fn.sign_define("DapBreakpoint", { text = "B", texthl = "DiagnosticError" })
-			vim.fn.sign_define("DapBreakpointCondition", { text = "C", texthl = "DiagnosticWarn" })
-			vim.fn.sign_define("DapStopped", { text = ">", texthl = "DiagnosticInfo", linehl = "Visual" })
+			vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError" })
+			vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "DiagnosticSignWarn" })
+			vim.fn.sign_define("DapBreakpointRejected", { text = "", texthl = "DiagnosticSignError" })
+			vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignInfo" })
+			vim.fn.sign_define(
+				"DapStopped",
+				{ text = "", texthl = "DiagnosticSignInfo", linehl = "Visual", numhl = "DiagnosticSignInfo" }
+			)
 
 			vim.keymap.set("n", "<A-d>b", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
 			vim.keymap.set("n", "<A-d>c", dap.continue, { desc = "Start or continue debugging" })
