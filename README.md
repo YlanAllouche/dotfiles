@@ -20,6 +20,16 @@ ansible-playbook main.yml
 
 The root `main.yml` currently defaults to the `hyprland` profile.
 
+### macOS note when Galaxy is restricted
+
+If your environment blocks Ansible Galaxy access but still allows GitHub, clone the AUR collection manually before running the macOS playbook:
+
+```bash
+mkdir -p ~/.ansible/collections/ansible_collections/kewlfft
+git clone --depth=1 https://github.com/kewlfft/ansible-aur.git ~/.ansible/collections/ansible_collections/kewlfft/aur
+git clone --depth=1 https://github.com/YlanAllouche/dotfiles.git && cd dotfiles && ansible-playbook playbooks/macos.yml
+```
+
 ## Public Entry Points
 
 - `main.yml`: friendly default entrypoint, currently equivalent to the public `hyprland` path.
