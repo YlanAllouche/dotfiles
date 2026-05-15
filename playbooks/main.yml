@@ -63,6 +63,9 @@
       ansible.builtin.set_fact:
         homebrew_prefix: "{{ homebrew_prefix_cmd.stdout if is_macos | bool else '' }}"
         pip3_executable: "{{ (homebrew_prefix_cmd.stdout ~ '/bin/pip3') if is_macos | bool else 'pip3' }}"
+        python_user_base: "{{ active_home }}/.local"
+        python_pip_environment:
+          PYTHONUSERBASE: "{{ active_home }}/.local"
 
     - name: Refresh pacman package databases on Arch
       become: true

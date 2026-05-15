@@ -1,19 +1,22 @@
-python_dev_poetry_enabled: false
-
 python_dev_arch_packages:
   - python
   - python-pip
+  - python-pipx
+  - python-poetry
+  - python-psutil
   - python-virtualenv
+  - uv
 
 python_dev_homebrew_packages:
   - python
+  - pipx
+  - poetry
+  - uv
 
 python_dev_global_packages:
   - numpy
   - pandas
+  - poethepoet
 
-python_dev_poetry_arch_packages:
-  - python-poetry
-
-python_dev_poetry_macos_python_packages:
-  - poetry
+python_dev_global_macos_packages:
+  - psutil

@@ -16,6 +16,7 @@
     name: "{{ tty_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when:
     - is_archlinux | bool
     - tty_python_packages | length > 0
@@ -25,6 +26,7 @@
     name: "{{ tty_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when:
     - is_macos | bool
     - tty_python_packages | length > 0
@@ -34,6 +36,7 @@
     name: "{{ tty_nvidia_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when:
     - is_linux | bool
     - GPU_VENDOR | lower == 'nvidia'
@@ -234,6 +237,9 @@
       dest: "{{ active_home }}/.tmux.conf"
     - src: tmux-sessionizer/tmux-sessionizer.conf
       dest: "{{ xdg_config_home }}/tmux-sessionizer/tmux-sessionizer.conf"
+    - src: bin/tmux-session-switch.sh
+      dest: "{{ local_bin_dir }}/tmux-session-switch.sh"
+      mode: "0755"
     - src: inputrc
       dest: "{{ active_home }}/.inputrc"
 

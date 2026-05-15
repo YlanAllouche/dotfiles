@@ -7,7 +7,7 @@ tty_enabled: true
 nvim_enabled: true
 python_dev_enabled: true
 ecmascript_enabled: true
-golang_enabled: false
+golang_enabled: true
 tower_enabled: false
 linux_desktop_enabled: true
 sound_enabled: false

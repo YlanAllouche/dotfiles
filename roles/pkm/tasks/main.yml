@@ -53,6 +53,7 @@
     name: "{{ pkm_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when: is_archlinux | bool
 
 - name: Install PKM Python packages on macOS
@@ -60,6 +61,7 @@
     name: "{{ pkm_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when: is_macos | bool
 
 - name: Ensure Obsidian config directory exists

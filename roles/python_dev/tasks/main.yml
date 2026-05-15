@@ -16,29 +16,13 @@
     name: "{{ python_dev_global_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when: is_archlinux | bool
 
 - name: Install global Python development packages on macOS
   ansible.builtin.pip:
-    name: "{{ python_dev_global_packages }}"
+    name: "{{ python_dev_global_packages + python_dev_global_macos_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when: is_macos | bool
-
-- name: Install Poetry on Arch when requested
-  become: true
-  community.general.pacman:
-    name: "{{ python_dev_poetry_arch_packages }}"
-    state: present
-  when:
-    - is_archlinux | bool
-    - python_dev_poetry_enabled | bool
-
-- name: Install Poetry on macOS when requested
-  ansible.builtin.pip:
-    name: "{{ python_dev_poetry_macos_python_packages }}"
-    extra_args: --user --break-system-packages
-    executable: "{{ pip3_executable }}"
-  when:
-    - is_macos | bool
-    - python_dev_poetry_enabled | bool

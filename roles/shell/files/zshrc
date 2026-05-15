@@ -112,6 +112,8 @@ function zvm_after_init() {
 alias gs="git status"
 alias v="nvim"
 alias f="ranger"
+alias python="python3"
+alias pip="pip3"
 alias ll="eza -la --icons"
 alias l="eza -l --git --icons"
 alias tree="eza -l --git --icons --tree"

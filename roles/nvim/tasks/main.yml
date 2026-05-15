@@ -16,6 +16,7 @@
     name: "{{ nvim_macos_python_packages }}"
     extra_args: --user --break-system-packages
     executable: "{{ pip3_executable }}"
+  environment: "{{ python_pip_environment }}"
   when: is_macos | bool
 
 - name: Ensure Neovim config directory exists
