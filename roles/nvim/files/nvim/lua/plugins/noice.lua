@@ -4,6 +4,16 @@ return {
 	opts = {
 		routes = {
 			{
+				filter = {
+					event = "lsp",
+					kind = "progress",
+					cond = function(message)
+						return message.opts.progress and message.opts.progress.client == "pyright"
+					end,
+				},
+				opts = { skip = true },
+			},
+			{
 				view = "notify",
 				filter = { event = "msg_showmode" },
 			},

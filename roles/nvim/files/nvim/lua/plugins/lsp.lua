@@ -254,7 +254,19 @@ return {
 
 			vim.lsp.config.pyright = {
 				capabilities = capabilities,
+				flags = {
+					debounce_text_changes = 150,
+				},
 				on_attach = on_attach,
+				settings = {
+					python = {
+						analysis = {
+							autoSearchPaths = true,
+							diagnosticMode = "openFilesOnly",
+							useLibraryCodeForTypes = true,
+						},
+					},
+				},
 			}
 			vim.lsp.enable("pyright")
 
