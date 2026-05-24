@@ -108,48 +108,61 @@
     mode: "0644"
   when: is_linux | bool
 
-- name: Check Desktop and Downloads directories before replacing them with symlinks
-  ansible.builtin.find:
-    paths: "{{ item }}"
-    recurse: false
-    hidden: true
-    file_type: any
+- name: Check Desktop and Downloads before replacing them with symlinks
+  ansible.builtin.stat:
+    path: "{{ item }}"
+    follow: false
   loop:
     - "{{ active_home }}/Desktop"
     - "{{ active_home }}/Downloads"
-  register: linux_desktop_user_dirs
-  failed_when: false
+  register: linux_desktop_user_dir_stats
   when: is_linux | bool
 
-- name: Assert Desktop and Downloads are empty before symlinking
+- name: Check non-symlink Desktop and Downloads directories before replacing them with symlinks
+  ansible.builtin.find:
+    paths: "{{ item.item }}"
+    recurse: false
+    hidden: true
+    file_type: any
+  loop: "{{ linux_desktop_user_dir_stats.results }}"
+  register: linux_desktop_user_dirs
+  failed_when: false
+  when:
+    - is_linux | bool
+    - item.stat.exists | default(false)
+    - not item.stat.islnk | default(false)
+
+- name: Assert non-symlink Desktop and Downloads are empty before symlinking
   ansible.builtin.assert:
     that:
       - item.matched | default(0) == 0
     fail_msg: >-
-      NOTES: {{ item.item }} must be empty before this role replaces it with a symlink.
+      NOTES: {{ item.item.item | default(item.item) }} must be empty before this role replaces it with a symlink.
   loop: "{{ linux_desktop_user_dirs.results }}"
   when:
     - is_linux | bool
+    - item.skipped is not defined or not item.skipped
     - item.failed is not defined or not item.failed
 
-- name: Remove Desktop and Downloads directories before symlinking
+- name: Remove non-symlink Desktop and Downloads before symlinking
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ item.item }}"
     state: absent
-  loop:
-    - "{{ active_home }}/Desktop"
-    - "{{ active_home }}/Downloads"
-  when: is_linux | bool
+  loop: "{{ linux_desktop_user_dir_stats.results }}"
+  when:
+    - is_linux | bool
+    - item.stat.exists | default(false)
+    - not item.stat.islnk | default(false)
 
 - name: Symlink Desktop and Downloads to workspaces local desktop
   ansible.builtin.file:
     src: "{{ active_home }}/workspaces/local/desktop"
-    dest: "{{ item }}"
+    dest: "{{ item.item }}"
     state: link
-  loop:
-    - "{{ active_home }}/Desktop"
-    - "{{ active_home }}/Downloads"
-  when: is_linux | bool
+  loop: "{{ linux_desktop_user_dir_stats.results }}"
+  when:
+    - is_linux | bool
+    - not item.stat.islnk | default(false)
 
 - name: Install Linux desktop helper scripts
   ansible.builtin.copy:
