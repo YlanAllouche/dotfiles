@@ -4,7 +4,7 @@
     "@mohak34/opencode-notifier@0.1.14"
   ],
   "autoshare": false,
-  "autoupdate": true,
+  "autoupdate": false,
   "compaction": {
     "auto": true,
     "prune": true,
