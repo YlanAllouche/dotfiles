@@ -12,6 +12,7 @@
   loop:
     - "{{ xdg_config_home }}/hypr"
     - "{{ xdg_config_home }}/hypr/conf.d"
+    - "{{ xdg_config_home }}/hypr/monitors.d"
     - "{{ xdg_config_home }}/hypr/hyprlock.d"
     - "{{ xdg_config_home }}/hypr/hypridle.d"
     - "{{ xdg_config_home }}/waybar"
@@ -44,5 +45,7 @@
   loop:
     - src: bin/way-unlock
       dest: way-unlock
+    - src: bin/hypridle-power-state.sh
+      dest: hypridle-power-state.sh
     - src: bin/video-selection.sh
       dest: video-selection.sh
