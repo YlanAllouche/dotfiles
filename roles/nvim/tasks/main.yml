@@ -44,6 +44,7 @@
     - "{{ xdg_config_home }}/nvim/lua/config/markdown/insertinline.lua"
     - "{{ xdg_config_home }}/nvim/lua/config/markdown/insertlink.lua"
     - "{{ xdg_config_home }}/nvim/lua/config/pkm_dataview_keymaps.lua"
+  when: not (pkm_enabled | default(false) | bool)
 
 - name: Bootstrap Neovim plugins
   # FIX: This headless bootstrap exists, but it still needs a validation pass
