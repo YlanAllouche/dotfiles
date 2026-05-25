@@ -20,6 +20,12 @@
     - "{{ active_home }}/.ssh"
     - "{{ xdg_config_home }}/rclone"
 
+- name: Ensure identity shell snippet directory exists
+  ansible.builtin.file:
+    path: "{{ active_home }}/.local/config/shell"
+    state: directory
+    mode: "0755"
+
 - name: Install consumer contract documentation
   ansible.builtin.template:
     src: "{{ item.src }}"
@@ -49,6 +55,12 @@
     src: zbw.zsh
     dest: "{{ local_bin_dir }}/zbw.zsh"
     mode: "0755"
+
+- name: Install Bitwarden shell snippet
+  ansible.builtin.copy:
+    src: rbw.zsh
+    dest: "{{ active_home }}/.local/config/shell/30-rbw.zsh"
+    mode: "0644"
 
 - name: Manage git identity config when values are provided
   ansible.builtin.template:

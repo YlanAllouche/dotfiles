@@ -317,9 +317,6 @@ browser_base_arch_packages:
 browser_personal_aur_packages:
   - firefox-tridactyl-native
 
-browser_personal_homebrew_packages:
-  - rbw
-
 browser_personal_homebrew_casks:
   - bitwarden
 

@@ -33,6 +33,7 @@ fi
 setopt AUTO_PUSHD PUSHD_IGNORE_DUPS PUSHD_SILENT
 setopt EXTENDED_GLOB
 setopt HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY
+setopt NO_NOMATCH
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
@@ -119,8 +120,6 @@ alias l="eza -l --git --icons"
 alias tree="eza -l --git --icons --tree"
 alias s="eza --git --icons"
 alias icat="kitten icat"
-alias pas="~/.local/bin/zbw.zsh password output"
-alias tok="~/.local/bin/zbw.zsh fields output"
 # Space-based alias expansion (simpler version)
 expand-alias-and-accept() {
   # Get the first word of the command line
@@ -164,43 +163,12 @@ bindkey '^P' fzf-file-widget
 # eval "$(starship init zsh)"
 # eval "$(oh-my-posh init zsh --config  $HOME/.config/oh-my-posh/themes/pywal-test.json)"
 eval "$(oh-my-posh init zsh --config  $HOME/.cache/wal/omp.json)"
-eval "$(rbw gen-completions zsh); compdef _rbw rbw;"
 # export BROWSER=(firefox -P main)
 export BROWSER=browser
 export ZSH_PLUGINS_ALIAS_TIPS_DISABLED=true
 export PATH="$PATH:$HOME/.local/bin"
 export COLORTERM=truecolor
 export R_LIBS_USER=~/.local/share/R/library
-
-# Add this to your ~/.zshrc
-
-# Widget for password completion (Ctrl+A)
-rbw-password-completion() {
-    local result
-    result=$(~/.local/bin/zbw.zsh password completion 2>/dev/null)
-    if [[ $? -eq 0 && -n "$result" ]]; then
-        LBUFFER="${LBUFFER}${result}"
-    fi
-    zle redisplay
-}
-
-# Widget for fields completion (Ctrl+Shift+A) 
-rbw-fields-completion() {
-    local result
-    result=$(~/.local/bin/zbw.zsh fields completion 2>/dev/null)
-    if [[ $? -eq 0 && -n "$result" ]]; then
-        LBUFFER="${LBUFFER}${result}"
-    fi
-    zle redisplay
-}
-
-# Register the widgets
-zle -N rbw-password-completion
-zle -N rbw-fields-completion
-
-# Bind to key combinations
-bindkey '^A' rbw-password-completion        # Ctrl+A
-bindkey '^B' rbw-fields-completion     # Ctrl+Shift+A (may vary by terminal)
 
 bindkey -s '^[i' '~/.local/bin/tailscale-helper.zsh ip^M'
 bindkey -s '^[h' '~/.local/bin/tailscale-helper.zsh hostname^M'
