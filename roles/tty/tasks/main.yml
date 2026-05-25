@@ -61,6 +61,26 @@
     - is_archlinux | bool
     - aur_install_method == 'pacman'
 
+- name: Install htop-vim on Arch through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ tty_htop_aur_package }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
+
+- name: Install htop-vim on Arch through pacman
+  become: true
+  community.general.pacman:
+    name: "{{ tty_htop_aur_package }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
+
 - name: Install pywal on Arch
   become: true
   community.general.pacman:

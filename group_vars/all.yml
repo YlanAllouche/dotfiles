@@ -146,7 +146,6 @@ tty_base_arch_packages:
   - fd
   - fzf
   - git
-  - htop
   - inxi
   - jq
   - lazygit
@@ -157,6 +156,9 @@ tty_base_arch_packages:
   - sshfs
   - tig
   - tmux
+  # NOTE: Keep usbutils in the Arch baseline so lsusb is available on test and
+  # desktop machines without needing a separate troubleshooting role.
+  - usbutils
   - unzip
   - wget
   - yq
@@ -184,6 +186,7 @@ tty_base_homebrew_packages:
 
 tty_pywal_package: python-pywal
 tty_gitmux_aur_package: gitmux
+tty_htop_aur_package: htop-vim
 tty_tmux_sessionizer_repo: https://github.com/theprimeagen/tmux-sessionizer
 tty_tpm_repo: https://github.com/tmux-plugins/tpm
 # TODO: Continue moving role-owned package/config defaults out of this shared
