@@ -61,13 +61,6 @@
     - is_archlinux | bool
     - aur_install_method == 'pacman'
 
-- name: Remove regular htop on Arch before installing htop-vim
-  become: true
-  community.general.pacman:
-    name: htop
-    state: absent
-  when: is_archlinux | bool
-
 - name: Install htop-vim on Arch through yay
   become: true
   become_user: "{{ aur_builder_user }}"
