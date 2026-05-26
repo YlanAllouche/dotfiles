@@ -166,6 +166,11 @@
         name: media
       when: media_enabled | default(false) | bool
 
+    - name: Apply games role
+      ansible.builtin.include_role:
+        name: games
+      when: games_enabled | default(false) | bool
+
     - name: Apply nvim role
       ansible.builtin.include_role:
         name: nvim

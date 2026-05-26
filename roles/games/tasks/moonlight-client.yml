@@ -1,0 +1,6 @@
+- name: Install Moonlight client on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ games_moonlight_client_arch_packages }}"
+    state: present
+  when: is_archlinux | bool

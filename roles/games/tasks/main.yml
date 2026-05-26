@@ -1,0 +1,3 @@
+- name: Install Moonlight client
+  ansible.builtin.include_tasks: moonlight-client.yml
+  when: games_moonlight_client_enabled | bool

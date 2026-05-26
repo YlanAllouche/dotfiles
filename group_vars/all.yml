@@ -83,6 +83,7 @@ system_tty_login_enabled: false
 browser_base_enabled: true
 browser_personal_enabled: false
 media_enabled: false
+games_enabled: false
 pkm_enabled: false
 pim_enabled: false
 email_enabled: false
@@ -97,6 +98,7 @@ oci_enabled: false
 android_dev_enabled: false
 
 browser_bitwarden_enabled: false
+games_moonlight_client_enabled: false
 tty_dv_enabled: false
 tty_gh_enabled: false
 tty_glab_enabled: false
