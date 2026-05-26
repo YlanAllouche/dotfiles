@@ -1,0 +1,31 @@
+# Safer defaults: disable easy push/cherry-pick until explicitly desired.
+bind generic P none
+bind generic C none
+
+# Vim-leaning navigation on top of Tig defaults.
+bind generic h parent
+bind generic l enter
+bind generic <Esc> view-close
+bind generic <Ctrl-b> move-page-up
+bind generic <Ctrl-f> move-page-down
+
+# View access.
+bind generic b view-refs
+bind generic B view-blame
+bind generic s view-status
+bind generic S view-stash
+bind generic E view-grep
+bind generic ? view-help
+
+# History helpers.
+bind main M >tig --first-parent
+bind main R ?git rebase -i %(commit)^ --rebase-merges
+
+# Working tree helpers.
+bind status c !git commit -v
+bind stage  c !git commit -v
+bind status a ?git commit --amend
+bind stage  a ?git commit --amend
+
+# TODO: Explore git-flow helpers later if that workflow becomes relevant.
+# TODO: Keep GitLab/self-hosted forge bindings in a separate optional snippet.

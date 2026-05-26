@@ -1,0 +1,13 @@
+# History-first main view with readable refs and graph.
+set main-view  = line-number:no date:relative-compact author:abbreviated,width=14 id:yes,color commit-title:yes,graph,refs,overflow=72
+set refs-view  = line-number:no ref id:yes,color author:abbreviated,width=14 date:relative-compact commit-title
+set stash-view = line-number:no id:yes,color date:relative-compact author:abbreviated,width=14 commit-title
+set grep-view  = file-name:auto line-number:yes,interval=1 text
+set blame-view = date:relative-compact author:abbreviated,width=14 id:yes,color line-number:yes,interval=1 text
+set tree-view  = line-number:no mode author:abbreviated,width=14 file-size:units date:relative-compact id:no file-name
+
+# Conservative default for merge-heavy repos.
+# TODO: If very large repos become sluggish, explore an optional perf.tigrc with:
+#   set commit-order = default
+#   set main-options = -n 1000
+#   set show-changes = no

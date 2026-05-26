@@ -1,0 +1,7 @@
+# Open the selected commit in the forge web UI.
+bind main ; @sh -c '"$HOME/.local/bin/git-open-commit.sh" "%(commit)"'
+
+# TODO: If commit browsing from refs/reflog becomes common, consider mirroring
+# this binding in those views once the ergonomics are validated.
+# TODO: If later needed, add optional forge-specific helpers for PR/MR browsing
+# in separate snippets instead of growing this generic commit opener.

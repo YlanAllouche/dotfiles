@@ -228,6 +228,12 @@
     - "{{ xdg_config_home }}/glab-cli"
   when: tty_gh_enabled | bool or tty_glab_enabled | bool
 
+- name: Ensure Tig config directory exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/tig"
+    state: directory
+    mode: "0755"
+
 - name: Install tmux plugin manager
   ansible.builtin.git:
     repo: "{{ tty_tpm_repo }}"
@@ -260,8 +266,41 @@
     - src: bin/tmux-session-switch.sh
       dest: "{{ local_bin_dir }}/tmux-session-switch.sh"
       mode: "0755"
+    - src: bin/git-open-commit.sh
+      dest: "{{ local_bin_dir }}/git-open-commit.sh"
+      mode: "0755"
     - src: inputrc
       dest: "{{ active_home }}/.inputrc"
+
+- name: Install Tig configuration files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - src: tig/config
+      dest: "{{ xdg_config_home }}/tig/config"
+    - src: tig/view.tigrc
+      dest: "{{ xdg_config_home }}/tig/view.tigrc"
+    - src: tig/bind.tigrc
+      dest: "{{ xdg_config_home }}/tig/bind.tigrc"
+
+- name: Install Tig theme configuration
+  ansible.builtin.template:
+    src: tig/color.tigrc.j2
+    dest: "{{ xdg_config_home }}/tig/color.tigrc"
+    mode: "0644"
+
+- name: Install optional Tig forge bindings
+  ansible.builtin.copy:
+    src: tig/forge.tigrc
+    dest: "{{ xdg_config_home }}/tig/forge.tigrc"
+    mode: "0644"
+
+- name: Remove legacy Tig GitHub binding snippet
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/tig/github.tigrc"
+    state: absent
 
 - name: Install bat configuration
   ansible.builtin.copy:
