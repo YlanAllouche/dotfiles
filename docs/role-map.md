@@ -1,5 +1,7 @@
 # Role Map
 
+Role ownership reference. For entrypoints and profile layering, see `docs/playbook-interface.md`.
+
 ## Core roles
 
 - `common`: shared directories and repo-level assumptions.
@@ -8,6 +10,7 @@
 - `appearance`: static theme outputs, pywal-compatible files, wallpaper generation, matugen/colorwhirl integration.
 - `shell`: zsh, antidote, oh-my-posh wiring, shell snippets, shell helpers.
 - `tty`: tmux, tmux-sessionizer, CLI helpers, optional gh/glab/newsboat/neofetch/pywal.
+- `sound`: PipeWire, Bluetooth, and audio-stack reconciliation.
 - `python_dev`: Python tooling, virtualenv/pip defaults, optional poetry.
 - `ecmascript`: node/npm/pnpm, Playwright, frontend CLI helpers.
 - `golang`: Go toolchain plus editor helpers.
@@ -22,6 +25,7 @@
 - `browser_base`: browser install plus the `browser` launcher script.
 - `browser_personal`: tridactyl config, bitwarden toggle, tridactyl native host.
 - `media`: local music and media helpers such as mpd/ncmpcpp and Jellyfin/Kodi scripts.
+- `games`: optional game-adjacent clients such as Moonlight; package-only by default.
 
 ## Editor and workflow roles
 
@@ -43,9 +47,16 @@
 - `cloud`: optional AWS/Fly/Terraform tooling.
 - `oci`: optional podman/docker/k3-style container tooling.
 - `android_dev`: Android platform tools, off by default.
+- `hammerspoon`: currently unwired macOS automation placeholder.
 
 ## Current boundaries to refine later
 
 - Some PKM-specific Neovim behavior still exists in the imported base Neovim tree and is then overlaid by `pkm`.
 - Common language tooling can intentionally leak into `nvim` where that is the practical boundary.
 - Browser, PKM, desktop, and shell scripts still need a second pass to reduce overlap and move more logic into clearly owned folders.
+- Base roles should avoid deleting files that are intentionally reintroduced by overlay roles during the same run.
+
+Related docs:
+
+- `docs/theme-pipeline.md` for the `appearance` role
+- `docs/consumer-contracts.md` for private config and app-owned state patterns

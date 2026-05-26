@@ -1,12 +1,8 @@
 # Ansible Patterns
 
-## Entry points
+Operational rules and working patterns for this repo.
 
-- `main.yml` is the friendly default public entrypoint.
-- `playbooks/main.yml` is the reusable orchestration engine.
-- `playbooks/desktop-wayland.yml`, `playbooks/hyprland.yml`, and `playbooks/macos.yml` are public scenario wrappers.
-- `vars/profiles/` contains public profile-level presets.
-- `docs/playbook-interface.md` describes the intended public-vs-downstream interface.
+For public entrypoints, profiles, and wrapper architecture, see `docs/playbook-interface.md`.
 
 ## Role-only iteration
 
@@ -81,6 +77,8 @@ For macOS, copy the `Detect Homebrew prefix on macOS` and `Normalize package-man
 - Machine-specific and secret-bearing overrides belong in the consuming playbook or repo.
 - This repo should not assume how the consumer stores private data.
 
+See `docs/consumer-contracts.md` for the concrete secret and private-state patterns.
+
 ## Package policy
 
 - Use native package modules directly.
@@ -96,6 +94,8 @@ For macOS, copy the `Detect Homebrew prefix on macOS` and `Normalize package-man
 ## Folder-first configs
 
 - Prefer copying full config directories when the application supports it.
+- Directory copies should add or update tracked files without deleting unrelated extras.
+- Avoid cleanup tasks unless the role fully owns the target path and the overlay story is explicit.
 - Current folder-based targets include:
   - `hypr/`
   - `waybar/`
@@ -131,3 +131,6 @@ For macOS, copy the `Detect Homebrew prefix on macOS` and `Normalize package-man
 - Theme data should be source-of-truth variables.
 - Pywal-compatible files are rendered outputs, not the source of truth.
 - Targets should always receive a static wal-compatible theme so configs that source wal files do not fail even when pywal is disabled.
+- Optional target-side theme tools should be treated as conveniences, not first-run requirements.
+
+See `docs/theme-pipeline.md` for the full theme/render/generation flow.

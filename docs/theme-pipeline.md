@@ -1,5 +1,7 @@
 # Theme Pipeline
 
+This document explains how the public theme values become static target-side files, optional generated assets, and application-specific themed configs.
+
 ## Source of truth
 
 Theme data is driven by shared variables, not by pywal runtime state.
@@ -31,6 +33,13 @@ This means apps can keep sourcing wal-style files even when pywal itself is not 
 App-owned themed configs can consume the same shared palette. Current example:
 
 - `linux_desktop` renders `zathura/zathurarc` from `appearance` values while still keeping a fallback file in the repo.
+
+## First run without theme tools
+
+- Static wal-compatible files are rendered during the playbook run and copied to the target.
+- Applications can source those rendered files immediately, even when `pywal` itself is not installed.
+- `matugen` and target-side `colorwhirl` are optional conveniences, not first-run requirements.
+- Wallpaper generation is controller-driven when enabled, so the target does not need `colorwhirl` just to receive generated wallpaper assets.
 
 ## Overriding theme values
 
@@ -83,3 +92,8 @@ Typical consumer overrides:
 - swap `appearance_colorwhirl_recipe_path`
 - add machine-specific resolutions
 - disable target-side `colorwhirl` or `matugen` installation
+
+Related docs:
+
+- `docs/ansible-patterns.md` for the high-level theme policy
+- `docs/consumer-contracts.md` for private overrides and machine-specific values
