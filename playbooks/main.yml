@@ -73,6 +73,14 @@
         update_cache: true
       when: is_archlinux | bool
 
+    - name: Apply downstream role toggle overrides
+      ansible.builtin.set_fact:
+        games_enabled: "{{ dotfiles_games_enabled | default(games_enabled) }}"
+        games_moonlight_client_enabled: >-
+          {{ dotfiles_games_moonlight_client_enabled | default(games_moonlight_client_enabled) }}
+        pkm_enabled: "{{ dotfiles_pkm_enabled | default(pkm_enabled) }}"
+        r_lang_enabled: "{{ dotfiles_r_lang_enabled | default(r_lang_enabled) }}"
+
   tasks:
     - name: Apply common role
       ansible.builtin.include_role:
