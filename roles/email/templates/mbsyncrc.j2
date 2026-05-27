@@ -1,7 +1,11 @@
-# Public baseline for isync.
-# Add account-specific credentials from the consuming playbook or local machine config.
+# Public baseline for isync/mbsync.
+# Add account-specific credentials, channels, and folder mappings from the
+# consuming playbook or local machine config.
 
 SyncState *
+
+# Multi-account setups are expected to define one IMAPAccount/IMAPStore/
+# MaildirStore/Channel group per account.
 
 # Example account:
 # IMAPAccount personal

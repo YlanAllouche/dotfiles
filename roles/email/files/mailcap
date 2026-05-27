@@ -1,0 +1,5 @@
+text/html; xdg-open %s >/dev/null 2>&1 &; test=test -n "$DISPLAY"
+text/html; lynx -dump %s; nametemplate=%s.html; copiousoutput
+image/*; xdg-open %s >/dev/null 2>&1 &; test=test -n "$DISPLAY"
+application/pdf; xdg-open %s >/dev/null 2>&1 &; test=test -n "$DISPLAY"
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; xdg-open %s >/dev/null 2>&1 &; test=test -n "$DISPLAY"

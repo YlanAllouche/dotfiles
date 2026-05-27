@@ -1,1 +1,3 @@
 email_maildir_path: "{{ active_home }}/Mail"
+email_header_cache_path: "{{ xdg_cache_home }}/mail/headers"
+email_body_cache_path: "{{ xdg_cache_home }}/mail/bodies"

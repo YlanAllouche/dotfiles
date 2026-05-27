@@ -2,4 +2,38 @@ set folder = "{{ email_maildir_path }}"
 set mbox_type = Maildir
 set spoolfile = "+INBOX"
 
-# Source account-specific overrides from your private layer when present.
+set editor = "vim"
+set charset = "utf-8"
+set smart_wrap
+set include = yes
+set fast_reply = yes
+set sleep_time = 0
+set sort = reverse-threads
+set sort_aux = last-date-received
+set header_cache = "{{ email_header_cache_path }}"
+set message_cachedir = "{{ email_body_cache_path }}"
+set mailcap_path = "{{ xdg_config_home }}/neomutt/mailcap"
+
+set sidebar_visible = no
+set sidebar_width = 20
+set sidebar_short_path = yes
+set sidebar_next_new_wrap = yes
+set mail_check_stats
+set sidebar_format = '%B%?F? [%F]?%* %?N?%N/? %?S?%S?'
+
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cj sidebar-next
+bind index,pager \Co sidebar-open
+bind index,pager \Cp sidebar-prev-new
+bind index,pager \Cn sidebar-next-new
+bind index,pager B sidebar-toggle-visible
+
+auto_view text/html
+alternative_order text/plain text/enriched text/html
+bind attach <return> view-mailcap
+
+set query_command = "notmuch-addrlookup --mutt '%s'"
+
+# Source account-specific overrides from your private layer or local machine
+# setup by editing this file, using a local include wrapper, or generating a
+# richer account file from the consumer layer.

@@ -13,6 +13,8 @@
   loop:
     - "{{ xdg_config_home }}/neomutt"
     - "{{ email_maildir_path }}"
+    - "{{ email_header_cache_path }}"
+    - "{{ email_body_cache_path }}"
 
 - name: Install public email scaffolding
   ansible.builtin.template:
@@ -32,3 +34,9 @@
     - src: neomuttrc.j2
       dest: "{{ xdg_config_home }}/neomutt/neomuttrc"
       mode: "0644"
+
+- name: Install reusable neomutt mailcap baseline
+  ansible.builtin.copy:
+    src: mailcap
+    dest: "{{ xdg_config_home }}/neomutt/mailcap"
+    mode: "0644"
