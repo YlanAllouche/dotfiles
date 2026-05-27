@@ -5,6 +5,13 @@
     state: present
   when: is_archlinux | bool
 
+- name: Media role future scope note
+  ansible.builtin.debug:
+    msg: >-
+      TODO: Media role may later grow optional glava and miniplayer integration,
+      but those are intentionally not wired yet.
+  changed_when: false
+
 - name: Install media packages on macOS
   community.general.homebrew:
     name: "{{ media_homebrew_packages }}"
@@ -19,6 +26,7 @@
   loop:
     - "{{ xdg_config_home }}/mpd"
     - "{{ xdg_config_home }}/ncmpcpp"
+    - "{{ xdg_config_home }}/mpv"
 
 - name: Install media helper scripts
   ansible.builtin.copy:
