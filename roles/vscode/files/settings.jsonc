@@ -1,0 +1,29 @@
+{
+  // Candidate baseline built from the current local OSS config plus the most
+  // mature, low-risk settings from first-draft notes. Not wired yet.
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "all",
+  "editor.wordWrap": "on",
+  "editor.stickyScroll.enabled": false,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "window.menuBarVisibility": "toggle",
+  "workbench.startupEditor": "none",
+  "workbench.activityBar.location": "hidden",
+  "workbench.editor.showTabs": "single",
+  "workbench.colorTheme": "Default High Contrast Light",
+  "workbench.iconTheme": "simple-icons",
+  "terminal.integrated.tabs.enabled": false,
+  "svelte.enable-ts-plugin": true,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "r.bracketedPaste": true,
+  "r.lsp.promptToInstall": false,
+  "r.plot.useHttpgd": true,
+  // TODO: Replace <user> when manually testing on a target.
+  "r.rterm.linux": "/home/<user>/.local/bin/radian"
+}

@@ -1,0 +1,6 @@
+vscode_product: oss
+
+vscode_user_config_dir: >-
+  {{
+    xdg_config_home ~ '/' ~ ('Code - OSS/User' if vscode_product == 'oss' else 'Code/User')
+  }}
