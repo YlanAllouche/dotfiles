@@ -1,0 +1,8 @@
+{#- Future single-file rclone render target. Not wired yet. -#}
+{% for remote in identity_rclone_remotes | default([]) %}
+[{{ remote.name }}]
+{% for key, value in remote.options.items() %}
+{{ key }} = {{ value }}
+{% endfor %}
+
+{% endfor %}

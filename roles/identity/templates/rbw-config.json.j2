@@ -1,0 +1,12 @@
+{
+  "base_url": "{{ identity_rbw_base_url | default('https://vault.bitwarden.com') }}",
+  "client_cert_path": "{{ identity_rbw_client_cert_path | default('') }}",
+  "email": "{{ identity_rbw_email | default('you@example.com') }}",
+  "identity_url": "{{ identity_rbw_identity_url | default('https://identity.bitwarden.com') }}",
+  "lock_timeout": {{ identity_rbw_lock_timeout | default(3600) }},
+  "notifications_url": "{{ identity_rbw_notifications_url | default('https://notifications.bitwarden.com') }}",
+  "pinentry": "{{ identity_rbw_pinentry | default('pinentry') }}",
+  "sso_id": "{{ identity_rbw_sso_id | default('') }}",
+  "sync_interval": {{ identity_rbw_sync_interval | default(3600) }},
+  "ui_url": "{{ identity_rbw_ui_url | default('https://vault.bitwarden.com') }}"
+}

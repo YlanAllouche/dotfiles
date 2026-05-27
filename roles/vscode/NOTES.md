@@ -14,6 +14,12 @@ prepared for manual evaluation before wiring them into the role.
   mature and less experimental than the raw first-draft snippets.
 - Then selectively folded in low-risk settings from `first-draft/roles/vscode/`.
 
+## Current live OSS settings still intentionally left out
+
+- `r.lsp.debug = true`
+
+This appears to be a debugging aid rather than a durable default.
+
 ## First-draft settings not yet carried into `settings.jsonc`
 
 - hidden horizontal and vertical editor scrollbars
