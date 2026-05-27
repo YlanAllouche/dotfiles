@@ -239,10 +239,12 @@ golang_homebrew_packages:
 linux_desktop_arch_packages:
   - flameshot
   - fuzzel
+  - gimp
   - grim
   - imagemagick
   - kitty
   - libnotify
+  - libreoffice-fresh
   - mpv
   - pcmanfm
   - python-requests
@@ -331,8 +333,10 @@ browser_personal_homebrew_casks:
   - bitwarden
 
 media_arch_packages:
+  - cava
   - jellyfin-mpv-shim
   - mpd
+  - mpd-mpris
   - ncmpcpp
   - python-gobject
   - python-pillow
