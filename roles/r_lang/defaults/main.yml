@@ -1,1 +1,20 @@
+r_lang_arch_packages:
+  - r
+
+r_lang_homebrew_packages:
+  - r
+
 r_lang_library_path: "{{ xdg_data_home }}/R/library"
+r_lang_default_repo: https://cloud.r-project.org
+
+r_lang_default_packages:
+  - dplyr
+  - purrr
+
+r_lang_radian_enabled: true
+r_lang_radian_python_packages:
+  - radian
+
+# TODO: Revisit whether littler deserves a first-class gate, and if so whether
+# it should be installed from the OS package manager or a lighter-weight source.
+# TODO: Revisit archived packages like colorout before wiring them by default.

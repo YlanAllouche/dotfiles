@@ -1,0 +1,13 @@
+- name: Install radian via pip
+  ansible.builtin.pip:
+    name: "{{ r_lang_radian_python_packages }}"
+    extra_args: --user --break-system-packages
+    executable: "{{ pip3_executable }}"
+  when:
+    - is_linux | bool or is_macos | bool
+
+- name: Install radian profile
+  ansible.builtin.template:
+    src: radian-profile.j2
+    dest: "{{ xdg_config_home }}/radian/profile"
+    mode: "0644"

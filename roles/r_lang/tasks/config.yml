@@ -1,0 +1,22 @@
+- name: Ensure R configuration directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ r_lang_library_path }}"
+    - "{{ xdg_config_home }}/R"
+    - "{{ xdg_config_home }}/R/profile.d"
+    - "{{ xdg_config_home }}/radian"
+
+- name: Install bootstrap .Rprofile
+  ansible.builtin.template:
+    src: Rprofile.j2
+    dest: "{{ active_home }}/.Rprofile"
+    mode: "0644"
+
+- name: Install base R profile fragment
+  ansible.builtin.template:
+    src: R-profile.d/00-base.R.j2
+    dest: "{{ xdg_config_home }}/R/profile.d/00-base.R"
+    mode: "0644"

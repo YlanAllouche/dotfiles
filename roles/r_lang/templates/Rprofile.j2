@@ -1,0 +1,12 @@
+local({
+  profile_dir <- path.expand("{{ xdg_config_home }}/R/profile.d")
+  profile_files <- character(0)
+
+  if (dir.exists(profile_dir)) {
+    profile_files <- sort(list.files(profile_dir, pattern = "\\.[Rr]$", full.names = TRUE))
+  }
+
+  for (profile_file in profile_files) {
+    sys.source(profile_file, envir = globalenv())
+  }
+})

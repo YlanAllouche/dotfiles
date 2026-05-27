@@ -1,0 +1,9 @@
+- name: Install default R libraries
+  ansible.builtin.command:
+    argv:
+      - Rscript
+      - -e
+      - >-
+        install.packages(c({{ r_lang_default_packages | map('regex_replace', '^(.*)$', "'\\1'") | join(', ') }}), repos='{{ r_lang_default_repo }}')
+  environment:
+    R_LIBS_USER: "{{ r_lang_library_path }}"

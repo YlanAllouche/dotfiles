@@ -1,0 +1,12 @@
+- name: Install R packages on Arch
+  become: true
+  community.general.pacman:
+    name: "{{ r_lang_arch_packages }}"
+    state: present
+  when: is_archlinux | bool
+
+- name: Install R packages on macOS
+  community.general.homebrew:
+    name: "{{ r_lang_homebrew_packages }}"
+    state: present
+  when: is_macos | bool

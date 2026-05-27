@@ -156,11 +156,14 @@ tty_base_arch_packages:
   - ripgrep
   - rsync
   - sshfs
+  - smartmontools
   - tig
   - tmux
   # NOTE: Keep usbutils in the Arch baseline so lsusb is available on test and
   # desktop machines without needing a separate troubleshooting role.
   - usbutils
+  # TODO: Evaluate whether `tty` should also grow a broader archive/compression
+  # baseline such as p7zip, unrar, unar, zstd, pigz, and bsdtar.
   - unzip
   - wget
   - yq
@@ -212,11 +215,13 @@ shell_homebrew_packages:
   - zsh
 
 ecmascript_arch_packages:
+  - bun
   - nodejs
   - npm
   - pnpm
 
 ecmascript_homebrew_packages:
+  - bun
   - node
   - pnpm
 
@@ -378,9 +383,6 @@ identity_homebrew_packages:
   - rbw
   - rclone
 
-r_lang_arch_packages:
-  - r
-
 java_arch_packages:
   - jdk-openjdk
   - maven
@@ -469,12 +471,6 @@ cloud_homebrew_packages:
   - flyctl
   - terraform
 
-oci_arch_packages:
-  - podman
-
-oci_homebrew_packages:
-  - podman
-
 android_dev_arch_packages:
   - android-tools
 
@@ -482,7 +478,3 @@ vscode_arch_pacman_package: code
 vscode_arch_aur_package: visual-studio-code-live-bin
 vscode_homebrew_casks:
   - visual-studio-code
-
-r_lang_default_packages:
-  - dplyr
-  - purrr

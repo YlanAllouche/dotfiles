@@ -1,0 +1,9 @@
+Sys.setenv(R_LIBS_USER = "{{ r_lang_library_path }}")
+
+local({
+  dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE, showWarnings = FALSE)
+  .libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+})
+
+options(width = 130)
+options(useFancyQuotes = FALSE)
