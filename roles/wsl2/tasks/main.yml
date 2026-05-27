@@ -1,0 +1,6 @@
+- name: WSL2 role future scope note
+  ansible.builtin.debug:
+    msg: >-
+      TODO: WSL2 role should eventually prepare the Windows host side first, then
+      hand off to the Arch-in-WSL bootstrap path. This is a scaffold only for now.
+  changed_when: false

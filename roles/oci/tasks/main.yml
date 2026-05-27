@@ -1,3 +1,11 @@
+- name: OCI role future scope note
+  ansible.builtin.debug:
+    msg: >-
+      TODO: OCI role may later grow optional docker-compose/podman-compose and a
+      small local Kubernetes distribution such as minikube, but those are not
+      wired yet.
+  changed_when: false
+
 - name: Install Podman on Arch
   become: true
   community.general.pacman:

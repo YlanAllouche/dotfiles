@@ -1,0 +1,13 @@
+oci_arch_packages:
+  - podman
+
+oci_homebrew_packages:
+  - podman
+
+oci_docker_compose_enabled: false
+oci_minikube_enabled: false
+
+# TODO: Revisit whether docker-compose or podman-compose is the better small
+# compose story for this repo.
+# TODO: Revisit whether minikube is the right smallest K8s footprint or whether
+# kind/k3s would fit better once the container workflow is clearer.

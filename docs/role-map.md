@@ -48,6 +48,7 @@ Role ownership reference. For entrypoints and profile layering, see `docs/playbo
 - `oci`: optional podman/docker/k3-style container tooling.
 - `android_dev`: Android platform tools, off by default.
 - `hammerspoon`: currently unwired macOS automation placeholder.
+- `wsl2`: future Windows/WSL bootstrap scaffold, currently unwired.
 
 ## Current boundaries to refine later
 
