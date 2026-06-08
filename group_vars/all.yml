@@ -376,7 +376,6 @@ email_arch_packages:
   - msmtp
   - neomutt
   - notmuch
-  - offlineimap
 
 email_aur_packages: []
 # TODO: Keep `bower-mail` out of the live package set until its AUR Makefile

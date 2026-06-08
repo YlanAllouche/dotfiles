@@ -58,15 +58,24 @@
   when:
     - (item.signature is defined and item.signature | length > 0) or (item.signature_src is defined and item.signature_src | length > 0)
 
+- name: Assert enabled sync accounts use mbsync
+  ansible.builtin.assert:
+    that:
+      - item.sync.backend | default('mbsync') == 'mbsync'
+    fail_msg: >-
+      Enabled email sync account `{{ item.id }}` must use `mbsync` in this repo.
+      Keep Gmail or other future backends disabled until they get dedicated wiring.
+  loop: "{{ email_accounts | default([]) | selectattr('enabled', 'equalto', true) | list }}"
+  when:
+    - item.sync is defined
+    - item.sync.enabled | default(false)
+
 - name: Install public email scaffolding
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode }}"
   loop:
-    - src: offlineimaprc.j2
-      dest: "{{ active_home }}/.offlineimaprc"
-      mode: "0600"
     - src: mbsyncrc.j2
       dest: "{{ active_home }}/.mbsyncrc"
       mode: "0600"
@@ -82,6 +91,11 @@
     - src: neomutt-accounts.rc.j2
       dest: "{{ xdg_config_home }}/neomutt/accounts.rc"
       mode: "0644"
+
+- name: Remove legacy offlineimap config
+  ansible.builtin.file:
+    path: "{{ active_home }}/.offlineimaprc"
+    state: absent
 
 - name: Install per-account neomutt configs
   ansible.builtin.template:

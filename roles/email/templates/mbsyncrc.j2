@@ -6,7 +6,7 @@ SyncState *
 
 {% set mbsync_accounts = [] %}
 {% for account in email_accounts | default([]) %}
-{%   if account.enabled | default(false) and account.sync is defined and account.sync.enabled | default(false) and account.sync.backend | default('') == 'mbsync' %}
+{%   if account.enabled | default(false) and account.sync is defined and account.sync.enabled | default(false) and account.sync.backend | default('mbsync') == 'mbsync' %}
 {%     set _ = mbsync_accounts.append(account) %}
 {%   endif %}
 {% endfor %}
@@ -37,12 +37,12 @@ Inbox {{ email_maildir_path }}/{{ account.maildir }}/{{ account.sync.inbox | def
 SubFolders {{ account.sync.subfolders | default('Legacy') }}
 
 Channel {{ account.id }}
-Master :{{ account.id }}-remote:
-Slave :{{ account.id }}-local:
+Far :{{ account.id }}-remote:
+Near :{{ account.id }}-local:
 {%     if account.sync.folders is defined and account.sync.folders | length > 0 %}
 Patterns {% for folder in account.sync.folders %}"{{ folder }}"{% if not loop.last %} {% endif %}{% endfor %}
 {%     else %}
-Patterns "INBOX"
+Patterns "INBOX" "*"
 {%     endif %}
 Create {{ account.sync.create | default('Both') }}
 Sync {{ account.sync.sync_mode | default('All') }}
