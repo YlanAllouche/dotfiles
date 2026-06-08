@@ -56,6 +56,8 @@ Current public runtime wrapper vars include:
 - `dotfiles_profile`
 - `dotfiles_active_user`
 - `dotfiles_active_home`
+- `dotfiles_consumer_vars_files`
+- `dotfiles_email_enabled`
 
 When a downstream wrapper needs to force role toggles after profile selection, prefer explicit wrapper-level vars and normalize them before the role graph instead of relying on import precedence alone.
 

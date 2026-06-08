@@ -37,7 +37,7 @@ Role ownership reference. For entrypoints and profile layering, see `docs/playbo
 
 ## Optional workflow roles
 
-- `email`: public scaffolding for isync, msmtp, notmuch, neomutt.
+- `email`: mail account rendering, offlineimap/mbsync scaffolding, msmtp, notmuch, neomutt, and mail-adjacent helper tooling.
 - `r_lang`: R install, user library path, default packages.
 - `java`: OpenJDK and Maven.
 - `share_sync`: share root and sync client baseline.

@@ -2,8 +2,11 @@
   # Could also be: ../main.yml
   vars:
     dotfiles_profile: hyprland
-    pkm_enabled: true
-    r_lang_enabled: true
+    dotfiles_pkm_enabled: true
+    dotfiles_r_lang_enabled: true
+    # dotfiles_email_enabled: true
+    # dotfiles_consumer_vars_files:
+    #   - "{{ playbook_dir }}/vars/mail-accounts.yml"
     # dotfiles_active_user: your-user
     # dotfiles_active_home: /home/your-user
     # identity_git_name: Your Name

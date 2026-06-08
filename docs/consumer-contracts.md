@@ -38,7 +38,7 @@ This repo is public. Private values should be injected by the consuming playbook
 ## Current role expectations
 
 - `identity`: git name/email, rclone config, optional key distribution
-- `email`: account-specific native config rendering
+- `email`: account-specific native config rendering from downstream `email_accounts` data
 - `games`: package-only public installs; private app state such as Moonlight pairing stays downstream/private
 - `media`: Jellyfin env or runtime secret lookup
 - `llm`: provider API keys and optional model overrides
