@@ -1,9 +1,26 @@
+{% set enabled_accounts = [] %}
+{% for account in email_accounts | default([]) %}
+{%   if account.enabled | default(false) %}
+{%     set _ = enabled_accounts.append(account) %}
+{%   endif %}
+{% endfor %}
+{% set ns = namespace(primary=enabled_accounts | first if enabled_accounts else none) %}
+{% for account in enabled_accounts %}
+{%   if account.id == (email_primary_account_id | default('')) or account.primary | default(false) %}
+{%     set ns.primary = account %}
+{%   endif %}
+{% endfor %}
 [database]
 path={{ email_maildir_path }}
 
 [user]
-name={{ active_user }}
-primary_email=you@example.com
+name={{ ns.primary.realname | default(email_default_realname) if ns.primary else email_default_realname }}
+primary_email={{ ns.primary.address if ns.primary else 'you@example.com' }}
+{% for account in enabled_accounts %}
+{%   if ns.primary is none or account.id != ns.primary.id %}
+other_email={{ account.address }}
+{%   endif %}
+{% endfor %}
 
 [new]
 tags=unread;inbox;

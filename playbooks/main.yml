@@ -43,6 +43,11 @@
         consumer_contract_env_dir: "{{ active_home }}/.config/dotfiles/env"
         consumer_contract_docs_dir: "{{ active_home }}/.config/dotfiles/contracts"
 
+    - name: Load consumer vars files
+      ansible.builtin.include_vars:
+        file: "{{ item }}"
+      loop: "{{ dotfiles_consumer_vars_files | default([]) }}"
+
     - name: Detect Homebrew prefix on macOS
       ansible.builtin.shell: |
         set -eu
@@ -79,6 +84,7 @@
         games_moonlight_client_enabled: >-
           {{ dotfiles_games_moonlight_client_enabled | default(games_moonlight_client_enabled) }}
         pkm_enabled: "{{ dotfiles_pkm_enabled | default(pkm_enabled) }}"
+        email_enabled: "{{ dotfiles_email_enabled | default(email_enabled) }}"
         r_lang_enabled: "{{ dotfiles_r_lang_enabled | default(r_lang_enabled) }}"
 
   tasks:

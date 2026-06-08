@@ -1,0 +1,43 @@
+[general]
+{% set offlineimap_accounts = [] %}
+{% for account in email_accounts | default([]) %}
+{%   if account.enabled | default(false) and account.sync is defined and account.sync.enabled | default(false) and account.sync.backend | default('') == 'offlineimap' %}
+{%     set _ = offlineimap_accounts.append(account) %}
+{%   endif %}
+{% endfor %}
+{% if offlineimap_accounts %}
+accounts = {{ offlineimap_accounts | map(attribute='id') | join(', ') }}
+ui = {{ email_offlineimap_ui | default('basic') }}
+
+{%   for account in offlineimap_accounts %}
+[Account {{ account.id }}]
+localrepository = {{ account.id }}-Local
+remoterepository = {{ account.id }}-Remote
+{%     if account.sync.since is defined and account.sync.since %}
+maxage = {{ account.sync.since }}
+{%     endif %}
+
+[Repository {{ account.id }}-Local]
+type = Maildir
+localfolders = {{ email_maildir_path }}/{{ account.maildir }}
+
+[Repository {{ account.id }}-Remote]
+type = IMAP
+remotehost = {{ account.sync.imap.host }}
+remoteuser = {{ account.sync.imap.user }}
+remotepass = {{ account.sync.imap.password }}
+remoteport = {{ account.sync.imap.port | default(993) }}
+ssl = yes
+sslcacertfile = {{ account.sync.imap.ssl_ca_cert | default(email_ssl_ca_cert_path) }}
+readonly = {{ 'True' if account.sync.readonly | default(true) else 'False' }}
+sync_deletes = {{ 'yes' if account.sync.sync_deletes | default(false) else 'no' }}
+{%     if account.sync.folders is defined and account.sync.folders | length > 0 %}
+folderfilter = lambda foldername: foldername in {{ account.sync.folders | to_json }}
+{%     endif %}
+
+{%   endfor %}
+{% else %}
+# No active offlineimap accounts are configured.
+accounts =
+ui = {{ email_offlineimap_ui | default('basic') }}
+{% endif %}

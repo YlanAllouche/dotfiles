@@ -1,0 +1,24 @@
+{% set enabled_accounts = [] %}
+{% for account in email_accounts | default([]) %}
+{%   if account.enabled | default(false) %}
+{%     set _ = enabled_accounts.append(account) %}
+{%   endif %}
+{% endfor %}
+{% set ns = namespace(primary=enabled_accounts | first if enabled_accounts else none) %}
+{% for account in enabled_accounts %}
+{%   if account.id == (email_primary_account_id | default('')) or account.primary | default(false) %}
+{%     set ns.primary = account %}
+{%   endif %}
+{% endfor %}
+{% if ns.primary %}
+source {{ email_neomutt_accounts_path }}/{{ ns.primary.id }}.rc
+
+mailboxes {% for account in enabled_accounts %}+{{ account.maildir }}/{{ account.spoolfile | default('INBOX') }}{% if not loop.last %} {% endif %}{% endfor %}
+
+{%   for account in enabled_accounts %}
+macro index <f{{ loop.index + 1 }}> '<sync-mailbox><enter-command>source {{ email_neomutt_accounts_path }}/{{ account.id }}.rc<enter><change-folder>!<enter>'
+macro pager <f{{ loop.index + 1 }}> '<exit><sync-mailbox><enter-command>source {{ email_neomutt_accounts_path }}/{{ account.id }}.rc<enter><change-folder>!<enter>'
+{%   endfor %}
+{% else %}
+# No enabled email accounts are configured.
+{% endif %}

@@ -1,14 +1,52 @@
 # Public baseline for isync/mbsync.
-# Add account-specific credentials, channels, and folder mappings from the
-# consuming playbook or local machine config.
+# Render account-specific values from `email_accounts` in the consuming playbook
+# or local private layer.
 
 SyncState *
 
-# Multi-account setups are expected to define one IMAPAccount/IMAPStore/
-# MaildirStore/Channel group per account.
-
+{% set mbsync_accounts = [] %}
+{% for account in email_accounts | default([]) %}
+{%   if account.enabled | default(false) and account.sync is defined and account.sync.enabled | default(false) and account.sync.backend | default('') == 'mbsync' %}
+{%     set _ = mbsync_accounts.append(account) %}
+{%   endif %}
+{% endfor %}
+{% if not mbsync_accounts %}
+# No active mbsync accounts are configured.
 # Example account:
 # IMAPAccount personal
 # Host imap.example.com
 # User you@example.com
 # PassCmd "cat /path/to/private/imap-password.txt"
+{% else %}
+{%   for account in mbsync_accounts %}
+IMAPAccount {{ account.id }}
+Host {{ account.sync.imap.host }}
+Port {{ account.sync.imap.port | default(993) }}
+User {{ account.sync.imap.user }}
+Pass {{ account.sync.imap.password }}
+Timeout {{ account.sync.timeout | default(0) }}
+AuthMechs {{ account.sync.imap.auth_mechs | default('LOGIN') }}
+SSLType {{ account.sync.imap.ssl_type | default('IMAPS') }}
+
+IMAPStore {{ account.id }}-remote
+Account {{ account.id }}
+
+MaildirStore {{ account.id }}-local
+Path {{ email_maildir_path }}/{{ account.maildir }}/
+Inbox {{ email_maildir_path }}/{{ account.maildir }}/{{ account.sync.inbox | default('INBOX') }}
+SubFolders {{ account.sync.subfolders | default('Legacy') }}
+
+Channel {{ account.id }}
+Master :{{ account.id }}-remote:
+Slave :{{ account.id }}-local:
+{%     if account.sync.folders is defined and account.sync.folders | length > 0 %}
+Patterns {% for folder in account.sync.folders %}"{{ folder }}"{% if not loop.last %} {% endif %}{% endfor %}
+{%     else %}
+Patterns "INBOX"
+{%     endif %}
+Create {{ account.sync.create | default('Both') }}
+Sync {{ account.sync.sync_mode | default('All') }}
+SyncState *
+
+{%   endfor %}
+{% endif %}

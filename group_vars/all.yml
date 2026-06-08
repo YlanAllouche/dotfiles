@@ -361,9 +361,6 @@ pkm_python_packages:
   - git+https://github.com/YlanAllouche/dashboard-md.git
 
 pim_arch_packages:
-  - afew
-  - alot
-  - goimapnotify
   - khal
   - todoman
   - vdirsyncer
@@ -372,10 +369,22 @@ pim_aur_packages:
   - gmailieer-git
 
 email_arch_packages:
+  - afew
+  - alot
+  - goimapnotify
   - isync
   - msmtp
   - neomutt
   - notmuch
+  - offlineimap
+
+email_aur_packages: []
+# TODO: Keep `bower-mail` out of the live package set until its AUR Makefile
+# issue is fixed.
+# - bower-mail
+# TODO: Evaluate whether the Maildir-first `mblaze` workflow should become part
+# of the default email toolchain or stay opt-in.
+# - mblaze
 
 identity_arch_packages:
   - pass

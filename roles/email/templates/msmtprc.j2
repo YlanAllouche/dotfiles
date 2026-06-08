@@ -1,8 +1,36 @@
 # Public baseline for msmtp.
-# Put real account settings in the consuming playbook or local machine config.
+# Render account-specific values from `email_accounts` in the consuming playbook
+# or local private layer.
 
 defaults
 auth on
 tls on
 auto_from on
 logfile {{ xdg_state_home }}/msmtp.log
+{% set enabled_accounts = [] %}
+{% for account in email_accounts | default([]) %}
+{%   if account.enabled | default(false) and account.send is defined and account.send.enabled | default(false) %}
+{%     set _ = enabled_accounts.append(account) %}
+{%   endif %}
+{% endfor %}
+{% set ns = namespace(primary=enabled_accounts | first if enabled_accounts else none) %}
+{% for account in enabled_accounts %}
+{%   if account.id == (email_primary_account_id | default('')) or account.primary | default(false) %}
+{%     set ns.primary = account %}
+{%   endif %}
+{% endfor %}
+{% if enabled_accounts %}
+
+{%   for account in enabled_accounts %}
+account {{ account.id }}
+host {{ account.send.smtp.host }}
+port {{ account.send.smtp.port | default(465) }}
+from {{ account.address }}
+user {{ account.send.smtp.user }}
+password {{ account.send.smtp.password }}
+tls_starttls {{ 'on' if account.send.smtp.tls_starttls | default(false) else 'off' }}
+tls_trust_file {{ account.send.smtp.tls_trust_file | default(email_ssl_ca_cert_path) }}
+
+{%   endfor %}
+account default : {{ ns.primary.id }}
+{% endif %}

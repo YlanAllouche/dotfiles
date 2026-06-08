@@ -1,0 +1,12 @@
+set mbox_type = Maildir
+set folder = "{{ email_maildir_path }}/{{ email_account.maildir }}"
+set spoolfile = "+{{ email_account.spoolfile | default('INBOX') }}"
+
+set from = "{{ email_account.address }}"
+set use_from = yes
+set realname = "{{ email_account.realname | default(email_default_realname) }}"
+{% if email_account.signature is defined and email_account.signature | length > 0 %}
+set signature = "{{ email_signature_root }}/{{ email_account.maildir }}/signature"
+{% endif %}
+set mail_check = {{ email_account.mail_check | default(90) }}
+unset mark_old

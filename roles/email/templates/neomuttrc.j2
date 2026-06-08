@@ -1,6 +1,7 @@
 set folder = "{{ email_maildir_path }}"
 set mbox_type = Maildir
 set spoolfile = "+INBOX"
+set sendmail = "{{ email_sendmail_command }}"
 
 set editor = "vim"
 set charset = "utf-8"
@@ -33,7 +34,8 @@ alternative_order text/plain text/enriched text/html
 bind attach <return> view-mailcap
 
 set query_command = "notmuch-addrlookup --mutt '%s'"
+set mail_check = 90
 
-# Source account-specific overrides from your private layer or local machine
-# setup by editing this file, using a local include wrapper, or generating a
-# richer account file from the consumer layer.
+source "{{ xdg_config_home }}/neomutt/accounts.rc"
+
+# Account-specific overrides are rendered from `email_accounts` when provided.

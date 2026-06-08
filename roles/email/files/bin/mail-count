@@ -1,0 +1,16 @@
+#!/bin/sh
+
+query=${DOTFILES_MAIL_COUNT_QUERY:-tag:inbox and tag:unread}
+count=$(notmuch count "$query" 2>/dev/null || printf '0')
+
+case "$count" in
+  ''|*[!0-9]*)
+    count=0
+    ;;
+esac
+
+if [ "$count" -gt 0 ]; then
+  printf '{"text":"mail:%s","tooltip":"%s unread inbox messages","class":"has-mail"}\n' "$count" "$count"
+else
+  printf '{"text":"mail","tooltip":"No unread inbox mail","class":"no-mail"}\n'
+fi

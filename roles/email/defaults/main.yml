@@ -1,3 +1,10 @@
 email_maildir_path: "{{ active_home }}/Mail"
 email_header_cache_path: "{{ xdg_cache_home }}/mail/headers"
 email_body_cache_path: "{{ xdg_cache_home }}/mail/bodies"
+email_signature_root: "{{ active_home }}/Data/Private/Mail"
+email_neomutt_accounts_path: "{{ xdg_config_home }}/neomutt/accounts"
+email_accounts: []
+email_primary_account_id: ""
+email_default_realname: "{{ active_user }}"
+email_sendmail_command: msmtp
+email_ssl_ca_cert_path: /etc/ssl/certs/ca-certificates.crt

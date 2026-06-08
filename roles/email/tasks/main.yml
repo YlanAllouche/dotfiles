@@ -5,6 +5,28 @@
     state: present
   when: is_archlinux | bool
 
+- name: Install email AUR packages through yay
+  become: true
+  become_user: "{{ aur_builder_user }}"
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ email_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'yay'
+    - email_aur_packages | length > 0
+
+- name: Install email AUR packages through pacman
+  become: true
+  community.general.pacman:
+    name: "{{ email_aur_packages }}"
+    state: present
+  when:
+    - is_archlinux | bool
+    - aur_install_method == 'pacman'
+    - email_aur_packages | length > 0
+
 - name: Ensure email config directories exist
   ansible.builtin.file:
     path: "{{ item }}"
@@ -12,9 +34,29 @@
     mode: "0700"
   loop:
     - "{{ xdg_config_home }}/neomutt"
+    - "{{ email_neomutt_accounts_path }}"
     - "{{ email_maildir_path }}"
     - "{{ email_header_cache_path }}"
     - "{{ email_body_cache_path }}"
+    - "{{ email_signature_root }}"
+    - "{{ local_bin_dir }}"
+    - "{{ xdg_state_home }}"
+
+- name: Ensure per-account mail directories exist
+  ansible.builtin.file:
+    path: "{{ email_maildir_path }}/{{ item.maildir }}"
+    state: directory
+    mode: "0700"
+  loop: "{{ email_accounts | default([]) | selectattr('enabled', 'equalto', true) | list }}"
+
+- name: Ensure per-account signature directories exist
+  ansible.builtin.file:
+    path: "{{ email_signature_root }}/{{ item.maildir }}"
+    state: directory
+    mode: "0700"
+  loop: "{{ email_accounts | default([]) | selectattr('enabled', 'equalto', true) | list }}"
+  when:
+    - (item.signature is defined and item.signature | length > 0) or (item.signature_src is defined and item.signature_src | length > 0)
 
 - name: Install public email scaffolding
   ansible.builtin.template:
@@ -22,6 +64,9 @@
     dest: "{{ item.dest }}"
     mode: "{{ item.mode }}"
   loop:
+    - src: offlineimaprc.j2
+      dest: "{{ active_home }}/.offlineimaprc"
+      mode: "0600"
     - src: mbsyncrc.j2
       dest: "{{ active_home }}/.mbsyncrc"
       mode: "0600"
@@ -34,9 +79,48 @@
     - src: neomuttrc.j2
       dest: "{{ xdg_config_home }}/neomutt/neomuttrc"
       mode: "0644"
+    - src: neomutt-accounts.rc.j2
+      dest: "{{ xdg_config_home }}/neomutt/accounts.rc"
+      mode: "0644"
+
+- name: Install per-account neomutt configs
+  ansible.builtin.template:
+    src: neomutt-account.rc.j2
+    dest: "{{ email_neomutt_accounts_path }}/{{ item.id }}.rc"
+    mode: "0600"
+  vars:
+    email_account: "{{ item }}"
+  loop: "{{ email_accounts | default([]) | selectattr('enabled', 'equalto', true) | list }}"
+
+- name: Install inline email signatures
+  ansible.builtin.copy:
+    dest: "{{ email_signature_root }}/{{ item.maildir }}/signature"
+    content: "{{ item.signature | trim }}\n"
+    mode: "0600"
+  loop: "{{ email_accounts | default([]) | selectattr('enabled', 'equalto', true) | list }}"
+  when:
+    - item.signature is defined
+    - item.signature | length > 0
+    - item.signature_src is not defined
+
+- name: Install file-backed email signatures
+  ansible.builtin.copy:
+    src: "{{ item.signature_src }}"
+    dest: "{{ email_signature_root }}/{{ item.maildir }}/signature"
+    mode: "0600"
+  loop: "{{ email_accounts | default([]) | selectattr('enabled', 'equalto', true) | list }}"
+  when:
+    - item.signature_src is defined
+    - item.signature_src | length > 0
 
 - name: Install reusable neomutt mailcap baseline
   ansible.builtin.copy:
     src: mailcap
     dest: "{{ xdg_config_home }}/neomutt/mailcap"
     mode: "0644"
+
+- name: Install email helper scripts
+  ansible.builtin.copy:
+    src: bin/mail-count
+    dest: "{{ local_bin_dir }}/mail-count"
+    mode: "0755"
