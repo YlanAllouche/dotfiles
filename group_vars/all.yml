@@ -310,6 +310,9 @@ hyprland_arch_packages:
   - swaync
   - tailscale
   - waybar
+  - xdg-desktop-portal
+  - xdg-desktop-portal-gtk
+  - xdg-desktop-portal-hyprland
 
 sound_arch_packages:
   - pipewire
