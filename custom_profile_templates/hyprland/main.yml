@@ -4,6 +4,8 @@
     dotfiles_profile: hyprland
     dotfiles_pkm_enabled: true
     dotfiles_r_lang_enabled: true
+    # Uncomment these with the bundled `vars/mail-accounts.yml` example when
+    # you want the public email role enabled in a downstream wrapper.
     # dotfiles_email_enabled: true
     # dotfiles_consumer_vars_files:
     #   - "{{ playbook_dir }}/vars/mail-accounts.yml"

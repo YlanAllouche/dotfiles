@@ -25,7 +25,8 @@ Current supported fields:
 - `send.enabled`
 - `send.smtp.{host,port,user,password,tls_starttls}`
 
-The intended private example lives in `personal-layer/vars/mail-accounts.yml`.
+The copyable public example lives in `custom_profile_templates/hyprland/vars/mail-accounts.yml`.
+The local working example used during development in this repo lives in `personal-layer/vars/mail-accounts.yml`.
 
 Enabled IMAP accounts in this repo are rendered through `mbsync` only. Future
 non-IMAP or provider-specific flows such as Gmail plus `lieer` should stay

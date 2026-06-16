@@ -1,0 +1,46 @@
+email_primary_account_id: perso
+
+email_accounts:
+  - id: perso
+    enabled: true
+    primary: true
+    address: you@example.com
+    realname: Your Name
+    maildir: perso
+    signature_src: "{{ playbook_dir }}/files/mail/accounts/perso/signature"
+    sync:
+      backend: mbsync
+      enabled: true
+      folders:
+        - INBOX
+        - "*"
+      create: Both
+      sync_mode: All
+      subfolders: Legacy
+      imap:
+        host: imap.example.com
+        port: 993
+        user: you@example.com
+        password: REPLACE_ME
+        auth_mechs: LOGIN
+        ssl_type: IMAPS
+    send:
+      enabled: true
+      smtp:
+        host: smtp.example.com
+        port: 465
+        user: you@example.com
+        password: REPLACE_ME
+        tls_starttls: false
+
+  - id: gmail
+    enabled: false
+    address: you@gmail.com
+    realname: Your Name
+    maildir: gmail
+    signature_src: "{{ playbook_dir }}/files/mail/accounts/gmail/signature"
+    sync:
+      backend: lieer
+      enabled: false
+      notes:
+        - TODO: wire Gmail OAuth and lieer before enabling

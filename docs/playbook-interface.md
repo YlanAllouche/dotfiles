@@ -80,7 +80,7 @@ The tracked `custom_profile_templates/` directory provides copyable examples for
 
 Use `dotfiles_profile=custom` when the downstream repo wants to define the full profile itself.
 
-`personal-layer/README.md` shows the local private-layer scaffold used during development in this repo.
+`personal-layer/README.md` shows the local private-layer scaffold used during development in this repo. It is not the canonical public consumer example; use `custom_profile_templates/` for copyable downstream examples.
 
 ## Role Vars vs Profile Vars
 

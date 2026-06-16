@@ -46,6 +46,7 @@ This repo is public. Private values should be injected by the consuming playbook
 
 ## Notes
 
+- See `custom_profile_templates/hyprland/vars/mail-accounts.yml` for a copyable public example of the `email_accounts` contract.
 - Avoid a single global env file.
 - Prefer the smallest scope that matches the application.
 - Keep consumer-side secret injection explicit and role-owned.

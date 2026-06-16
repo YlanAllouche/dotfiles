@@ -10,6 +10,6 @@ Each template:
 
 Available starting points:
 
-- `hyprland/`: reuse the public Hyprland archetype and override a few flags
+- `hyprland/`: reuse the public Hyprland archetype and override a few flags; includes a copyable `vars/mail-accounts.yml` example for the public `email_accounts` contract
 - `macos/`: reuse the public macOS archetype and override a few flags
 - `custom/`: let the whole profile live downstream while still using the public engine

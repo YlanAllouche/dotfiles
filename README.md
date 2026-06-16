@@ -28,8 +28,8 @@ For inline role-only remote iteration, see `docs/ansible-patterns.md`.
 - `docs/role-map.md`: role inventory and ownership boundaries.
 - `docs/theme-pipeline.md`: theme source-of-truth values, rendered static outputs, and wallpaper generation flow.
 - `docs/consumer-contracts.md`: secrets, private config, app-owned state, and consumer-side injection patterns.
-- `custom_profile_templates/README.md`: copyable downstream wrapper examples.
-- `personal-layer/README.md`: local private-layer scaffold and machine-specific override patterns.
+- `custom_profile_templates/README.md`: copyable downstream wrapper examples, including the public mail-account contract example.
+- `personal-layer/README.md`: local private-layer scaffold and machine-specific override patterns used during development here.
 
 ## Downstream And Private Layers
 
