@@ -4,6 +4,62 @@
     name: "{{ aur_base_packages }}"
     state: present
 
+- name: Check whether pacman options overlay exists
+  become: true
+  ansible.builtin.stat:
+    path: "{{ aur_pacman_options_overlay_path }}"
+  register: aur_pacman_options_overlay
+  when:
+    - is_archlinux | bool
+    - aur_manage_pacman_config | bool
+
+- name: Read pacman configuration when overlay bootstrap may be needed
+  become: true
+  ansible.builtin.slurp:
+    src: "{{ aur_pacman_config_path }}"
+  register: aur_pacman_config
+  when:
+    - is_archlinux | bool
+    - aur_manage_pacman_config | bool
+    - not aur_pacman_options_overlay.stat.exists
+
+- name: Check whether pacman already enables Color and ILoveCandy
+  ansible.builtin.set_fact:
+    aur_pacman_color_enabled: >-
+      {{
+        (aur_pacman_config.content | b64decode)
+        is regex('(?m)^[ \t]*Color[ \t]*$')
+      }}
+    aur_pacman_ilovecandy_enabled: >-
+      {{
+        (aur_pacman_config.content | b64decode)
+        is regex('(?m)^[ \t]*ILoveCandy[ \t]*$')
+      }}
+  when:
+    - is_archlinux | bool
+    - aur_manage_pacman_config | bool
+    - not aur_pacman_options_overlay.stat.exists
+
+- name: Bootstrap pacman options overlay when ergonomic options are missing
+  become: true
+  when:
+    - is_archlinux | bool
+    - aur_manage_pacman_config | bool
+    - not aur_pacman_options_overlay.stat.exists
+    - not aur_pacman_color_enabled or not aur_pacman_ilovecandy_enabled
+  block:
+    - name: Install pacman options overlay
+      ansible.builtin.copy:
+        src: options.conf
+        dest: "{{ aur_pacman_options_overlay_path }}"
+        mode: "0644"
+
+    - name: Include pacman options overlay from options section
+      ansible.builtin.lineinfile:
+        path: "{{ aur_pacman_config_path }}"
+        line: "Include = {{ aur_pacman_options_overlay_path }}"
+        insertafter: '^\[options\]$'
+
 - name: Ensure AUR builder user exists when yay is used
   become: true
   ansible.builtin.user:

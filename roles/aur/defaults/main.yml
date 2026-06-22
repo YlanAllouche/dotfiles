@@ -4,3 +4,5 @@ aur_base_packages:
 
 aur_sudoers_path: /etc/sudoers.d/11-aur-builder
 aur_manage_pacman_config: true
+aur_pacman_config_path: /etc/pacman.conf
+aur_pacman_options_overlay_path: /etc/pacman.d/options.conf
