@@ -152,6 +152,7 @@ tty_base_arch_packages:
   - jq
   - lazygit
   - less
+  - lsof
   - ranger
   - ripgrep
   - rsync
