@@ -1,13 +1,19 @@
-oci_arch_packages:
-  - podman
-
-oci_homebrew_packages:
-  - podman
-
-oci_docker_compose_enabled: false
+oci_docker_enabled: true
+oci_docker_compose_enabled: true
+oci_docker_service_enabled: false
 oci_minikube_enabled: false
 
-# TODO: Revisit whether docker-compose or podman-compose is the better small
-# compose story for this repo.
+oci_arch_packages:
+  - docker
+
+oci_arch_compose_packages:
+  - docker-compose
+
+oci_podman_arch_packages:
+  - podman
+
+oci_podman_homebrew_packages:
+  - podman
+
 # TODO: Revisit whether minikube is the right smallest K8s footprint or whether
 # kind/k3s would fit better once the container workflow is clearer.

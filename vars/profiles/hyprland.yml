@@ -26,6 +26,7 @@ llm_enabled: true
 llm_opencode_enabled: true
 llm_claudecode_enabled: false
 vscode_enabled: true
+oci_enabled: true
 
 browser_bitwarden_enabled: false
 tty_dv_enabled: true

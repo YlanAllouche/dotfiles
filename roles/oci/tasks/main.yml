@@ -1,15 +1,40 @@
-- name: OCI role future scope note
-  ansible.builtin.debug:
-    msg: >-
-      TODO: OCI role may later grow optional docker-compose/podman-compose and a
-      small local Kubernetes distribution such as minikube, but those are not
-      wired yet.
-  changed_when: false
+- name: Install Docker tooling on Arch
+  become: true
+  community.general.pacman:
+    name: >-
+      {{
+        oci_arch_packages
+        + (oci_arch_compose_packages if oci_docker_compose_enabled | bool else [])
+      }}
+    state: present
+  when:
+    - is_archlinux | bool
+    - oci_docker_enabled | bool
+
+- name: Add active user to docker group
+  become: true
+  ansible.builtin.user:
+    name: "{{ active_user }}"
+    groups: docker
+    append: true
+  when:
+    - is_archlinux | bool
+    - oci_docker_enabled | bool
+
+- name: Set Docker service startup policy
+  become: true
+  ansible.builtin.systemd_service:
+    name: docker.service
+    enabled: "{{ oci_docker_service_enabled | bool }}"
+    state: "{{ 'started' if oci_docker_service_enabled | bool else 'stopped' }}"
+  when:
+    - is_archlinux | bool
+    - oci_docker_enabled | bool
 
 - name: Install Podman on Arch
   become: true
   community.general.pacman:
-    name: podman
+    name: "{{ oci_podman_arch_packages }}"
     state: present
   when:
     - is_archlinux | bool
@@ -17,7 +42,7 @@
 
 - name: Install Podman on macOS
   community.general.homebrew:
-    name: podman
+    name: "{{ oci_podman_homebrew_packages }}"
     state: present
   when:
     - is_macos | bool
