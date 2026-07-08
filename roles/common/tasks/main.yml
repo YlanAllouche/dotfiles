@@ -8,6 +8,7 @@
     - "{{ xdg_data_home }}"
     - "{{ xdg_state_home }}"
     - "{{ xdg_cache_home }}"
+    - "{{ repl_history_dir }}"
     - "{{ local_bin_dir }}"
 
 # NOTES: NVIDIA driver installation belongs to the infra layer, not to this

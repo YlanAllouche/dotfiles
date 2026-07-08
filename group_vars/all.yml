@@ -23,6 +23,7 @@ xdg_config_home: "{{ active_home }}/.config"
 xdg_data_home: "{{ active_home }}/.local/share"
 xdg_state_home: "{{ active_home }}/.local/state"
 xdg_cache_home: "{{ active_home }}/.cache"
+repl_history_dir: "{{ xdg_cache_home }}/repl_history"
 local_bin_dir: "{{ active_home }}/.local/bin"
 dotfiles_repo_root: >-
   {{

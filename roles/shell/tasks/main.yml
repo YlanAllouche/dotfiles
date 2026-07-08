@@ -61,6 +61,8 @@
       dest: 10-path.zsh
     - src: brew.zsh.j2
       dest: 20-brew.zsh
+    - src: repl-history.zsh.j2
+      dest: 30-repl-history.zsh
 
 - name: Bootstrap antidote plugin cache
   # FIX: This bootstrap path is intentionally kept off by default until we
