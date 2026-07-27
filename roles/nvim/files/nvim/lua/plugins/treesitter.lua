@@ -74,7 +74,7 @@ local function register_gherkin_parser()
 			url = "https://github.com/binhtddev/tree-sitter-gherkin",
 			files = { "src/parser.c", "src/scanner.c" },
 			branch = "main",
-			queries = "queries",
+			queries = "queries/gherkin",
 		},
 	}
 end
@@ -209,9 +209,24 @@ local function setup_textobjects()
 		{ lhs = "<leader>na", action = swap.swap_next, query = "@parameter.inner", desc = "Swap with next parameter" },
 		{ lhs = "<leader>n:", action = swap.swap_next, query = "@property.outer", desc = "Swap with next property" },
 		{ lhs = "<leader>nm", action = swap.swap_next, query = "@function.outer", desc = "Swap with next function" },
-		{ lhs = "<leader>pa", action = swap.swap_previous, query = "@parameter.inner", desc = "Swap with previous parameter" },
-		{ lhs = "<leader>p:", action = swap.swap_previous, query = "@property.outer", desc = "Swap with previous property" },
-		{ lhs = "<leader>pm", action = swap.swap_previous, query = "@function.outer", desc = "Swap with previous function" },
+		{
+			lhs = "<leader>pa",
+			action = swap.swap_previous,
+			query = "@parameter.inner",
+			desc = "Swap with previous parameter",
+		},
+		{
+			lhs = "<leader>p:",
+			action = swap.swap_previous,
+			query = "@property.outer",
+			desc = "Swap with previous property",
+		},
+		{
+			lhs = "<leader>pm",
+			action = swap.swap_previous,
+			query = "@function.outer",
+			desc = "Swap with previous function",
+		},
 	}
 
 	for _, spec in ipairs(swap_keymaps) do
@@ -222,7 +237,12 @@ local function setup_textobjects()
 
 	local move_keymaps = {
 		{ lhs = "]f", action = move.goto_next_start, query = "@call.outer", desc = "Next function call start" },
-		{ lhs = "]m", action = move.goto_next_start, query = "@function.outer", desc = "Next method/function def start" },
+		{
+			lhs = "]m",
+			action = move.goto_next_start,
+			query = "@function.outer",
+			desc = "Next method/function def start",
+		},
 		{ lhs = "]c", action = move.goto_next_start, query = "@class.outer", desc = "Next class start" },
 		{ lhs = "]i", action = move.goto_next_start, query = "@conditional.outer", desc = "Next conditional start" },
 		{ lhs = "]l", action = move.goto_next_start, query = "@loop.outer", desc = "Next loop start" },
@@ -234,12 +254,27 @@ local function setup_textobjects()
 		{ lhs = "]I", action = move.goto_next_end, query = "@conditional.outer", desc = "Next conditional end" },
 		{ lhs = "]L", action = move.goto_next_end, query = "@loop.outer", desc = "Next loop end" },
 		{ lhs = "[f", action = move.goto_previous_start, query = "@call.outer", desc = "Prev function call start" },
-		{ lhs = "[m", action = move.goto_previous_start, query = "@function.outer", desc = "Prev method/function def start" },
+		{
+			lhs = "[m",
+			action = move.goto_previous_start,
+			query = "@function.outer",
+			desc = "Prev method/function def start",
+		},
 		{ lhs = "[c", action = move.goto_previous_start, query = "@class.outer", desc = "Prev class start" },
-		{ lhs = "[i", action = move.goto_previous_start, query = "@conditional.outer", desc = "Prev conditional start" },
+		{
+			lhs = "[i",
+			action = move.goto_previous_start,
+			query = "@conditional.outer",
+			desc = "Prev conditional start",
+		},
 		{ lhs = "[l", action = move.goto_previous_start, query = "@loop.outer", desc = "Prev loop start" },
 		{ lhs = "[F", action = move.goto_previous_end, query = "@call.outer", desc = "Prev function call end" },
-		{ lhs = "[M", action = move.goto_previous_end, query = "@function.outer", desc = "Prev method/function def end" },
+		{
+			lhs = "[M",
+			action = move.goto_previous_end,
+			query = "@function.outer",
+			desc = "Prev method/function def end",
+		},
 		{ lhs = "[C", action = move.goto_previous_end, query = "@class.outer", desc = "Prev class end" },
 		{ lhs = "[I", action = move.goto_previous_end, query = "@conditional.outer", desc = "Prev conditional end" },
 		{ lhs = "[L", action = move.goto_previous_end, query = "@loop.outer", desc = "Prev loop end" },
