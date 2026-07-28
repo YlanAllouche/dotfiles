@@ -1,0 +1,23 @@
+- import_playbook: "{{ ((lookup('env', 'DOTFILES_PUBLIC_REPO_DIR') | default('', true)) or (lookup('env', 'HOME') ~ '/workspaces/repos/github/YlanAllouche/dotfiles')) ~ '/main.yml' }}"
+  # Could also be: ../main.yml
+  vars:
+    dotfiles_profile: hyprland
+    dotfiles_pkm_enabled: true
+    dotfiles_r_lang_enabled: true
+    dotfiles_email_enabled: true
+    # This template focuses on controller-side Bitwarden lookups through
+    # `community.general.bitwarden` and the official `bw` CLI.
+    #
+    # Downstream setup reminders:
+    # - `ansible-galaxy collection install community.general`
+    # - install `bw` where `ansible-playbook` runs
+    # - export `BW_SESSION`, for example:
+    #   export BW_SESSION="$(bw unlock --raw)"
+    dotfiles_consumer_vars_files:
+      - "{{ playbook_dir }}/vars/mail-accounts-explicit.yml"
+    # Swap the vars file above for the helper-oriented variant if you want a
+    # more abstract local pattern:
+    # dotfiles_consumer_vars_files:
+    #   - "{{ playbook_dir }}/vars/mail-accounts-helper.yml"
+    # dotfiles_active_user: your-user
+    # dotfiles_active_home: /home/your-user

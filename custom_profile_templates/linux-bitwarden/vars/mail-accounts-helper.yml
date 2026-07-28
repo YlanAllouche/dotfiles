@@ -1,0 +1,105 @@
+# Helper-oriented example.
+#
+# Document the Bitwarden item names once, then derive the public mail contract
+# and a couple of identity values from that local structure.
+
+bitwarden_mail_accounts:
+  - id: perso
+    item_name: mail-account/perso
+    enabled: true
+    primary: true
+    signature_src: "{{ playbook_dir }}/files/mail/accounts/perso/signature"
+    sync_folders:
+      - INBOX
+      - "*"
+    defaults:
+      maildir: perso
+      imap_auth_mechs: LOGIN
+      imap_ssl_type: IMAPS
+      smtp_tls_starttls: false
+
+bitwarden_mail_items: >-
+  {%- set ns = namespace(items={}) -%}
+  {%- for account in bitwarden_mail_accounts -%}
+  {%- set _ = ns.items.update({
+    account.id: lookup(
+      'community.general.bitwarden',
+      account.item_name,
+      result_count=1
+    ) | first
+  }) -%}
+  {%- endfor -%}
+  {{ ns.items }}
+
+bitwarden_mail_fields: >-
+  {%- set ns = namespace(fields={}) -%}
+  {%- for account in bitwarden_mail_accounts -%}
+  {%- set item = bitwarden_mail_items[account.id] -%}
+  {%- set _ = ns.fields.update({
+    account.id: dict(
+      (item.fields | default([]) | map(attribute='name'))
+      | zip(item.fields | default([]) | map(attribute='value'))
+    )
+  }) -%}
+  {%- endfor -%}
+  {{ ns.fields }}
+
+bitwarden_primary_mail_account: >-
+  {{
+    (
+      bitwarden_mail_accounts
+      | selectattr('primary', 'equalto', true)
+      | list
+      | first
+    )
+  }}
+
+bitwarden_primary_mail_fields: "{{ bitwarden_mail_fields[bitwarden_primary_mail_account.id] }}"
+
+identity_git_name: "{{ bitwarden_primary_mail_fields.realname }}"
+identity_git_email: "{{ bitwarden_primary_mail_fields.address }}"
+
+email_primary_account_id: "{{ bitwarden_primary_mail_account.id }}"
+
+email_accounts: >-
+  {%- set ns = namespace(accounts=[]) -%}
+  {%- for account in bitwarden_mail_accounts if account.enabled | default(true) -%}
+  {%- set fields = bitwarden_mail_fields[account.id] -%}
+  {%- set defaults = account.defaults | default({}) -%}
+  {%- set _ = ns.accounts.append({
+    'id': account.id,
+    'enabled': account.enabled | default(true),
+    'primary': account.primary | default(false),
+    'address': fields.address,
+    'realname': fields.realname,
+    'maildir': fields.maildir | default(defaults.maildir | default(account.id)),
+    'signature_src': account.signature_src,
+    'sync': {
+      'backend': 'mbsync',
+      'enabled': true,
+      'folders': account.sync_folders | default(['INBOX', '*']),
+      'create': 'Both',
+      'sync_mode': 'All',
+      'subfolders': 'Legacy',
+      'imap': {
+        'host': fields.imap_host,
+        'port': fields.imap_port | int,
+        'user': fields.imap_user,
+        'password': fields.imap_password,
+        'auth_mechs': fields.imap_auth_mechs | default(defaults.imap_auth_mechs | default('LOGIN')),
+        'ssl_type': fields.imap_ssl_type | default(defaults.imap_ssl_type | default('IMAPS'))
+      }
+    },
+    'send': {
+      'enabled': true,
+      'smtp': {
+        'host': fields.smtp_host,
+        'port': fields.smtp_port | int,
+        'user': fields.smtp_user,
+        'password': fields.smtp_password,
+        'tls_starttls': fields.smtp_tls_starttls | default(defaults.smtp_tls_starttls | default(false)) | bool
+      }
+    }
+  }) -%}
+  {%- endfor -%}
+  {{ ns.accounts }}

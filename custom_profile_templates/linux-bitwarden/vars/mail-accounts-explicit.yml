@@ -1,0 +1,76 @@
+# Copy-pasteable, low-magic example.
+#
+# Expected Bitwarden item:
+# - name: mail-account/perso
+# - custom fields:
+#   - address
+#   - realname
+#   - maildir
+#   - imap_host
+#   - imap_port
+#   - imap_user
+#   - imap_password
+#   - imap_auth_mechs
+#   - imap_ssl_type
+#   - smtp_host
+#   - smtp_port
+#   - smtp_user
+#   - smtp_password
+#   - smtp_tls_starttls
+
+mail_perso_item_name: mail-account/perso
+
+mail_perso_item: >-
+  {{
+    lookup(
+      'community.general.bitwarden',
+      mail_perso_item_name,
+      result_count=1
+    ) | first
+  }}
+
+mail_perso_fields: >-
+  {{
+    dict(
+      (mail_perso_item.fields | default([]) | map(attribute='name'))
+      | zip(mail_perso_item.fields | default([]) | map(attribute='value'))
+    )
+  }}
+
+identity_git_name: "{{ mail_perso_fields.realname }}"
+identity_git_email: "{{ mail_perso_fields.address }}"
+
+email_primary_account_id: perso
+
+email_accounts:
+  - id: perso
+    enabled: true
+    primary: true
+    address: "{{ mail_perso_fields.address }}"
+    realname: "{{ mail_perso_fields.realname }}"
+    maildir: "{{ mail_perso_fields.maildir | default('perso') }}"
+    signature_src: "{{ playbook_dir }}/files/mail/accounts/perso/signature"
+    sync:
+      backend: mbsync
+      enabled: true
+      folders:
+        - INBOX
+        - "*"
+      create: Both
+      sync_mode: All
+      subfolders: Legacy
+      imap:
+        host: "{{ mail_perso_fields.imap_host }}"
+        port: "{{ mail_perso_fields.imap_port | int }}"
+        user: "{{ mail_perso_fields.imap_user }}"
+        password: "{{ mail_perso_fields.imap_password }}"
+        auth_mechs: "{{ mail_perso_fields.imap_auth_mechs | default('LOGIN') }}"
+        ssl_type: "{{ mail_perso_fields.imap_ssl_type | default('IMAPS') }}"
+    send:
+      enabled: true
+      smtp:
+        host: "{{ mail_perso_fields.smtp_host }}"
+        port: "{{ mail_perso_fields.smtp_port | int }}"
+        user: "{{ mail_perso_fields.smtp_user }}"
+        password: "{{ mail_perso_fields.smtp_password }}"
+        tls_starttls: "{{ mail_perso_fields.smtp_tls_starttls | default(false) | bool }}"
