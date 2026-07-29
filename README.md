@@ -19,6 +19,56 @@ Useful entrypoints:
 - `playbooks/hyprland.yml`: Hyprland-focused desktop path.
 - `playbooks/macos.yml`: reusable public macOS baseline.
 
+## Local Apply
+
+By default, this repo targets the current machine as the current user.
+
+- `active_user` defaults to the current Ansible user.
+- `active_home` defaults to that user's home directory.
+- user config lands under that home directory.
+- system-wide tasks use `become: true` only where needed.
+
+Common local commands:
+
+```bash
+# Default public profile on the current machine.
+ansible-playbook main.yml
+
+# Apply a specific public entrypoint.
+ansible-playbook playbooks/macos.yml
+ansible-playbook playbooks/hyprland.yml
+
+# Pass standard ansible-playbook flags.
+ansible-playbook main.yml --check
+ansible-playbook playbooks/macos.yml -K
+```
+
+## Consumers
+
+This repo can be consumed in three main ways:
+
+1. Run the public repo directly.
+2. Import one of the public playbooks from a downstream wrapper repo.
+3. Keep the full profile in a downstream wrapper with `dotfiles_profile=custom`.
+
+Useful consumer starting points:
+
+- `custom_profile_templates/README.md`: copyable downstream wrapper examples.
+- `custom_profile_templates/hyprland/main.yml`: reuse the public Hyprland profile.
+- `custom_profile_templates/macos/main.yml`: reuse the public macOS profile.
+- `custom_profile_templates/custom/main.yml`: downstream-owned full profile.
+- `personal-layer/README.md`: local private-layer scaffold used during development here.
+
+Wrapper usage examples:
+
+```bash
+# Apply a downstream wrapper playbook.
+ansible-playbook path/to/your-wrapper/main.yml
+
+# Apply a tracked example wrapper from this repo.
+ansible-playbook custom_profile_templates/hyprland/main.yml
+```
+
 For inline role-only remote iteration, see `docs/ansible-patterns.md`.
 
 ## Documentation Map
