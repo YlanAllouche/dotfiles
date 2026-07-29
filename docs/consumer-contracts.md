@@ -47,6 +47,7 @@ This repo is public. Private values should be injected by the consuming playbook
 ## Notes
 
 - See `custom_profile_templates/hyprland/vars/mail-accounts.yml` for a copyable public example of the `email_accounts` contract.
+- See `custom_profile_templates/linux-bitwarden/` for a consumer-side example that resolves Bitwarden items on the controller from one `vars/bitwarden.yml` file and then exports neutral vars like `email_accounts` and `identity_git_email` into the public roles.
 - Avoid a single global env file.
 - Prefer the smallest scope that matches the application.
 - Keep consumer-side secret injection explicit and role-owned.

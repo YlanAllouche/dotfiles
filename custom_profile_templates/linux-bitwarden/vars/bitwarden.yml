@@ -1,0 +1,58 @@
+bitwarden:
+  # This is the one file most consumers edit.
+  #
+  # Patterns available here:
+  # - bindings: source registry for Bitwarden items
+  # - values: one exported scalar var per entry
+  # - objects: one exported dict per entry
+  # - role_exports: public-role vars derived from contract-bound bindings
+  bindings:
+    mail_perso:
+      item: mail-account/perso
+      contract: email_account
+
+    llm_openai:
+      item: llm/openai
+
+  values:
+    identity_git_name:
+      binding: mail_perso
+      field: realname
+      default: ""
+
+    identity_git_email:
+      binding: mail_perso
+      field: address
+
+    openai_api_key:
+      binding: llm_openai
+
+  objects:
+    mail_perso_fields:
+      binding: mail_perso
+      style: fields
+
+    mail_perso_env:
+      binding: mail_perso
+      style: env
+
+  role_exports:
+    email:
+      contract: email_account
+      primary: mail_perso
+
+  # Optional global overrides for any contract preset can live here.
+  # contract_overrides:
+  #   email_account:
+  #     realname:
+  #       default: Your Name
+
+  # Optional custom contracts can also be defined in YAML instead of Python.
+  # contract_definitions:
+  #   smtp_login:
+  #     host: smtp_host
+  #     port:
+  #       field: smtp_port
+  #       cast: int
+  #     username: smtp_user
+  #     password: smtp_password
