@@ -2,11 +2,11 @@
   # Could also be: ../main.yml
   vars:
     dotfiles_profile: hyprland
-    dotfiles_pkm_enabled: true
-    dotfiles_r_lang_enabled: true
+    # Optional structured consumer config is auto-loaded from:
+    #   {{ playbook_dir }}/vars/dotfiles.consumer.yml
     # Uncomment these with the bundled `vars/mail-accounts.yml` example when
-    # you want the public email role enabled in a downstream wrapper.
-    # dotfiles_email_enabled: true
+    # you want the public email role enabled in a downstream wrapper. Flip
+    # `dotfiles_roles.email.enabled` in `vars/dotfiles.consumer.yml` too.
     # dotfiles_consumer_vars_files:
     #   - "{{ playbook_dir }}/vars/mail-accounts.yml"
     # dotfiles_active_user: your-user

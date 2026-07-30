@@ -57,7 +57,15 @@ Current public runtime wrapper vars include:
 - `dotfiles_active_user`
 - `dotfiles_active_home`
 - `dotfiles_consumer_vars_files`
-- `dotfiles_email_enabled`
+- `dotfiles_roles`
+- `dotfiles_<name>` flat overrides such as `dotfiles_email_enabled`
+
+When `{{ playbook_dir }}/vars/dotfiles.consumer.yml` exists in the consuming wrapper,
+the orchestration playbook auto-loads it as an optional structured consumer config.
+That file is intended to hold discovery-friendly toggles such as `dotfiles_roles`.
+For small wrappers, `dotfiles_roles` can also live inline in the playbook vars.
+If both exist, the inline `dotfiles_roles` values win per-key over the file values.
+Keep role-native data such as `email_accounts` in dedicated consumer vars files.
 
 When a downstream wrapper needs to force role toggles after profile selection, prefer explicit wrapper-level vars and normalize them before the role graph instead of relying on import precedence alone.
 
@@ -67,6 +75,7 @@ A downstream repo is expected to:
 
 - import one of the public playbooks
 - override `dotfiles_profile` when needed
+- optionally add `vars/dotfiles.consumer.yml` for structured role toggles
 - set global vars such as `dotfiles_active_user`, `dotfiles_active_home`, or role-specific toggles
 - keep private secrets, machine notes, and client-specific artifacts out of this public repo
 

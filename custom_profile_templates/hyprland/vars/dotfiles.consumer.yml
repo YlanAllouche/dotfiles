@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=../../../docs/dotfiles.consumer.schema.json
+# Adjust or remove the schema path after copying this template into another repo.
+
+dotfiles_roles:
+  pkm:
+    enabled: true
+  r_lang:
+    enabled: true
+  email:
+    enabled: false

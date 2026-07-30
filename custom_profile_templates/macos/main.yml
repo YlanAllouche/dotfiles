@@ -2,8 +2,11 @@
   # Could also be: ../playbooks/macos.yml
   vars:
     dotfiles_profile: macos
-    tty_gh_enabled: true
-    vscode_enabled: true
+    dotfiles_roles:
+      tty:
+        gh_enabled: true
+      vscode:
+        enabled: true
     # dotfiles_active_user: your-user
     # dotfiles_active_home: /Users/your-user
     # identity_git_name: Your Name

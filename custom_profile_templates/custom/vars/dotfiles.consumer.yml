@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../docs/dotfiles.consumer.schema.json
+# Adjust or remove the schema path after copying this template into another repo.
+
+dotfiles_roles:
+  identity:
+    enabled: true
+  appearance:
+    enabled: true
+    generate_wallpapers: false
+    install_colorwhirl_target: false
+    install_matugen: true
+  shell:
+    enabled: true
+  tty:
+    enabled: true
+    dv_enabled: false
+    gh_enabled: false
+    glab_enabled: false
+    newsboat_enabled: false
+    neofetch_enabled: false
+    pywal_enabled: true
+    tmux_bootstrap_enabled: false
+  nvim:
+    enabled: true
+  python_dev:
+    enabled: false
+  ecmascript:
+    enabled: false
+  golang:
+    enabled: false
+  tower:
+    enabled: false
+  linux_desktop:
+    enabled: false
+  sound:
+    enabled: false
+  hyprland:
+    enabled: false
+  system_tty_login:
+    enabled: false
+  browser_base:
+    enabled: true
+  browser_personal:
+    enabled: false
+  media:
+    enabled: false
+  games:
+    enabled: false
+  pkm:
+    enabled: false
+  pim:
+    enabled: false
+  email:
+    enabled: false
+  r_lang:
+    enabled: false
+  java:
+    enabled: false
+  share_sync:
+    enabled: false
+  llm:
+    enabled: false
+    opencode_enabled: false
+    claudecode_enabled: false
+  vscode:
+    enabled: false
+  peripherals:
+    enabled: false
+  cloud:
+    enabled: false
+  oci:
+    enabled: false
+  android_dev:
+    enabled: false

@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "docs/dotfiles.consumer.schema.json",
+  "title": "Dotfiles Consumer Config",
+  "description": "Optional structured consumer-side toggle file loaded from vars/dotfiles.consumer.yml.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "dotfiles_roles": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "aur": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "appearance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "generate_wallpapers": { "type": "boolean" },
+            "install_colorwhirl_target": { "type": "boolean" },
+            "install_matugen": { "type": "boolean" }
+          }
+        },
+        "shell": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "bootstrap_enabled": { "type": "boolean" }
+          }
+        },
+        "tty": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "dv_enabled": { "type": "boolean" },
+            "gh_enabled": { "type": "boolean" },
+            "glab_enabled": { "type": "boolean" },
+            "newsboat_enabled": { "type": "boolean" },
+            "neofetch_enabled": { "type": "boolean" },
+            "pywal_enabled": { "type": "boolean" },
+            "tmux_bootstrap_enabled": { "type": "boolean" }
+          }
+        },
+        "nvim": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "bootstrap_plugins_enabled": { "type": "boolean" }
+          }
+        },
+        "python_dev": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "ecmascript": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "golang": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "tower": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "install_collections_enabled": { "type": "boolean" }
+          }
+        },
+        "linux_desktop": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "sound": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "hyprland": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "system_tty_login": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "browser_base": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "browser_personal": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "bitwarden_enabled": { "type": "boolean" }
+          }
+        },
+        "media": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "playlist_tools_enabled": { "type": "boolean" }
+          }
+        },
+        "games": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "moonlight_client_enabled": { "type": "boolean" }
+          }
+        },
+        "pkm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "pim": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "email": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "r_lang": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "radian_enabled": { "type": "boolean" }
+          }
+        },
+        "java": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "share_sync": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "llm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "opencode_enabled": { "type": "boolean" },
+            "claudecode_enabled": { "type": "boolean" }
+          }
+        },
+        "vscode": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "peripherals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "cloud": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "aws_enabled": { "type": "boolean" },
+            "fly_enabled": { "type": "boolean" },
+            "terraform_enabled": { "type": "boolean" }
+          }
+        },
+        "oci": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "docker_enabled": { "type": "boolean" },
+            "docker_compose_enabled": { "type": "boolean" },
+            "docker_service_enabled": { "type": "boolean" },
+            "podman_enabled": { "type": "boolean" },
+            "minikube_enabled": { "type": "boolean" }
+          }
+        },
+        "android_dev": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -3,13 +3,32 @@
   gather_facts: true
 
   vars:
-    dotfiles_profile: "{{ dotfiles_profile | default('base') }}"
+    dotfiles_auto_consumer_config_file: >-
+      {{
+        lookup(
+          'ansible.builtin.first_found',
+          {'files': ['vars/dotfiles.consumer.yml'], 'paths': [playbook_dir]},
+          errors='ignore'
+        ) | default('', true)
+      }}
 
   vars_files:
     - ../group_vars/all.yml
-    - "../vars/profiles/{{ dotfiles_profile }}.yml"
 
   pre_tasks:
+    - name: Normalize selected profile name
+      ansible.builtin.set_fact:
+        dotfiles_profile: "{{ vars.get('dotfiles_profile', 'base') }}"
+
+    - name: Load base public vars for compatibility precedence checks
+      ansible.builtin.include_vars:
+        file: ../group_vars/all.yml
+        name: dotfiles_base_config
+
+    - name: Load selected public profile vars
+      ansible.builtin.include_vars:
+        file: "../vars/profiles/{{ dotfiles_profile }}.yml"
+
     - name: Normalize runtime user and platform variables
       ansible.builtin.set_fact:
         active_user: "{{ dotfiles_active_user | default(ansible_facts['user_id']) }}"
@@ -48,6 +67,284 @@
         file: "{{ item }}"
       loop: "{{ dotfiles_consumer_vars_files | default([]) }}"
 
+    - name: Snapshot raw flat role vars for compatibility
+      ansible.builtin.set_fact:
+        dotfiles_raw_role_vars_snapshot:
+          aur_enabled: "{{ vars.get('aur_enabled') }}"
+          identity_enabled: "{{ vars.get('identity_enabled') }}"
+          appearance_enabled: "{{ vars.get('appearance_enabled') }}"
+          appearance_generate_wallpapers: "{{ vars.get('appearance_generate_wallpapers') }}"
+          appearance_install_colorwhirl_target: "{{ vars.get('appearance_install_colorwhirl_target') }}"
+          appearance_install_matugen: "{{ vars.get('appearance_install_matugen') }}"
+          shell_enabled: "{{ vars.get('shell_enabled') }}"
+          shell_bootstrap_enabled: "{{ vars.get('shell_bootstrap_enabled') }}"
+          tty_enabled: "{{ vars.get('tty_enabled') }}"
+          tty_dv_enabled: "{{ vars.get('tty_dv_enabled') }}"
+          tty_gh_enabled: "{{ vars.get('tty_gh_enabled') }}"
+          tty_glab_enabled: "{{ vars.get('tty_glab_enabled') }}"
+          tty_newsboat_enabled: "{{ vars.get('tty_newsboat_enabled') }}"
+          tty_neofetch_enabled: "{{ vars.get('tty_neofetch_enabled') }}"
+          tty_pywal_enabled: "{{ vars.get('tty_pywal_enabled') }}"
+          tty_tmux_bootstrap_enabled: "{{ vars.get('tty_tmux_bootstrap_enabled') }}"
+          nvim_enabled: "{{ vars.get('nvim_enabled') }}"
+          nvim_bootstrap_plugins_enabled: "{{ vars.get('nvim_bootstrap_plugins_enabled', none) }}"
+          python_dev_enabled: "{{ vars.get('python_dev_enabled') }}"
+          ecmascript_enabled: "{{ vars.get('ecmascript_enabled') }}"
+          golang_enabled: "{{ vars.get('golang_enabled') }}"
+          tower_enabled: "{{ vars.get('tower_enabled') }}"
+          tower_install_collections_enabled: "{{ vars.get('tower_install_collections_enabled') }}"
+          linux_desktop_enabled: "{{ vars.get('linux_desktop_enabled') }}"
+          sound_enabled: "{{ vars.get('sound_enabled') }}"
+          hyprland_enabled: "{{ vars.get('hyprland_enabled') }}"
+          system_tty_login_enabled: "{{ vars.get('system_tty_login_enabled') }}"
+          browser_base_enabled: "{{ vars.get('browser_base_enabled') }}"
+          browser_personal_enabled: "{{ vars.get('browser_personal_enabled') }}"
+          browser_bitwarden_enabled: "{{ vars.get('browser_bitwarden_enabled') }}"
+          media_enabled: "{{ vars.get('media_enabled') }}"
+          media_playlist_tools_enabled: "{{ vars.get('media_playlist_tools_enabled') }}"
+          games_enabled: "{{ vars.get('games_enabled') }}"
+          games_moonlight_client_enabled: "{{ vars.get('games_moonlight_client_enabled') }}"
+          pkm_enabled: "{{ vars.get('pkm_enabled') }}"
+          pim_enabled: "{{ vars.get('pim_enabled') }}"
+          email_enabled: "{{ vars.get('email_enabled') }}"
+          r_lang_enabled: "{{ vars.get('r_lang_enabled') }}"
+          r_lang_radian_enabled: "{{ vars.get('r_lang_radian_enabled', none) }}"
+          java_enabled: "{{ vars.get('java_enabled') }}"
+          share_sync_enabled: "{{ vars.get('share_sync_enabled') }}"
+          llm_enabled: "{{ vars.get('llm_enabled') }}"
+          llm_opencode_enabled: "{{ vars.get('llm_opencode_enabled') }}"
+          llm_claudecode_enabled: "{{ vars.get('llm_claudecode_enabled') }}"
+          vscode_enabled: "{{ vars.get('vscode_enabled') }}"
+          peripherals_enabled: "{{ vars.get('peripherals_enabled') }}"
+          cloud_enabled: "{{ vars.get('cloud_enabled') }}"
+          cloud_aws_enabled: "{{ vars.get('cloud_aws_enabled') }}"
+          cloud_fly_enabled: "{{ vars.get('cloud_fly_enabled') }}"
+          cloud_terraform_enabled: "{{ vars.get('cloud_terraform_enabled') }}"
+          oci_enabled: "{{ vars.get('oci_enabled') }}"
+          oci_docker_enabled: "{{ vars.get('oci_docker_enabled', none) }}"
+          oci_docker_compose_enabled: "{{ vars.get('oci_docker_compose_enabled', none) }}"
+          oci_docker_service_enabled: "{{ vars.get('oci_docker_service_enabled', none) }}"
+          oci_podman_enabled: "{{ vars.get('oci_podman_enabled') }}"
+          oci_minikube_enabled: "{{ vars.get('oci_minikube_enabled', none) }}"
+          android_dev_enabled: "{{ vars.get('android_dev_enabled') }}"
+
+    - name: Load optional structured consumer config
+      ansible.builtin.include_vars:
+        file: "{{ dotfiles_auto_consumer_config_file }}"
+        name: dotfiles_consumer_config
+      when: dotfiles_auto_consumer_config_file | length > 0
+
+    - name: Apply structured consumer role overrides
+      ansible.builtin.set_fact:
+        aur_enabled: "{{ _dotfiles_roles.get('aur', {}).get('enabled', aur_enabled) }}"
+        identity_enabled: "{{ _dotfiles_roles.get('identity', {}).get('enabled', identity_enabled) }}"
+        appearance_enabled: "{{ _dotfiles_roles.get('appearance', {}).get('enabled', appearance_enabled) }}"
+        appearance_generate_wallpapers: >-
+          {{ _dotfiles_roles.get('appearance', {}).get('generate_wallpapers', appearance_generate_wallpapers) }}
+        appearance_install_colorwhirl_target: >-
+          {{ _dotfiles_roles.get('appearance', {}).get('install_colorwhirl_target', appearance_install_colorwhirl_target) }}
+        appearance_install_matugen: >-
+          {{ _dotfiles_roles.get('appearance', {}).get('install_matugen', appearance_install_matugen) }}
+        shell_enabled: "{{ _dotfiles_roles.get('shell', {}).get('enabled', shell_enabled) }}"
+        shell_bootstrap_enabled: >-
+          {{ _dotfiles_roles.get('shell', {}).get('bootstrap_enabled', shell_bootstrap_enabled) }}
+        tty_enabled: "{{ _dotfiles_roles.get('tty', {}).get('enabled', tty_enabled) }}"
+        tty_dv_enabled: "{{ _dotfiles_roles.get('tty', {}).get('dv_enabled', tty_dv_enabled) }}"
+        tty_gh_enabled: "{{ _dotfiles_roles.get('tty', {}).get('gh_enabled', tty_gh_enabled) }}"
+        tty_glab_enabled: "{{ _dotfiles_roles.get('tty', {}).get('glab_enabled', tty_glab_enabled) }}"
+        tty_newsboat_enabled: >-
+          {{ _dotfiles_roles.get('tty', {}).get('newsboat_enabled', tty_newsboat_enabled) }}
+        tty_neofetch_enabled: >-
+          {{ _dotfiles_roles.get('tty', {}).get('neofetch_enabled', tty_neofetch_enabled) }}
+        tty_pywal_enabled: "{{ _dotfiles_roles.get('tty', {}).get('pywal_enabled', tty_pywal_enabled) }}"
+        tty_tmux_bootstrap_enabled: >-
+          {{ _dotfiles_roles.get('tty', {}).get('tmux_bootstrap_enabled', tty_tmux_bootstrap_enabled) }}
+        nvim_enabled: "{{ _dotfiles_roles.get('nvim', {}).get('enabled', nvim_enabled) }}"
+        nvim_bootstrap_plugins_enabled: >-
+          {{ _dotfiles_roles.get('nvim', {}).get('bootstrap_plugins_enabled', nvim_bootstrap_plugins_enabled) }}
+        python_dev_enabled: "{{ _dotfiles_roles.get('python_dev', {}).get('enabled', python_dev_enabled) }}"
+        ecmascript_enabled: "{{ _dotfiles_roles.get('ecmascript', {}).get('enabled', ecmascript_enabled) }}"
+        golang_enabled: "{{ _dotfiles_roles.get('golang', {}).get('enabled', golang_enabled) }}"
+        tower_enabled: "{{ _dotfiles_roles.get('tower', {}).get('enabled', tower_enabled) }}"
+        tower_install_collections_enabled: >-
+          {{ _dotfiles_roles.get('tower', {}).get('install_collections_enabled', tower_install_collections_enabled) }}
+        linux_desktop_enabled: >-
+          {{ _dotfiles_roles.get('linux_desktop', {}).get('enabled', linux_desktop_enabled) }}
+        sound_enabled: "{{ _dotfiles_roles.get('sound', {}).get('enabled', sound_enabled) }}"
+        hyprland_enabled: "{{ _dotfiles_roles.get('hyprland', {}).get('enabled', hyprland_enabled) }}"
+        system_tty_login_enabled: >-
+          {{ _dotfiles_roles.get('system_tty_login', {}).get('enabled', system_tty_login_enabled) }}
+        browser_base_enabled: >-
+          {{ _dotfiles_roles.get('browser_base', {}).get('enabled', browser_base_enabled) }}
+        browser_personal_enabled: >-
+          {{ _dotfiles_roles.get('browser_personal', {}).get('enabled', browser_personal_enabled) }}
+        browser_bitwarden_enabled: >-
+          {{ _dotfiles_roles.get('browser_personal', {}).get('bitwarden_enabled', browser_bitwarden_enabled) }}
+        media_enabled: "{{ _dotfiles_roles.get('media', {}).get('enabled', media_enabled) }}"
+        media_playlist_tools_enabled: >-
+          {{ _dotfiles_roles.get('media', {}).get('playlist_tools_enabled', media_playlist_tools_enabled) }}
+        games_enabled: "{{ _dotfiles_roles.get('games', {}).get('enabled', games_enabled) }}"
+        games_moonlight_client_enabled: >-
+          {{ _dotfiles_roles.get('games', {}).get('moonlight_client_enabled', games_moonlight_client_enabled) }}
+        pkm_enabled: "{{ _dotfiles_roles.get('pkm', {}).get('enabled', pkm_enabled) }}"
+        pim_enabled: "{{ _dotfiles_roles.get('pim', {}).get('enabled', pim_enabled) }}"
+        email_enabled: "{{ _dotfiles_roles.get('email', {}).get('enabled', email_enabled) }}"
+        r_lang_enabled: "{{ _dotfiles_roles.get('r_lang', {}).get('enabled', r_lang_enabled) }}"
+        r_lang_radian_enabled: >-
+          {{ _dotfiles_roles.get('r_lang', {}).get('radian_enabled', r_lang_radian_enabled) }}
+        java_enabled: "{{ _dotfiles_roles.get('java', {}).get('enabled', java_enabled) }}"
+        share_sync_enabled: "{{ _dotfiles_roles.get('share_sync', {}).get('enabled', share_sync_enabled) }}"
+        llm_enabled: "{{ _dotfiles_roles.get('llm', {}).get('enabled', llm_enabled) }}"
+        llm_opencode_enabled: >-
+          {{ _dotfiles_roles.get('llm', {}).get('opencode_enabled', llm_opencode_enabled) }}
+        llm_claudecode_enabled: >-
+          {{ _dotfiles_roles.get('llm', {}).get('claudecode_enabled', llm_claudecode_enabled) }}
+        vscode_enabled: "{{ _dotfiles_roles.get('vscode', {}).get('enabled', vscode_enabled) }}"
+        peripherals_enabled: >-
+          {{ _dotfiles_roles.get('peripherals', {}).get('enabled', peripherals_enabled) }}
+        cloud_enabled: "{{ _dotfiles_roles.get('cloud', {}).get('enabled', cloud_enabled) }}"
+        cloud_aws_enabled: "{{ _dotfiles_roles.get('cloud', {}).get('aws_enabled', cloud_aws_enabled) }}"
+        cloud_fly_enabled: "{{ _dotfiles_roles.get('cloud', {}).get('fly_enabled', cloud_fly_enabled) }}"
+        cloud_terraform_enabled: >-
+          {{ _dotfiles_roles.get('cloud', {}).get('terraform_enabled', cloud_terraform_enabled) }}
+        oci_enabled: "{{ _dotfiles_roles.get('oci', {}).get('enabled', oci_enabled) }}"
+        oci_docker_enabled: "{{ _dotfiles_roles.get('oci', {}).get('docker_enabled', oci_docker_enabled) }}"
+        oci_docker_compose_enabled: >-
+          {{ _dotfiles_roles.get('oci', {}).get('docker_compose_enabled', oci_docker_compose_enabled) }}
+        oci_docker_service_enabled: >-
+          {{ _dotfiles_roles.get('oci', {}).get('docker_service_enabled', oci_docker_service_enabled) }}
+        oci_podman_enabled: "{{ _dotfiles_roles.get('oci', {}).get('podman_enabled', oci_podman_enabled) }}"
+        oci_minikube_enabled: >-
+          {{ _dotfiles_roles.get('oci', {}).get('minikube_enabled', oci_minikube_enabled) }}
+        android_dev_enabled: >-
+          {{ _dotfiles_roles.get('android_dev', {}).get('enabled', android_dev_enabled) }}
+      vars:
+        _dotfiles_roles: >-
+          {{
+            (dotfiles_consumer_config.dotfiles_roles | default({}))
+            | combine(dotfiles_roles | default({}), recursive=True)
+          }}
+
+    - name: Reapply raw flat role vars over structured config when detected
+      ansible.builtin.set_fact:
+        aur_enabled: >-
+          {{ _dotfiles_raw.aur_enabled if _dotfiles_raw.aur_enabled != _dotfiles_base.get('aur_enabled') else aur_enabled }}
+        identity_enabled: >-
+          {{ _dotfiles_raw.identity_enabled if _dotfiles_raw.identity_enabled != _dotfiles_base.get('identity_enabled') else identity_enabled }}
+        appearance_enabled: >-
+          {{ _dotfiles_raw.appearance_enabled if _dotfiles_raw.appearance_enabled != _dotfiles_base.get('appearance_enabled') else appearance_enabled }}
+        appearance_generate_wallpapers: >-
+          {{ _dotfiles_raw.appearance_generate_wallpapers if _dotfiles_raw.appearance_generate_wallpapers != _dotfiles_base.get('appearance_generate_wallpapers') else appearance_generate_wallpapers }}
+        appearance_install_colorwhirl_target: >-
+          {{ _dotfiles_raw.appearance_install_colorwhirl_target if _dotfiles_raw.appearance_install_colorwhirl_target != _dotfiles_base.get('appearance_install_colorwhirl_target') else appearance_install_colorwhirl_target }}
+        appearance_install_matugen: >-
+          {{ _dotfiles_raw.appearance_install_matugen if _dotfiles_raw.appearance_install_matugen != _dotfiles_base.get('appearance_install_matugen') else appearance_install_matugen }}
+        shell_enabled: >-
+          {{ _dotfiles_raw.shell_enabled if _dotfiles_raw.shell_enabled != _dotfiles_base.get('shell_enabled') else shell_enabled }}
+        shell_bootstrap_enabled: >-
+          {{ _dotfiles_raw.shell_bootstrap_enabled if _dotfiles_raw.shell_bootstrap_enabled != _dotfiles_base.get('shell_bootstrap_enabled') else shell_bootstrap_enabled }}
+        tty_enabled: >-
+          {{ _dotfiles_raw.tty_enabled if _dotfiles_raw.tty_enabled != _dotfiles_base.get('tty_enabled') else tty_enabled }}
+        tty_dv_enabled: >-
+          {{ _dotfiles_raw.tty_dv_enabled if _dotfiles_raw.tty_dv_enabled != _dotfiles_base.get('tty_dv_enabled') else tty_dv_enabled }}
+        tty_gh_enabled: >-
+          {{ _dotfiles_raw.tty_gh_enabled if _dotfiles_raw.tty_gh_enabled != _dotfiles_base.get('tty_gh_enabled') else tty_gh_enabled }}
+        tty_glab_enabled: >-
+          {{ _dotfiles_raw.tty_glab_enabled if _dotfiles_raw.tty_glab_enabled != _dotfiles_base.get('tty_glab_enabled') else tty_glab_enabled }}
+        tty_newsboat_enabled: >-
+          {{ _dotfiles_raw.tty_newsboat_enabled if _dotfiles_raw.tty_newsboat_enabled != _dotfiles_base.get('tty_newsboat_enabled') else tty_newsboat_enabled }}
+        tty_neofetch_enabled: >-
+          {{ _dotfiles_raw.tty_neofetch_enabled if _dotfiles_raw.tty_neofetch_enabled != _dotfiles_base.get('tty_neofetch_enabled') else tty_neofetch_enabled }}
+        tty_pywal_enabled: >-
+          {{ _dotfiles_raw.tty_pywal_enabled if _dotfiles_raw.tty_pywal_enabled != _dotfiles_base.get('tty_pywal_enabled') else tty_pywal_enabled }}
+        tty_tmux_bootstrap_enabled: >-
+          {{ _dotfiles_raw.tty_tmux_bootstrap_enabled if _dotfiles_raw.tty_tmux_bootstrap_enabled != _dotfiles_base.get('tty_tmux_bootstrap_enabled') else tty_tmux_bootstrap_enabled }}
+        nvim_enabled: >-
+          {{ _dotfiles_raw.nvim_enabled if _dotfiles_raw.nvim_enabled != _dotfiles_base.get('nvim_enabled') else nvim_enabled }}
+        nvim_bootstrap_plugins_enabled: >-
+          {{ _dotfiles_raw.nvim_bootstrap_plugins_enabled if _dotfiles_raw.nvim_bootstrap_plugins_enabled is not none else nvim_bootstrap_plugins_enabled }}
+        python_dev_enabled: >-
+          {{ _dotfiles_raw.python_dev_enabled if _dotfiles_raw.python_dev_enabled != _dotfiles_base.get('python_dev_enabled') else python_dev_enabled }}
+        ecmascript_enabled: >-
+          {{ _dotfiles_raw.ecmascript_enabled if _dotfiles_raw.ecmascript_enabled != _dotfiles_base.get('ecmascript_enabled') else ecmascript_enabled }}
+        golang_enabled: >-
+          {{ _dotfiles_raw.golang_enabled if _dotfiles_raw.golang_enabled != _dotfiles_base.get('golang_enabled') else golang_enabled }}
+        tower_enabled: >-
+          {{ _dotfiles_raw.tower_enabled if _dotfiles_raw.tower_enabled != _dotfiles_base.get('tower_enabled') else tower_enabled }}
+        tower_install_collections_enabled: >-
+          {{ _dotfiles_raw.tower_install_collections_enabled if _dotfiles_raw.tower_install_collections_enabled != _dotfiles_base.get('tower_install_collections_enabled') else tower_install_collections_enabled }}
+        linux_desktop_enabled: >-
+          {{ _dotfiles_raw.linux_desktop_enabled if _dotfiles_raw.linux_desktop_enabled != _dotfiles_base.get('linux_desktop_enabled') else linux_desktop_enabled }}
+        sound_enabled: >-
+          {{ _dotfiles_raw.sound_enabled if _dotfiles_raw.sound_enabled != _dotfiles_base.get('sound_enabled') else sound_enabled }}
+        hyprland_enabled: >-
+          {{ _dotfiles_raw.hyprland_enabled if _dotfiles_raw.hyprland_enabled != _dotfiles_base.get('hyprland_enabled') else hyprland_enabled }}
+        system_tty_login_enabled: >-
+          {{ _dotfiles_raw.system_tty_login_enabled if _dotfiles_raw.system_tty_login_enabled != _dotfiles_base.get('system_tty_login_enabled') else system_tty_login_enabled }}
+        browser_base_enabled: >-
+          {{ _dotfiles_raw.browser_base_enabled if _dotfiles_raw.browser_base_enabled != _dotfiles_base.get('browser_base_enabled') else browser_base_enabled }}
+        browser_personal_enabled: >-
+          {{ _dotfiles_raw.browser_personal_enabled if _dotfiles_raw.browser_personal_enabled != _dotfiles_base.get('browser_personal_enabled') else browser_personal_enabled }}
+        browser_bitwarden_enabled: >-
+          {{ _dotfiles_raw.browser_bitwarden_enabled if _dotfiles_raw.browser_bitwarden_enabled != _dotfiles_base.get('browser_bitwarden_enabled') else browser_bitwarden_enabled }}
+        media_enabled: >-
+          {{ _dotfiles_raw.media_enabled if _dotfiles_raw.media_enabled != _dotfiles_base.get('media_enabled') else media_enabled }}
+        media_playlist_tools_enabled: >-
+          {{ _dotfiles_raw.media_playlist_tools_enabled if _dotfiles_raw.media_playlist_tools_enabled != _dotfiles_base.get('media_playlist_tools_enabled') else media_playlist_tools_enabled }}
+        games_enabled: >-
+          {{ _dotfiles_raw.games_enabled if _dotfiles_raw.games_enabled != _dotfiles_base.get('games_enabled') else games_enabled }}
+        games_moonlight_client_enabled: >-
+          {{ _dotfiles_raw.games_moonlight_client_enabled if _dotfiles_raw.games_moonlight_client_enabled != _dotfiles_base.get('games_moonlight_client_enabled') else games_moonlight_client_enabled }}
+        pkm_enabled: >-
+          {{ _dotfiles_raw.pkm_enabled if _dotfiles_raw.pkm_enabled != _dotfiles_base.get('pkm_enabled') else pkm_enabled }}
+        pim_enabled: >-
+          {{ _dotfiles_raw.pim_enabled if _dotfiles_raw.pim_enabled != _dotfiles_base.get('pim_enabled') else pim_enabled }}
+        email_enabled: >-
+          {{ _dotfiles_raw.email_enabled if _dotfiles_raw.email_enabled != _dotfiles_base.get('email_enabled') else email_enabled }}
+        r_lang_enabled: >-
+          {{ _dotfiles_raw.r_lang_enabled if _dotfiles_raw.r_lang_enabled != _dotfiles_base.get('r_lang_enabled') else r_lang_enabled }}
+        r_lang_radian_enabled: >-
+          {{ _dotfiles_raw.r_lang_radian_enabled if _dotfiles_raw.r_lang_radian_enabled is not none else r_lang_radian_enabled }}
+        java_enabled: >-
+          {{ _dotfiles_raw.java_enabled if _dotfiles_raw.java_enabled != _dotfiles_base.get('java_enabled') else java_enabled }}
+        share_sync_enabled: >-
+          {{ _dotfiles_raw.share_sync_enabled if _dotfiles_raw.share_sync_enabled != _dotfiles_base.get('share_sync_enabled') else share_sync_enabled }}
+        llm_enabled: >-
+          {{ _dotfiles_raw.llm_enabled if _dotfiles_raw.llm_enabled != _dotfiles_base.get('llm_enabled') else llm_enabled }}
+        llm_opencode_enabled: >-
+          {{ _dotfiles_raw.llm_opencode_enabled if _dotfiles_raw.llm_opencode_enabled != _dotfiles_base.get('llm_opencode_enabled') else llm_opencode_enabled }}
+        llm_claudecode_enabled: >-
+          {{ _dotfiles_raw.llm_claudecode_enabled if _dotfiles_raw.llm_claudecode_enabled != _dotfiles_base.get('llm_claudecode_enabled') else llm_claudecode_enabled }}
+        vscode_enabled: >-
+          {{ _dotfiles_raw.vscode_enabled if _dotfiles_raw.vscode_enabled != _dotfiles_base.get('vscode_enabled') else vscode_enabled }}
+        peripherals_enabled: >-
+          {{ _dotfiles_raw.peripherals_enabled if _dotfiles_raw.peripherals_enabled != _dotfiles_base.get('peripherals_enabled') else peripherals_enabled }}
+        cloud_enabled: >-
+          {{ _dotfiles_raw.cloud_enabled if _dotfiles_raw.cloud_enabled != _dotfiles_base.get('cloud_enabled') else cloud_enabled }}
+        cloud_aws_enabled: >-
+          {{ _dotfiles_raw.cloud_aws_enabled if _dotfiles_raw.cloud_aws_enabled != _dotfiles_base.get('cloud_aws_enabled') else cloud_aws_enabled }}
+        cloud_fly_enabled: >-
+          {{ _dotfiles_raw.cloud_fly_enabled if _dotfiles_raw.cloud_fly_enabled != _dotfiles_base.get('cloud_fly_enabled') else cloud_fly_enabled }}
+        cloud_terraform_enabled: >-
+          {{ _dotfiles_raw.cloud_terraform_enabled if _dotfiles_raw.cloud_terraform_enabled != _dotfiles_base.get('cloud_terraform_enabled') else cloud_terraform_enabled }}
+        oci_enabled: >-
+          {{ _dotfiles_raw.oci_enabled if _dotfiles_raw.oci_enabled != _dotfiles_base.get('oci_enabled') else oci_enabled }}
+        oci_docker_enabled: >-
+          {{ _dotfiles_raw.oci_docker_enabled if _dotfiles_raw.oci_docker_enabled is not none else oci_docker_enabled }}
+        oci_docker_compose_enabled: >-
+          {{ _dotfiles_raw.oci_docker_compose_enabled if _dotfiles_raw.oci_docker_compose_enabled is not none else oci_docker_compose_enabled }}
+        oci_docker_service_enabled: >-
+          {{ _dotfiles_raw.oci_docker_service_enabled if _dotfiles_raw.oci_docker_service_enabled is not none else oci_docker_service_enabled }}
+        oci_podman_enabled: >-
+          {{ _dotfiles_raw.oci_podman_enabled if _dotfiles_raw.oci_podman_enabled != _dotfiles_base.get('oci_podman_enabled') else oci_podman_enabled }}
+        oci_minikube_enabled: >-
+          {{ _dotfiles_raw.oci_minikube_enabled if _dotfiles_raw.oci_minikube_enabled is not none else oci_minikube_enabled }}
+        android_dev_enabled: >-
+          {{ _dotfiles_raw.android_dev_enabled if _dotfiles_raw.android_dev_enabled != _dotfiles_base.get('android_dev_enabled') else android_dev_enabled }}
+      vars:
+        _dotfiles_raw: "{{ dotfiles_raw_role_vars_snapshot }}"
+        _dotfiles_base: "{{ dotfiles_base_config }}"
+
     - name: Detect Homebrew prefix on macOS
       ansible.builtin.shell: |
         set -eu
@@ -78,14 +375,90 @@
         update_cache: true
       when: is_archlinux | bool
 
-    - name: Apply downstream role toggle overrides
+    - name: Apply downstream flat role toggle overrides
       ansible.builtin.set_fact:
+        aur_enabled: "{{ dotfiles_aur_enabled | default(aur_enabled) }}"
+        identity_enabled: "{{ dotfiles_identity_enabled | default(identity_enabled) }}"
+        appearance_enabled: "{{ dotfiles_appearance_enabled | default(appearance_enabled) }}"
+        appearance_generate_wallpapers: >-
+          {{ dotfiles_appearance_generate_wallpapers | default(appearance_generate_wallpapers) }}
+        appearance_install_colorwhirl_target: >-
+          {{ dotfiles_appearance_install_colorwhirl_target | default(appearance_install_colorwhirl_target) }}
+        appearance_install_matugen: >-
+          {{ dotfiles_appearance_install_matugen | default(appearance_install_matugen) }}
+        shell_enabled: "{{ dotfiles_shell_enabled | default(shell_enabled) }}"
+        shell_bootstrap_enabled: >-
+          {{ dotfiles_shell_bootstrap_enabled | default(shell_bootstrap_enabled) }}
+        tty_enabled: "{{ dotfiles_tty_enabled | default(tty_enabled) }}"
+        tty_dv_enabled: "{{ dotfiles_tty_dv_enabled | default(tty_dv_enabled) }}"
+        tty_gh_enabled: "{{ dotfiles_tty_gh_enabled | default(tty_gh_enabled) }}"
+        tty_glab_enabled: "{{ dotfiles_tty_glab_enabled | default(tty_glab_enabled) }}"
+        tty_newsboat_enabled: >-
+          {{ dotfiles_tty_newsboat_enabled | default(tty_newsboat_enabled) }}
+        tty_neofetch_enabled: >-
+          {{ dotfiles_tty_neofetch_enabled | default(tty_neofetch_enabled) }}
+        tty_pywal_enabled: "{{ dotfiles_tty_pywal_enabled | default(tty_pywal_enabled) }}"
+        tty_tmux_bootstrap_enabled: >-
+          {{ dotfiles_tty_tmux_bootstrap_enabled | default(tty_tmux_bootstrap_enabled) }}
+        nvim_enabled: "{{ dotfiles_nvim_enabled | default(nvim_enabled) }}"
+        nvim_bootstrap_plugins_enabled: >-
+          {{ dotfiles_nvim_bootstrap_plugins_enabled | default(nvim_bootstrap_plugins_enabled) }}
+        python_dev_enabled: "{{ dotfiles_python_dev_enabled | default(python_dev_enabled) }}"
+        ecmascript_enabled: "{{ dotfiles_ecmascript_enabled | default(ecmascript_enabled) }}"
+        golang_enabled: "{{ dotfiles_golang_enabled | default(golang_enabled) }}"
+        tower_enabled: "{{ dotfiles_tower_enabled | default(tower_enabled) }}"
+        tower_install_collections_enabled: >-
+          {{ dotfiles_tower_install_collections_enabled | default(tower_install_collections_enabled) }}
+        linux_desktop_enabled: >-
+          {{ dotfiles_linux_desktop_enabled | default(linux_desktop_enabled) }}
+        sound_enabled: "{{ dotfiles_sound_enabled | default(sound_enabled) }}"
+        hyprland_enabled: "{{ dotfiles_hyprland_enabled | default(hyprland_enabled) }}"
+        system_tty_login_enabled: >-
+          {{ dotfiles_system_tty_login_enabled | default(system_tty_login_enabled) }}
+        browser_base_enabled: >-
+          {{ dotfiles_browser_base_enabled | default(browser_base_enabled) }}
+        browser_personal_enabled: >-
+          {{ dotfiles_browser_personal_enabled | default(browser_personal_enabled) }}
+        browser_bitwarden_enabled: >-
+          {{ dotfiles_browser_bitwarden_enabled | default(browser_bitwarden_enabled) }}
+        media_enabled: "{{ dotfiles_media_enabled | default(media_enabled) }}"
+        media_playlist_tools_enabled: >-
+          {{ dotfiles_media_playlist_tools_enabled | default(media_playlist_tools_enabled) }}
         games_enabled: "{{ dotfiles_games_enabled | default(games_enabled) }}"
         games_moonlight_client_enabled: >-
           {{ dotfiles_games_moonlight_client_enabled | default(games_moonlight_client_enabled) }}
         pkm_enabled: "{{ dotfiles_pkm_enabled | default(pkm_enabled) }}"
+        pim_enabled: "{{ dotfiles_pim_enabled | default(pim_enabled) }}"
         email_enabled: "{{ dotfiles_email_enabled | default(email_enabled) }}"
         r_lang_enabled: "{{ dotfiles_r_lang_enabled | default(r_lang_enabled) }}"
+        r_lang_radian_enabled: >-
+          {{ dotfiles_r_lang_radian_enabled | default(r_lang_radian_enabled) }}
+        java_enabled: "{{ dotfiles_java_enabled | default(java_enabled) }}"
+        share_sync_enabled: "{{ dotfiles_share_sync_enabled | default(share_sync_enabled) }}"
+        llm_enabled: "{{ dotfiles_llm_enabled | default(llm_enabled) }}"
+        llm_opencode_enabled: >-
+          {{ dotfiles_llm_opencode_enabled | default(llm_opencode_enabled) }}
+        llm_claudecode_enabled: >-
+          {{ dotfiles_llm_claudecode_enabled | default(llm_claudecode_enabled) }}
+        vscode_enabled: "{{ dotfiles_vscode_enabled | default(vscode_enabled) }}"
+        peripherals_enabled: >-
+          {{ dotfiles_peripherals_enabled | default(peripherals_enabled) }}
+        cloud_enabled: "{{ dotfiles_cloud_enabled | default(cloud_enabled) }}"
+        cloud_aws_enabled: "{{ dotfiles_cloud_aws_enabled | default(cloud_aws_enabled) }}"
+        cloud_fly_enabled: "{{ dotfiles_cloud_fly_enabled | default(cloud_fly_enabled) }}"
+        cloud_terraform_enabled: >-
+          {{ dotfiles_cloud_terraform_enabled | default(cloud_terraform_enabled) }}
+        oci_enabled: "{{ dotfiles_oci_enabled | default(oci_enabled) }}"
+        oci_docker_enabled: "{{ dotfiles_oci_docker_enabled | default(oci_docker_enabled) }}"
+        oci_docker_compose_enabled: >-
+          {{ dotfiles_oci_docker_compose_enabled | default(oci_docker_compose_enabled) }}
+        oci_docker_service_enabled: >-
+          {{ dotfiles_oci_docker_service_enabled | default(oci_docker_service_enabled) }}
+        oci_podman_enabled: "{{ dotfiles_oci_podman_enabled | default(oci_podman_enabled) }}"
+        oci_minikube_enabled: >-
+          {{ dotfiles_oci_minikube_enabled | default(oci_minikube_enabled) }}
+        android_dev_enabled: >-
+          {{ dotfiles_android_dev_enabled | default(android_dev_enabled) }}
 
   tasks:
     - name: Apply common role
