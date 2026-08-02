@@ -1,0 +1,21 @@
+-- Per-repository Java project profiles.
+--
+-- The public dotfiles layer stays generic on purpose: repository-specific
+-- bootstrap commands belong in a machine-local file at `~/.local/java-projects.lua`.
+-- This module exists to document the shape and to leave room for public,
+-- non-sensitive defaults if they ever become necessary.
+--
+-- Each entry may contain:
+--   repo          string    exact repository name, compared literally
+--   repo_pattern  string    Lua pattern alternative to `repo`, anchored for you
+--   match         function  (root) -> boolean
+--   bootstrap     table     optional build-before-indexing metadata
+--
+-- bootstrap fields:
+--   cmd           string[]  command run at the project root by :JavaBootstrap
+--   description   string    shown before any build is kicked off
+--   auto          boolean   run the bootstrap once automatically per checkout
+--   produces      string    glob, relative to the project root, that proves the
+--                           build output exists on a never-built checkout
+
+return {}

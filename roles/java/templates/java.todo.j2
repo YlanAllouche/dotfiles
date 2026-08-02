@@ -1,0 +1,48 @@
+Java / Neovim setup notes
+=========================
+
+This machine has the public Java role enabled.
+
+What this role manages:
+- `mise` shell activation through `~/.local/config/shell/40-mise.zsh`
+- global Java and Gradle toolchains through `mise`
+- Java-specific Neovim files under `~/.config/nvim`
+- the debug/test bundle installer scripts under `~/.config/nvim/scripts`
+
+Still worth checking on a fresh machine:
+1. Run `nvim` and let Lazy finish installing plugins.
+2. If `jdtls` is still missing, run `:MasonInstall jdtls`.
+3. Open a Java file and run `:JavaHealth`.
+4. If a repository needs a one-off bootstrap build before jdtls can index it,
+   record it in `{{ java_local_projects_file }}`.
+
+Machine-local repo profiles live outside the public config:
+- `{{ java_local_projects_file }}`
+
+Example shape:
+```lua
+return {
+	{
+		repo = "example-repo",
+		bootstrap = {
+			cmd = { "mise", "x", "--", "gradle", "build" },
+			description = "build the jars jdtls needs before indexing",
+			produces = "build/libs/example.jar",
+			auto = false,
+		},
+	},
+}
+```
+
+Environment-specific notes:
+- Private Maven credentials are still repository/environment specific.
+  Put the required keys in `~/.gradle/gradle.properties`.
+- If corporate TLS interception breaks downloads, run:
+  `~/.config/nvim/scripts/trust-corporate-certs.sh <cert-dir>...`
+- Rebuild the Gradle toolchain list after installing new JDKs with:
+  `~/.config/nvim/scripts/gradle-toolchains.sh`
+
+Fresh-machine verification:
+- `:JavaHealth`
+- `:JavaWorkspaces`
+- `:JavaBootstrap`

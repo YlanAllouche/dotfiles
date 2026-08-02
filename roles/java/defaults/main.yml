@@ -1,3 +1,17 @@
+java_arch_packages:
+  - maven
+  - mise
+
 java_homebrew_packages:
   - maven
-  - openjdk
+  - mise
+
+java_mise_global_tools:
+  - java@corretto-11.0.32.9.1
+  - java@temurin-21.0.11
+  - java@temurin-25.0.4
+  - java@temurin-26.0.2
+  - gradle@8.14.4
+  - gradle@9.6.1
+
+java_local_projects_file: "{{ active_home }}/.local/java-projects.lua"
