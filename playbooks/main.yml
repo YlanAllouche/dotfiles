@@ -465,6 +465,11 @@
       ansible.builtin.include_role:
         name: common
 
+    - name: Apply browser_base role
+      ansible.builtin.include_role:
+        name: browser_base
+      when: browser_base_enabled | default(false) | bool
+
     - name: Apply aur role
       ansible.builtin.include_role:
         name: aur
@@ -537,11 +542,6 @@
       when:
         - system_tty_login_enabled | default(false) | bool
         - is_linux | bool
-
-    - name: Apply browser_base role
-      ansible.builtin.include_role:
-        name: browser_base
-      when: browser_base_enabled | default(false) | bool
 
     - name: Apply browser_personal role
       ansible.builtin.include_role:

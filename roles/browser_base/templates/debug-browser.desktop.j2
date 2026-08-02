@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name={{ browser_base_linux_desktop_entry_name }}
+Comment=Managed browser launcher with optional remote debugging
+Exec={{ (local_bin_dir ~ '/browser') | quote }} %u
+Terminal=false
+Categories=Network;WebBrowser;
+MimeType=x-scheme-handler/http;x-scheme-handler/https;text/html;application/xhtml+xml;
+NoDisplay=true

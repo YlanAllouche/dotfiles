@@ -1,2 +1,52 @@
-browser_base_homebrew_casks:
+browser_base_arch_packages:
   - firefox
+  - xdg-utils
+
+browser_base_homebrew_packages:
+  - defaultbrowser
+
+browser_base_homebrew_casks:
+  - google-chrome
+
+browser_base_browser_name: "{{ 'chrome' if is_macos | bool else 'firefox' }}"
+browser_base_browser_command: >-
+  {{
+    browser_base_macos_applications_dir ~ '/Google Chrome.app/Contents/MacOS/Google Chrome'
+    if (is_macos | bool and browser_base_browser_name == 'chrome')
+    else browser_base_browser_name
+  }}
+browser_base_browser_extra_args: []
+browser_base_private_arg: >-
+  {{
+    '--private-window'
+    if browser_base_browser_name == 'firefox'
+    else '--incognito'
+    if browser_base_browser_name == 'chrome'
+    else ''
+  }}
+
+browser_base_remote_debugging_enabled: true
+browser_base_remote_debugging_host: 127.0.0.1
+browser_base_remote_debugging_port: 9222
+browser_base_use_managed_profile: "{{ browser_base_remote_debugging_enabled | bool }}"
+browser_base_profile_dir: >-
+  {{
+    active_home ~ '/.chrome-debug-profile'
+    if browser_base_browser_name == 'chrome'
+    else active_home ~ '/.firefox-debug-profile'
+  }}
+
+browser_base_make_default_browser: true
+
+browser_base_macos_applications_dir: "{{ '/Applications' if sudo_present | bool else active_home ~ '/Applications' }}"
+browser_base_macos_wrapper_app_name: DebugBrowser
+browser_base_macos_wrapper_executable_name: DebugBrowser
+browser_base_macos_wrapper_bundle_identifier: com.ylanallouche.debugbrowser
+browser_base_macos_wrapper_app_path: "{{ active_home }}/Applications/{{ browser_base_macos_wrapper_app_name }}.app"
+browser_base_macos_wrapper_bundle_token: "{{ browser_base_macos_wrapper_app_name | lower }}"
+browser_base_defaultbrowser_binary: "{{ homebrew_prefix }}/bin/defaultbrowser"
+browser_base_lsregister_binary: /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+
+browser_base_linux_desktop_entry_name: Debug Browser
+browser_base_linux_desktop_entry_filename: debug-browser.desktop
+browser_base_linux_desktop_entry_path: "{{ xdg_data_home }}/applications/{{ browser_base_linux_desktop_entry_filename }}"

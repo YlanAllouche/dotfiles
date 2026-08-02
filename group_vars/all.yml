@@ -328,9 +328,6 @@ sound_arch_packages:
   - bluez
   - bluez-utils
 
-browser_base_arch_packages:
-  - firefox
-
 browser_personal_aur_packages:
   - firefox-tridactyl-native
 

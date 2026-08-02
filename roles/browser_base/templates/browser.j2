@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -eu
+
+BROWSER_COMMAND={{ browser_base_browser_command | quote }}
+
+args=()
+
+{% if browser_base_use_managed_profile | bool %}
+PROFILE={{ browser_base_profile_dir | quote }}
+{% endif %}
+
+{% if browser_base_remote_debugging_enabled | bool %}
+{% if browser_base_browser_name == 'chrome' %}
+args+=(--remote-debugging-address={{ browser_base_remote_debugging_host | quote }})
+args+=(--remote-debugging-port={{ browser_base_remote_debugging_port | quote }})
+{% elif browser_base_browser_name == 'firefox' %}
+args+=(--remote-debugging-port={{ browser_base_remote_debugging_port | quote }})
+{% endif %}
+{% endif %}
+
+{% if browser_base_use_managed_profile | bool %}
+{% if browser_base_browser_name == 'chrome' %}
+args+=(--user-data-dir="$PROFILE")
+{% elif browser_base_browser_name == 'firefox' %}
+args+=(--profile "$PROFILE")
+{% endif %}
+{% endif %}
+
+{% for arg in browser_base_browser_extra_args %}
+args+=({{ arg | quote }})
+{% endfor %}
+
+exec "$BROWSER_COMMAND" "${args[@]}" "$@"

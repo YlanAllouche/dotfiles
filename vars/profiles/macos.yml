@@ -15,7 +15,7 @@ linux_desktop_enabled: true
 sound_enabled: false
 hyprland_enabled: false
 system_tty_login_enabled: false
-browser_base_enabled: false
+browser_base_enabled: true
 browser_personal_enabled: false
 media_enabled: false
 pkm_enabled: false

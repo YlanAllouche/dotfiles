@@ -5,6 +5,12 @@
     state: present
   when: is_archlinux | bool
 
+- name: Install base browser helper packages on macOS
+  community.general.homebrew:
+    name: "{{ browser_base_homebrew_packages }}"
+    state: present
+  when: is_macos | bool
+
 - name: Install base browser packages on macOS
   community.general.homebrew_cask:
     name: "{{ browser_base_homebrew_casks }}"
@@ -13,16 +19,156 @@
   when: is_macos | bool
 
 - name: Install browser launcher script
-  ansible.builtin.copy:
-    src: bin/browser
+  ansible.builtin.template:
+    src: browser.j2
     dest: "{{ local_bin_dir }}/browser"
     mode: "0755"
 
-- name: Ensure shell snippet directory exists for browser export
+- name: Ensure browser support directories exist
   ansible.builtin.file:
-    path: "{{ active_home }}/.local/config/shell"
+    path: "{{ item.path }}"
     state: directory
     mode: "0755"
+  loop:
+    - path: "{{ active_home }}/.local/config/shell"
+    - path: "{{ xdg_data_home }}/applications"
+      when: "{{ is_linux | bool }}"
+    - path: "{{ active_home }}/Applications"
+      when: "{{ is_macos | bool }}"
+    - path: "{{ browser_base_macos_wrapper_app_path }}/Contents"
+      when: "{{ is_macos | bool }}"
+    - path: "{{ browser_base_macos_wrapper_app_path }}/Contents/MacOS"
+      when: "{{ is_macos | bool }}"
+  when: item.when | default(true) | bool
+
+- name: Install Linux desktop entry for managed browser
+  ansible.builtin.template:
+    src: debug-browser.desktop.j2
+    dest: "{{ browser_base_linux_desktop_entry_path }}"
+    mode: "0644"
+  when: is_linux | bool
+
+- name: Install macOS wrapper app plist
+  ansible.builtin.template:
+    src: debug-browser-info.plist.j2
+    dest: "{{ browser_base_macos_wrapper_app_path }}/Contents/Info.plist"
+    mode: "0644"
+  register: browser_base_macos_wrapper_plist
+  when: is_macos | bool
+
+- name: Install macOS wrapper app launcher
+  ansible.builtin.template:
+    src: debug-browser-macos-launcher.j2
+    dest: "{{ browser_base_macos_wrapper_app_path }}/Contents/MacOS/{{ browser_base_macos_wrapper_executable_name }}"
+    mode: "0755"
+  register: browser_base_macos_wrapper_launcher
+  when: is_macos | bool
+
+- name: List registered macOS browsers
+  ansible.builtin.command:
+    argv:
+      - "{{ browser_base_defaultbrowser_binary }}"
+  register: browser_base_macos_defaultbrowser_list
+  changed_when: false
+  when: is_macos | bool
+
+- name: Register macOS wrapper app with Launch Services
+  ansible.builtin.command:
+    argv:
+      - "{{ browser_base_lsregister_binary }}"
+      - -f
+      - "{{ browser_base_macos_wrapper_app_path }}"
+  when:
+    - is_macos | bool
+    - >-
+      browser_base_macos_wrapper_plist.changed
+      or browser_base_macos_wrapper_launcher.changed
+      or browser_base_macos_wrapper_bundle_token not in (browser_base_macos_defaultbrowser_list.stdout | lower)
+
+- name: Set managed macOS browser as default
+  ansible.builtin.command:
+    argv:
+      - "{{ browser_base_defaultbrowser_binary }}"
+      - "{{ browser_base_macos_wrapper_bundle_token }}"
+  when:
+    - is_macos | bool
+    - browser_base_make_default_browser | bool
+    - >-
+      not (
+        browser_base_macos_defaultbrowser_list.stdout
+        | lower
+        | regex_search('(?m)^\\*\\s*' ~ browser_base_macos_wrapper_bundle_token ~ '\\s*$')
+      )
+
+- name: Query Linux default web browser
+  ansible.builtin.command:
+    argv:
+      - xdg-settings
+      - get
+      - default-web-browser
+  register: browser_base_linux_default_browser
+  failed_when: false
+  changed_when: false
+  when:
+    - is_linux | bool
+    - browser_base_make_default_browser | bool
+
+- name: Query Linux MIME browser handlers
+  ansible.builtin.command:
+    argv:
+      - xdg-mime
+      - query
+      - default
+      - "{{ item }}"
+  loop:
+    - x-scheme-handler/http
+    - x-scheme-handler/https
+    - text/html
+    - application/xhtml+xml
+  register: browser_base_linux_mime_defaults
+  failed_when: false
+  changed_when: false
+  when:
+    - is_linux | bool
+    - browser_base_make_default_browser | bool
+
+- name: Set managed Linux browser as default web browser
+  ansible.builtin.command:
+    argv:
+      - xdg-settings
+      - set
+      - default-web-browser
+      - "{{ browser_base_linux_desktop_entry_filename }}"
+  when:
+    - is_linux | bool
+    - browser_base_make_default_browser | bool
+    - browser_base_linux_default_browser.stdout != browser_base_linux_desktop_entry_filename
+
+- name: Set managed Linux MIME browser handlers
+  ansible.builtin.command:
+    argv:
+      - xdg-mime
+      - default
+      - "{{ browser_base_linux_desktop_entry_filename }}"
+      - x-scheme-handler/http
+      - x-scheme-handler/https
+      - text/html
+      - application/xhtml+xml
+  when:
+    - is_linux | bool
+    - browser_base_make_default_browser | bool
+    - >-
+      (
+        browser_base_linux_mime_defaults.results
+        | map(attribute='stdout')
+        | list
+      )
+      != [
+        browser_base_linux_desktop_entry_filename,
+        browser_base_linux_desktop_entry_filename,
+        browser_base_linux_desktop_entry_filename,
+        browser_base_linux_desktop_entry_filename
+      ]
 
 - name: Export browser helper path in shell snippets
   ansible.builtin.copy:

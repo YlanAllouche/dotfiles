@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# TODO: Decide the Linux browser secret-store policy for autologin Wayland
-# sessions. Options: keep the desktop secret service, switch Chromium to
-# --password-store=basic, or standardize on an alternative such as KeePassXC.
-exec firefox "$@"

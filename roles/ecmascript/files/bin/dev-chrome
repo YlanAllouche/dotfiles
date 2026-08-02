@@ -1,3 +1,4 @@
 #! /usr/bin/bash
 
+# TODO: Consider retiring this in favor of the shared browser_base launcher.
 chromium --remote-debugging-port=9222 --profile-directory=dev & disown
