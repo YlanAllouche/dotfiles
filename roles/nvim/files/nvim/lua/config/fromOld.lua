@@ -32,6 +32,10 @@ end
 vim.api.nvim_create_user_command("LiveGrepGitRoot", live_grep_git_root, {})
 
 local on_attach = function(_, bufnr)
+	-- These mappings were dead code: `lua/plugins/lsp.lua` referenced an
+	-- undefined global `on_attach`, so this file-local function never ran.
+	-- Hooking it off `LspAttach` applies it to every language server, including
+	-- jdtls, which is started by the Java ftplugin rather than by lspconfig.
 	-- NOTE: Remember that lua is a real programming language, and as such it is possible
 	-- to define small helper and utility functions so you don't have to repeat yourself
 	-- many times.
@@ -50,8 +54,12 @@ local on_attach = function(_, bufnr)
 	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
 	nmap("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-	nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-	nmap("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+	-- Neovim 0.11+ already owns the `gr` prefix (`grr`, `gri`, `grn`, `gra`,
+	-- `grt`). Mapping bare `gr`/`gI` makes that whole family wait for
+	-- `timeoutlen`, so keep Neovim's keys and back the list-producing ones with
+	-- Telescope.
+	nmap("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+	nmap("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
 	nmap("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
 	nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
 	nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
@@ -78,6 +86,13 @@ local on_attach = function(_, bufnr)
 		end
 	end, { desc = "Format current buffer with LSP" })
 end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("lsp-keymaps", { clear = true }),
+	callback = function(args)
+		on_attach(vim.lsp.get_client_by_id(args.data.client_id), args.buf)
+	end,
+})
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })

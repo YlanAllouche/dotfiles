@@ -20,10 +20,15 @@ local parsers_to_install = {
 	"rust",
 	"python",
 	"go",
+	"groovy",
 	"r",
+	"java",
 	"vimdoc",
 	"c_sharp",
 	"jsdoc",
+	"kotlin",
+	"properties",
+	"xml",
 }
 
 local function setup_treesitter_compat()

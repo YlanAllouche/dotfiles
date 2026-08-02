@@ -13,6 +13,38 @@ return {
 			local mason_lspconfig = require("mason-lspconfig")
 
 			local mason_tool_installer = require("mason-tool-installer")
+			local has_java_support = vim.uv.fs_stat(vim.fn.stdpath("config") .. "/ftplugin/java.lua") ~= nil
+			local ensure_installed = {
+				"ts_ls",
+				"ansiblels",
+				-- "html",
+				-- "cssls",
+				"tailwindcss",
+				-- "svelte",
+				-- "lua_ls",
+				-- "graphql",
+				-- "emmet_ls",
+				-- "prismals",
+				-- "r_language_server",
+				-- "fsautocomplete",
+				-- "csharp_ls",
+				"pyright",
+				"ruff",
+				"gopls",
+				"rust_analyzer",
+			}
+			local ensure_tools = {
+				"prettier", -- prettier formatter
+				"stylua", -- lua formatter
+				"ruff", -- python formatter/linter/LSP server
+				-- "black", -- fallback formatter for Black-only Python repos
+				"eslint_d", -- js linter
+			}
+
+			if has_java_support then
+				table.insert(ensure_installed, "jdtls")
+				table.insert(ensure_tools, "google-java-format")
+			end
 
 			-- enable mason and configure icons
 			mason.setup({
@@ -27,38 +59,16 @@ return {
 
 			mason_lspconfig.setup({
 				-- list of servers for mason to install
-				ensure_installed = {
-					"ts_ls",
-					"ansiblels",
-					-- "html",
-					-- "cssls",
-					"tailwindcss",
-					-- "svelte",
-					-- "lua_ls",
-					-- "graphql",
-					-- "emmet_ls",
-					-- "prismals",
-					-- "r_language_server",
-					-- "fsautocomplete",
-					-- "csharp_ls",
-					"pyright",
-					"ruff",
-					"gopls",
-					"rust_analyzer",
-					"jdtls",
-				},
+				ensure_installed = ensure_installed,
 				-- auto-install configured servers (with lspconfig)
 				automatic_installation = true, -- not the same as ensure_installed
+				-- jdtls is started by the Java ftplugin; letting mason-lspconfig also
+				-- enable it would attach a second, differently configured client.
+				automatic_enable = has_java_support and { exclude = { "jdtls" } } or true,
 			})
 
 			mason_tool_installer.setup({
-				ensure_installed = {
-					"prettier", -- prettier formatter
-					"stylua", -- lua formatter
-					"ruff", -- python formatter/linter/LSP server
-					-- "black", -- fallback formatter for Black-only Python repos
-					"eslint_d", -- js linter
-				},
+				ensure_installed = ensure_tools,
 			})
 		end,
 	},
@@ -77,15 +87,9 @@ return {
 			vim.g.lsp_semantic_tokens_enabled = false
 
 			local function apply_semantic_tokens(bufnr, enabled)
-				for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
-					if client.server_capabilities.semanticTokensProvider then
-						if enabled then
-							pcall(vim.lsp.semantic_tokens.start, bufnr, client.id)
-						else
-							pcall(vim.lsp.semantic_tokens.stop, bufnr, client.id)
-						end
-					end
-				end
+				-- `vim.lsp.semantic_tokens.start/stop` are deprecated since 0.12 and
+				-- removed in 0.13; the capability API replaces both.
+				vim.lsp.semantic_tokens.enable(enabled, { bufnr = bufnr })
 			end
 
 			vim.api.nvim_create_autocmd("LspAttach", {
@@ -183,7 +187,6 @@ return {
   highlight DiagnosticVirtualTextHint guibg=#2a2a3f guifg=#88aaff
 ]])
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 			vim.lsp.config.ts_ls = {
 				capabilities = capabilities,
@@ -240,7 +243,6 @@ return {
 
 			vim.lsp.config.terraformls = {
 				capabilities = capabilities,
-				on_attach = on_attach,
 			}
 			vim.lsp.enable("terraformls")
 
@@ -248,7 +250,6 @@ return {
 
 			vim.lsp.config.bashls = {
 				capabilities = capabilities,
-				on_attach = on_attach,
 			}
 			vim.lsp.enable("bashls")
 
@@ -257,7 +258,6 @@ return {
 				flags = {
 					debounce_text_changes = 150,
 				},
-				on_attach = on_attach,
 				settings = {
 					python = {
 						analysis = {
@@ -277,7 +277,6 @@ return {
 
 			vim.lsp.config.svelte = {
 				capabilities = capabilities,
-				on_attach = on_attach,
 			}
 			vim.lsp.enable("svelte")
 
@@ -298,14 +297,8 @@ return {
 			}
 			vim.lsp.enable("rust_analyzer")
 
-			vim.lsp.config.jdtls = {
-				capabilities = capabilities,
-			}
-			vim.lsp.enable("jdtls")
-
 			vim.lsp.config.tailwindcss = {
 				capabilities = capabilities,
-				on_attach = on_attach,
 				filetypes = { "html", "css", "javascript", "jsx", "typescript", "tsx", "svelte", "python" },
 				settings = {
 					tailwindCSS = {

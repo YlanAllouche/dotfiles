@@ -1,6 +1,7 @@
 return {
 	"nvim-telescope/telescope.nvim",
-	branch = "0.1.x",
+	-- 0.1.x predates Neovim 0.11's LSP API and breaks the LSP-backed pickers.
+	branch = "master",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -40,10 +41,15 @@ return {
 					"--hidden",
 					"--glob=!**/.git/*", -- Exclude .git directories
 				},
-				-- Global file ignore patterns
+				-- Global file ignore patterns.
+				-- These are Lua patterns matched against the whole path, so a bare
+				-- `%.git/` also matches bare-repo worktree layouts such as
+				-- `.../repo.git/workspaces/branch/...` and drops every result there.
 				file_ignore_patterns = {
-					"%.git/",
-					"%.git\\",
+					"/%.git/",
+					"^%.git/",
+					"/%.git\\",
+					"^%.git\\",
 					"node_modules/",
 					"%.DS_Store",
 				},

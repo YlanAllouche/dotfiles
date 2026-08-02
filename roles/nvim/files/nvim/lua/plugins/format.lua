@@ -29,6 +29,9 @@ return {
 					typescript = { "prettier" },
 					javascriptreact = { "prettier" },
 					typescriptreact = { "prettier" },
+					-- Java formatting is destructive on some legacy codebases, so keep
+					-- it reachable manually but off the save path.
+					java = { "google-java-format" },
 					-- svelte = { "prettier" },
 					css = { "prettier" },
 					html = { "prettier" },
@@ -45,11 +48,17 @@ return {
 						-- formatter above with "black" instead of chaining both.
 					},
 				},
-				format_on_save = {
-					lsp_fallback = true,
-					async = false,
-					timeout_ms = 1000,
-				},
+				format_on_save = function(bufnr)
+					if vim.bo[bufnr].filetype == "java" then
+						return nil
+					end
+
+					return {
+						lsp_fallback = true,
+						async = false,
+						timeout_ms = 1000,
+					}
+				end,
 			})
 
 			vim.keymap.set({ "n", "v" }, "<leader>mp", format_current_buffer, { desc = "Format file or range (in visual mode)" })
