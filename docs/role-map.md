@@ -22,7 +22,7 @@ Role ownership reference. For entrypoints and profile layering, see `docs/playbo
 - `linux_desktop`: desktop-adjacent Linux apps, launchers, capture scripts, mpv, pacmixer, zathura.
 - `hyprland`: Hyprland, hyprlock, hypridle, waybar, swaync, and Hyprland-specific helpers.
 - `desktop`: dormant placeholder scope for GTK/theme/cursor config that is not wired yet.
-- `browser_base`: browser install plus the `browser` launcher script.
+- `browser_base`: browser install, the managed `browser` launcher, and default-browser wiring for macOS/Linux.
 - `browser_personal`: tridactyl config, bitwarden toggle, tridactyl native host.
 - `media`: local music and media helpers such as mpd/ncmpcpp and Jellyfin/Kodi scripts.
 - `games`: optional game-adjacent clients such as Moonlight; package-only by default.
@@ -60,4 +60,5 @@ Role ownership reference. For entrypoints and profile layering, see `docs/playbo
 Related docs:
 
 - `docs/theme-pipeline.md` for the `appearance` role
+- `docs/browser-automation.md` for the managed browser/debug-launcher flow
 - `docs/consumer-contracts.md` for private config and app-owned state patterns
